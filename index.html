@@ -3,24 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supernatural - Dialog</title>
+    <title>Sobrenatural: O Mapinguari</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="game-container">
-        <!-- Background element just to show context -->
+    <!-- Main game wrapper -->
+    <div class="game-container" id="game-container">
         <div class="background-overlay"></div>
         
-        <div class="dialog-wrapper">
-            <div class="portrait-container">
-                <img src="imagens/Alex_CD.jpeg" alt="Alex" class="portrait realistic-portrait">
+        <!-- Loading State -->
+        <div id="loading-overlay" class="overlay active">
+            <div class="overlay-content">
+                <h1 class="blink-fast">CARREGANDO ROTEIRO...</h1>
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-overlay" class="overlay">
+            <div class="overlay-content error-box">
+                <h2>⚠️ ERRO DE SISTEMA ⚠️</h2>
+                <p id="error-message">Não foi possível carregar o arquivo de roteiro.</p>
+                <div class="cors-notice" id="cors-notice" style="display: none;">
+                    <strong>Nota:</strong> Se você estiver abrindo o arquivo HTML diretamente no navegador, o CORS pode bloquear requisições fetch. Por favor, execute um servidor local (ex: <code>npx http-server</code> ou Live Server no VS Code).
+                </div>
+                <button onclick="window.location.reload()" class="retro-btn">Tentar Novamente</button>
+            </div>
+        </div>
+
+        <!-- Top Navigation / Info Bar -->
+        <div class="top-nav" id="top-nav" style="display: none;">
+            <div class="scene-info">
+                <span class="scene-badge" id="scene-badge">Cena 1</span>
+                <span class="scene-location" id="scene-location">Carregando local...</span>
+            </div>
+            <div class="nav-controls">
+                <button id="btn-log" class="retro-btn btn-small" title="Ver Histórico de Diálogos">📜 Histórico</button>
+                <button id="btn-map" class="retro-btn btn-small" title="Ver Mapa de Cenas">🗺️ Mapa</button>
+                <button id="btn-restart" class="retro-btn btn-small" title="Reiniciar do Início">🔄 Reiniciar</button>
+            </div>
+        </div>
+
+        <!-- History/Log Modal -->
+        <div id="log-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📜 HISTÓRICO DA CENA</h3>
+                    <button class="close-btn" id="close-log">&times;</button>
+                </div>
+                <div class="modal-body" id="log-body">
+                    <!-- Dynamic history content goes here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene Map / Travel Menu Modal -->
+        <div id="map-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🗺️ MAPA DE CENAS</h3>
+                    <button class="close-btn" id="close-map">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="map-subtitle">Selecione qualquer cena do roteiro para pular para ela:</p>
+                    <div class="scene-grid" id="scene-grid">
+                        <!-- Dynamic scene buttons go here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decisions / Choices Overlay -->
+        <div id="choices-overlay" class="overlay">
+            <div class="overlay-content choice-box">
+                <h2>⚡ FAÇA SUA ESCOLHA ⚡</h2>
+                <p class="choice-prompt">Qual caminho você irá tomar para enfrentar a criatura?</p>
+                <div class="choices-container" id="choices-container">
+                    <!-- Dynamic choice buttons go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div id="gameover-overlay" class="overlay">
+            <div class="overlay-content gameover-box">
+                <h1 class="title-red blink-slow">MISSÃO FRACASSADA</h1>
+                <p class="gameover-desc">O Mapinguari avançou sobre você. A caçada falhou.</p>
+                <div class="gameover-actions">
+                    <button id="btn-retry-choice" class="retro-btn">Retornar às Escolhas</button>
+                    <button id="btn-restart-gameover" class="retro-btn">Reiniciar Caçada</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Victory/Ending Screen -->
+        <div id="ending-overlay" class="overlay">
+            <div class="overlay-content ending-box">
+                <div class="ending-text-container">
+                    <p id="ending-text"></p>
+                </div>
+                <div class="ending-actions" id="ending-actions" style="display: none;">
+                    <button id="btn-restart-ending" class="retro-btn">Jogar Novamente</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialogue Arena -->
+        <div class="dialog-wrapper" id="dialog-wrapper" style="display: none;">
+            <div class="portrait-container" id="portrait-container">
+                <!-- Dynamic portrait (img or SVG initials badge) will go here -->
             </div>
             
-            <div class="dialog-box">
-                <div class="name-tag">Alex</div>
+            <div class="dialog-box" id="dialog-box">
+                <div class="name-tag" id="name-tag">Alex</div>
                 <div class="text-container">
                     <p id="dialog-text"></p>
                     <span class="cursor-blink">▼</span>

@@ -1,0 +1,463 @@
+{
+"personagens": [
+{
+"id": "P1",
+"nome": "Alex"
+},
+{
+"id": "P2",
+"nome": "Lucas"
+},
+{
+"id": "P3",
+"nome": "José"
+},
+{
+"id": "P4",
+"nome": "Claudio"
+},
+{
+"id": "P5",
+"nome": "Mecânico"
+},
+{
+"id": "P6",
+"nome": "Mapinguari"
+}
+],
+"cenas": [
+{
+"id": 1,
+"local": "Rodoviária de Manacapuru",
+"eventos": [
+"A rodoviária está barulhenta.",
+"Alex permanece parado em um canto aparentando extremo cansaço.",
+"Lucas se aproxima para vender produtos."
+],
+"dialogos": [
+{
+"personagem": "Lucas",
+"fala": "Boa noite tio sou Lucas lá da União e tô vendendo uns negócio para ajudar lá em casa vai querer?",
+"comentario": "Lucas tenta vender produtos para ajudar financeiramente sua família."
+},
+{
+"personagem": "Alex",
+"fala": "Não era para você estar na escola uma hora dessas não garoto?",
+"comentario": "Alex demonstra preocupação com a situação do garoto."
+},
+{
+"personagem": "Lucas",
+"fala": "Se eu ficar de bubuia o dia inteiro não vou conseguir comer né, pega uma ae tio estou com mó fome",
+"comentario": "Lucas explica sua necessidade financeira e busca sensibilizar Alex."
+},
+{
+"personagem": "Alex",
+"fala": "Infelizmente sim entendo, mais quanto está?",
+"comentario": "Alex demonstra empatia e considera realizar a compra."
+},
+{
+"personagem": "Lucas",
+"fala": "1,25 mais pra tu eu faço por 1",
+"comentario": "Lucas oferece um desconto para concluir a venda."
+},
+{
+"personagem": "Alex",
+"fala": "Beleza então me vê 2 ai por favor, e vê se toma cuidado para não ser roubado",
+"comentario": "Alex compra os produtos e alerta Lucas sobre possíveis perigos."
+},
+{
+"personagem": "Lucas",
+"fala": "Fecho tio, os galeroso não meche comigo não relaxa",
+"comentario": "Lucas tenta demonstrar confiança e tranquilidade."
+},
+{
+"personagem": "Alex",
+"fala": "Vai nessa que o acaso não te protege não garoto",
+"comentario": "Alex faz um aviso sério baseado em sua experiência."
+}
+]
+},
+{
+"id": 2,
+"local": "Ônibus rumo à Ponte Phelippe Daou",
+"eventos": [
+"Alex entra no ônibus e se senta.",
+"Alex fecha os olhos e suspira.",
+"Após cochilar, desperta próximo à ponte."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "Estou cansado que só para ficar em pé vou tirar um cochilo aqui mesmo",
+"comentario": "Alex expressa exaustão física e decide descansar."
+},
+{
+"personagem": "Alex",
+"fala": "Acho que não conseguirei morar aqui por muito tempo em Manacapuru, são Males do oficio estou acostumado",
+"comentario": "Alex reflete sobre sua vida e dificuldades profissionais."
+},
+{
+"personagem": "Alex",
+"fala": "Ei José pode me deixar nesse posto?",
+"comentario": "Alex solicita uma parada ao motorista."
+},
+{
+"personagem": "José",
+"fala": "Beleza pode deixar",
+"comentario": "José concorda em ajudar Alex."
+}
+]
+},
+{
+"id": 3,
+"local": "Posto e píer à beira do rio",
+"eventos": [
+"Alex desce do ônibus.",
+"Ele caminha até um píer onde encontra Claudio em um pequeno barco."
+],
+"dialogos": [
+{
+"personagem": "Claudio",
+"fala": "Finalmente garoto você demorou hein",
+"comentario": "Claudio reclama do atraso de Alex."
+},
+{
+"personagem": "Alex",
+"fala": "Nem vem que não tem foi só 5 minutos Claudio",
+"comentario": "Alex responde de forma descontraída."
+},
+{
+"personagem": "Claudio",
+"fala": "Esta bem anda logo Alex",
+"comentario": "Claudio quer partir rapidamente."
+},
+{
+"personagem": "Alex",
+"fala": "Você esta feliz assim com eu te pagando adiantado imagina só se eu atrasasse",
+"comentario": "Alex provoca Claudio em tom de brincadeira."
+},
+{
+"personagem": "Claudio",
+"fala": "Eu dava cabo de você",
+"comentario": "Claudio faz uma ameaça claramente exagerada."
+},
+{
+"personagem": "Alex",
+"fala": "Tá, tá… você fala isso toda vez.",
+"comentario": "Alex reage sem levar a ameaça a sério."
+}
+]
+},
+{
+"id": 4,
+"local": "Rio e floresta amazônica",
+"eventos": [
+"O barco segue pelo rio enquanto a cidade desaparece ao fundo.",
+"O ambiente torna-se silencioso e ameaçador.",
+"Alex vê algo enorme submergir na água.",
+"O barco chega próximo a uma casa isolada."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "Quanto tempo até chegar?",
+"comentario": "Alex busca informações sobre o trajeto."
+},
+{
+"personagem": "Claudio",
+"fala": "normalmente leva 5 a 10 minutos, dependendo da correnteza",
+"comentario": "Claudio explica as condições da viagem."
+},
+{
+"personagem": "Alex",
+"fala": "Beleza então",
+"comentario": "Alex aceita a informação e aguarda."
+},
+{
+"personagem": "Claudio",
+"fala": "Oque você veio matar por aqui?",
+"comentario": "Claudio demonstra curiosidade sobre a missão."
+},
+{
+"personagem": "Alex",
+"fala": "Você ouviu falar dele, né?",
+"comentario": "Alex se refere ao alvo da caçada."
+},
+{
+"personagem": "Claudio",
+"fala": "Ouvi.",
+"comentario": "Claudio confirma conhecer a lenda."
+},
+{
+"personagem": "Alex",
+"fala": "E mesmo assim aceitou me trazer.",
+"comentario": "Alex demonstra surpresa pela coragem ou ganância do barqueiro."
+},
+{
+"personagem": "Claudio",
+"fala": "Eu aceito qualquer coisa que pague bem… mas isso aí não é só história de pescador não.",
+"comentario": "Claudio alerta sobre o perigo real da criatura."
+},
+{
+"personagem": "Alex",
+"fala": "Nunca é.",
+"comentario": "Alex demonstra experiência com criaturas sobrenaturais."
+},
+{
+"personagem": "Alex",
+"fala": "Você viu isso?",
+"comentario": "Alex reage ao avistamento de algo estranho na água."
+},
+{
+"personagem": "Claudio",
+"fala": "Não quero ver, só quero chegar.",
+"comentario": "Claudio evita encarar qualquer ameaça."
+},
+{
+"personagem": "Claudio",
+"fala": "Chegamos.",
+"comentario": "Claudio anuncia o fim da viagem."
+}
+]
+},
+{
+"id": 5,
+"local": "Margem do rio e início da mata",
+"eventos": [
+"Alex desembarca.",
+"Claudio permanece aguardando próximo ao barco.",
+"Alex segue sozinho para a floresta."
+],
+"dialogos": [
+{
+"personagem": "Claudio",
+"fala": "Eu não vou ir, vou esperar sua caçada quando precisar volta aqui.",
+"comentario": "Claudio deixa claro que não acompanhará a missão."
+},
+{
+"personagem": "Alex",
+"fala": "Nem te pedi para ficar, mas que bom estou precisando mesmo de uma isca.",
+"comentario": "Alex provoca Claudio com humor sombrio."
+},
+{
+"personagem": "Claudio",
+"fala": "Não ferra, você só pode ser leso de vir pro mato seis vezes em uma semana para enfrentar o grande Mapinguari",
+"comentario": "Claudio critica a insistência de Alex."
+},
+{
+"personagem": "Alex",
+"fala": "Para mim isso e mais normal doque deveria",
+"comentario": "Alex demonstra que caçar monstros faz parte de sua rotina."
+},
+{
+"personagem": "Claudio",
+"fala": "Só quero ir para casa e pedir um kikão então vai logo",
+"comentario": "Claudio deseja encerrar logo a situação."
+},
+{
+"personagem": "Alex",
+"fala": "Não confirmo nada",
+"comentario": "Alex brinca sobre sua própria sobrevivência."
+}
+]
+},
+{
+"id": 6,
+"local": "Clareira destruída na floresta",
+"eventos": [
+"Alex encontra rastros gigantescos.",
+"Ele examina pelos e marcas no solo.",
+"O Mapinguari surge entre árvores quebradas.",
+"Inicia-se uma perseguição."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "Tu é grande pra caralho...",
+"comentario": "Alex avalia o tamanho da criatura pelos rastros."
+},
+{
+"personagem": "Alex",
+"fala": "É você realmente grande pra caralho",
+"comentario": "Alex confirma visualmente a dimensão do Mapinguari."
+}
+]
+},
+{
+"id": 7,
+"local": "Floresta durante a perseguição",
+"eventos": [
+"Alex salta sobre um arbusto espinhoso.",
+"A criatura para e recua.",
+"Uma gota de sangue fica no chão.",
+"Alex coleta um galho espinhoso e o guarda."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "Bem se sangra então da para matar essa coisa",
+"comentario": "Alex conclui que a criatura não é invencível."
+},
+{
+"personagem": "Alex",
+"fala": "Bem não tenho ideia da onde estou e isso não é uma boa ideia enquanto aquela coisa esta me rastreando, agora por que ele parou? será que tem algo haver com esta planta espinhosa?",
+"comentario": "Alex investiga a possível fraqueza do monstro."
+}
+]
+},
+{
+"id": 8,
+"local": "Acampamento abandonado",
+"eventos": [
+"Alex encontra um antigo acampamento tomado pela vegetação.",
+"Após investigar as barracas, encontra um livro antigo.",
+"O livro contém relatos sobre o Mapinguari.",
+"Alex descobre a fraqueza da criatura."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "Olha só o que tem aqui… isso foi realmente difícil de achar.",
+"comentario": "Alex encontra uma pista importante."
+},
+{
+"personagem": "Alex",
+"fala": "Então é assim que eu mato você…",
+"comentario": "Alex compreende como derrotar a criatura."
+}
+]
+},
+{
+"id": 9,
+"local": "Floresta - Final Alternativo 1",
+"eventos": [
+"Alex prepara uma armadilha.",
+"O Mapinguari fica preso temporariamente em espinhos.",
+"Alex usa uma granada improvisada."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "Agora!",
+"comentario": "Alex aproveita o momento ideal para atacar."
+}
+]
+},
+{
+"id": 10,
+"local": "Floresta - Final Alternativo 2",
+"eventos": [
+"Alex utiliza uma arma com apenas uma munição.",
+"O Mapinguari tenta devorá-lo.",
+"Alex dispara no ponto fraco da criatura."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "Vai pro inferno…",
+"comentario": "Alex realiza seu ataque final em situação desesperadora."
+}
+]
+},
+{
+"id": 11,
+"local": "Floresta - Final Alternativo 3",
+"eventos": [
+"Alex monta uma armadilha com cordas.",
+"O plano falha.",
+"As cordas arrebentam.",
+"O Mapinguari avança.",
+"Missão fracassada."
+],
+"dialogos": []
+},
+{
+"id": 12,
+"local": "Floresta - Pós-vitória",
+"eventos": [
+"Alex observa o cadáver da criatura derrotada."
+],
+"dialogos": [
+{
+"personagem": "Alex",
+"fala": "É… já matei coisa pior.",
+"comentario": "Alex demonstra confiança e experiência após a vitória."
+}
+]
+},
+{
+"id": 13,
+"local": "Oficina de beira de estrada",
+"eventos": [
+"Alex aguarda seu Opala ficar pronto.",
+"O mecânico termina os reparos.",
+"O rádio toca ao fundo."
+],
+"dialogos": [
+{
+"personagem": "Mecânico",
+"fala": "Bem… tava com o carburador todo desregulado. E a longarina tava trincada também.",
+"comentario": "O mecânico explica os problemas encontrados no veículo."
+},
+{
+"personagem": "Alex",
+"fala": "Saiu o olho da cara, né?",
+"comentario": "Alex teme o valor do conserto."
+},
+{
+"personagem": "Mecânico",
+"fala": "Pode acreditar que sim.",
+"comentario": "O mecânico brinca sobre o custo."
+},
+{
+"personagem": "Alex",
+"fala": "Beleza… passa nesse cartão aí. Só espero que não seja mais de dois mil e trezentos.",
+"comentario": "Alex aceita pagar, mas demonstra preocupação."
+},
+{
+"personagem": "Mecânico",
+"fala": "Quase isso mesmo.",
+"comentario": "O mecânico continua a brincadeira."
+},
+{
+"personagem": "Alex",
+"fala": "Como?",
+"comentario": "Alex reage assustado ao suposto valor."
+},
+{
+"personagem": "Mecânico",
+"fala": "Tô zoando, rapaz. Fiz umas soldas aí, troquei umas peças… carro velho dá trabalho, mas esse Opala ainda aguenta muito chão.",
+"comentario": "O mecânico tranquiliza Alex e elogia o veículo."
+},
+{
+"personagem": "Alex",
+"fala": "Amém.",
+"comentario": "Alex sente alívio ao saber que o custo não foi tão alto."
+},
+{
+"personagem": "Mecânico",
+"fala": "Só tenta não atravessar a Amazônia com ele de novo.",
+"comentario": "O mecânico faz uma observação bem-humorada."
+},
+{
+"personagem": "Alex",
+"fala": "Sem promessas.",
+"comentario": "Alex sugere que continuará se envolvendo em aventuras."
+}
+]
+},
+{
+"id": 14,
+"local": "Estrada ao pôr do sol",
+"eventos": [
+"Alex entra no Opala.",
+"O motor liga após uma falha inicial.",
+"O carro desaparece no horizonte.",
+"Um livro sobre o Mapinguari permanece aberto no banco do passageiro.",
+"Uma frase final é revelada: 'Onde existe um… existem outros.'",
+"Tela preta."
+],
+"dialogos": []
+}
+]
+}
