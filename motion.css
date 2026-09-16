@@ -15,7 +15,7 @@
     transition: transform .6s steps(4, end), filter .6s steps(4, end), opacity .4s ease;
 }
 
-#game-container > *:not(#pixel-art-canvas) { position: relative; }
+#game-container > :not(#pixel-art-canvas):not(.background-overlay) { position: relative; }
 
 #game-container::after {
     content: '';
