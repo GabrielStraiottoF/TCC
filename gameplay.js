@@ -11,9 +11,38 @@
     let animationFrame = null;
     const keys = new Set();
     const speed = 22;
+    const playerRadius = 2.2;
+
+    // Mapa de teste da cena 1.
+    // Os valores são percentuais da área jogável (0-100).
+    const sceneGameplay = {
+        1: {
+            testMap: true,
+            collisions: [
+                { x: 8, y: 12, width: 17, height: 22, label: "Árvores" },
+                { x: 34, y: 8, width: 32, height: 12, label: "Casa" },
+                { x: 74, y: 14, width: 17, height: 24, label: "Árvores" },
+                { x: 7, y: 44, width: 25, height: 12, label: "Rio" },
+                { x: 43, y: 44, width: 13, height: 10, label: "Pedras" },
+                { x: 69, y: 45, width: 23, height: 11, label: "Vegetação" },
+                { x: 22, y: 68, width: 12, height: 8, label: "Tronco" },
+                { x: 66, y: 68, width: 14, height: 8, label: "Pedras" }
+            ],
+            decorations: [
+                { type: "trees", x: 8, y: 12, width: 17, height: 22 },
+                { type: "house", x: 34, y: 8, width: 32, height: 12 },
+                { type: "trees", x: 74, y: 14, width: 17, height: 24 },
+                { type: "river", x: 7, y: 44, width: 25, height: 12 },
+                { type: "rocks", x: 43, y: 44, width: 13, height: 10 },
+                { type: "bushes", x: 69, y: 45, width: 23, height: 11 },
+                { type: "log", x: 22, y: 68, width: 12, height: 8 },
+                { type: "rocks", x: 66, y: 68, width: 14, height: 8 }
+            ]
+        }
+    };
 
     const scenePoints = {
-        1: [{ x: 82, y: 72, label: "Entrada", action: "advance" }],
+        1: [{ x: 88, y: 72, label: "Entrada", action: "advance" }],
         2: [{ x: 50, y: 55, label: "Corredor do ônibus", action: "advance" }],
         3: [{ x: 76, y: 62, label: "Pier", action: "advance" }],
         4: [{ x: 55, y: 68, label: "Margem do rio", action: "advance" }],
@@ -40,6 +69,7 @@
         if (!layer || !player) return;
 
         createScenePoints();
+        createTestMap();
         bindControls();
         syncScene();
         renderPlayer();
@@ -125,10 +155,33 @@
         if (!dx && !dy) return;
 
         const length = Math.hypot(dx, dy) || 1;
-        x = Math.max(7, Math.min(93, x + (dx / length) * speed * dt));
-        y = Math.max(18, Math.min(82, y + (dy / length) * speed * dt));
+        const nextX = x + (dx / length) * speed * dt;
+        const nextY = y + (dy / length) * speed * dt;
+
+        // Teste simples de colisão AABB: o personagem não atravessa as caixas.
+        if (!collides(nextX, nextY)) {
+            x = Math.max(7, Math.min(93, nextX));
+            y = Math.max(18, Math.min(82, nextY));
+        } else {
+            // Permite deslizar pela lateral de um obstáculo.
+            if (!collides(nextX, y)) x = Math.max(7, Math.min(93, nextX));
+            if (!collides(x, nextY)) y = Math.max(18, Math.min(82, nextY));
+        }
+
         renderPlayer();
         updatePrompt();
+    }
+
+    function collides(testX, testY) {
+        const config = sceneGameplay[currentScene];
+        if (!config?.collisions) return false;
+
+        return config.collisions.some(box =>
+            testX + playerRadius > box.x &&
+            testX - playerRadius < box.x + box.width &&
+            testY + playerRadius > box.y &&
+            testY - playerRadius < box.y + box.height
+        );
     }
 
     function syncScene() {
@@ -139,7 +192,45 @@
         x = 50;
         y = 72;
         createScenePoints();
+        createTestMap();
         renderPlayer();
+    }
+
+    function createTestMap() {
+        if (!layer) return;
+
+        layer.querySelectorAll(".test-map, .collision-box").forEach(element => element.remove());
+
+        const config = sceneGameplay[currentScene];
+        if (!config?.testMap) return;
+
+        const map = document.createElement("div");
+        map.className = "test-map";
+        map.setAttribute("aria-hidden", "true");
+
+        config.decorations.forEach(decoration => {
+            const element = document.createElement("div");
+            element.className = `test-object test-object-${decoration.type}`;
+            element.style.left = `${decoration.x}%`;
+            element.style.top = `${decoration.y}%`;
+            element.style.width = `${decoration.width}%`;
+            element.style.height = `${decoration.height}%`;
+            map.appendChild(element);
+        });
+
+        config.collisions.forEach(box => {
+            const element = document.createElement("div");
+            element.className = "collision-box";
+            element.style.left = `${box.x}%`;
+            element.style.top = `${box.y}%`;
+            element.style.width = `${box.width}%`;
+            element.style.height = `${box.height}%`;
+            element.textContent = box.label;
+            element.setAttribute("aria-hidden", "true");
+            layer.appendChild(element);
+        });
+
+        layer.insertBefore(map, player);
     }
 
     function createScenePoints() {
