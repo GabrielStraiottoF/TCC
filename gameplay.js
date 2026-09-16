@@ -52,6 +52,19 @@
                 attributeFilter: ["data-scene"]
             });
         }
+
+        const choicesOverlay = document.getElementById("choices-overlay");
+        if (choicesOverlay) {
+            new MutationObserver(() => {
+                if (currentScene === 8 && choicesOverlay.classList.contains("active")) {
+                    choicesOverlay.classList.remove("active");
+                    updatePrompt();
+                }
+            }).observe(choicesOverlay, {
+                attributes: true,
+                attributeFilter: ["class"]
+            });
+        }
     }
 
     function bindControls() {
@@ -71,12 +84,21 @@
         const movementKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "w", "a", "s", "d", "W", "A", "S", "D"];
         if (movementKeys.includes(event.key)) {
             event.preventDefault();
+            event.stopImmediatePropagation();
             keys.add(event.key);
+            return;
+        }
+
+        if (["Enter", " ", "ArrowRight"].includes(event.key)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            interactNearest();
             return;
         }
 
         if (event.key === "e" || event.key === "E") {
             event.preventDefault();
+            event.stopImmediatePropagation();
             interactNearest();
         }
     }
