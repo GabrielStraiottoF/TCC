@@ -3,7 +3,7 @@ let roteiro = null;
 let currentSceneIndex = 0;
 let currentEventIndex = 0;
 let currentDialogueIndex = -1;
-let currentState = "loading"; // loading, running, choice, gameover, ending
+let currentState = "loading";
 let sceneLog = [];
 
 // Estado do efeito de texto
@@ -14,11 +14,10 @@ let isTyping = false;
 let currentOnComplete = null;
 let endingInterval = null;
 
-// Elementos da interface
+// Elementos principais da interface
 const dialogText = document.getElementById("dialog-text");
 const nameTag = document.getElementById("name-tag");
 const dialogBox = document.getElementById("dialog-box");
-const cursorBlink = document.querySelector(".cursor-blink");
 const gameContainer = document.getElementById("game-container");
 
 const characterColors = {
@@ -39,11 +38,7 @@ const characterImages = {
     "Mecânico": "imagens/mecanico.png"
 };
 
-// Os cenários são renderizados integralmente por backgrounds.css.
-// O JavaScript só informa qual cena está ativa através de data-scene.
-// Isso evita background-image inline sobrescrevendo os gradientes CSS.
-
-// As três decisões da cena 8 correspondem aos três caminhos já existentes no roteiro.
+// As três decisões da cena 8 correspondem aos caminhos do roteiro.
 const scene8Choices = [
     { label: "Usar a armadilha de espinhos e a granada", sceneId: 9 },
     { label: "Usar a arma e atingir o ponto fraco", sceneId: 10 },
@@ -68,17 +63,16 @@ async function fetchRoteiro() {
         validateRoteiro(data);
         roteiro = data;
 
-        loadingOverlay.classList.remove("active");
+        loadingOverlay?.classList.remove("active");
         setupGameControls();
         buildSceneMap();
         loadScene(0);
     } catch (err) {
         console.error("Erro ao inicializar o roteiro:", err);
-        loadingOverlay.classList.remove("active");
-        errorOverlay.classList.add("active");
-        errorMessage.textContent = `Falha ao ler roteiro.json: ${err.message}`;
-
-        if (window.location.protocol === "file:") {
+        loadingOverlay?.classList.remove("active");
+        errorOverlay?.classList.add("active");
+        if (errorMessage) errorMessage.textContent = `Falha ao ler roteiro.json: ${err.message}`;
+        if (window.location.protocol === "file:" && corsNotice) {
             corsNotice.style.display = "block";
         }
     }
@@ -100,10 +94,12 @@ function validateRoteiro(data) {
         if (scene.id === undefined || scene.id === null) {
             throw new Error(`Cena na posição ${index} está sem identificador.`);
         }
-        if (ids.has(scene.id)) {
+        const normalizedId = Number(scene.id);
+        const idKey = Number.isNaN(normalizedId) ? String(scene.id) : normalizedId;
+        if (ids.has(idKey)) {
             throw new Error(`O identificador da cena ${scene.id} está duplicado.`);
         }
-        ids.add(scene.id);
+        ids.add(idKey);
 
         if (typeof scene.local !== "string") scene.local = "Cena sem nome";
         if (!Array.isArray(scene.eventos)) scene.eventos = [];
@@ -117,51 +113,59 @@ function validateRoteiro(data) {
 }
 
 function setupGameControls() {
-    document.getElementById("btn-log").onclick = event => {
+    const btnLog = document.getElementById("btn-log");
+    const btnMap = document.getElementById("btn-map");
+    const btnRestart = document.getElementById("btn-restart");
+    const closeLog = document.getElementById("close-log");
+    const closeMap = document.getElementById("close-map");
+    const retryChoice = document.getElementById("btn-retry-choice");
+    const restartGameOver = document.getElementById("btn-restart-gameover");
+    const restartEnding = document.getElementById("btn-restart-ending");
+
+    btnLog?.addEventListener("click", event => {
         event.stopPropagation();
         openLogModal();
-    };
-
-    document.getElementById("btn-map").onclick = event => {
-        event.stopPropagation();
-        openMapModal();
-    };
-
-    document.getElementById("btn-restart").onclick = event => {
-        event.stopPropagation();
-        if (confirm("Deseja reiniciar a história do início?")) restartGame();
-    };
-
-    document.getElementById("close-log").onclick = () => {
-        document.getElementById("log-modal").classList.remove("active");
-    };
-
-    document.getElementById("close-map").onclick = () => {
-        document.getElementById("map-modal").classList.remove("active");
-    };
-
-    document.querySelectorAll(".modal").forEach(modal => {
-        modal.onclick = event => {
-            if (event.target === modal) modal.classList.remove("active");
-        };
     });
 
-    document.getElementById("btn-retry-choice").onclick = () => {
+    btnMap?.addEventListener("click", event => {
+        event.stopPropagation();
+        openMapModal();
+    });
+
+    btnRestart?.addEventListener("click", event => {
+        event.stopPropagation();
+        if (confirm("Deseja reiniciar a história do início?")) restartGame();
+    });
+
+    closeLog?.addEventListener("click", () => {
+        document.getElementById("log-modal")?.classList.remove("active");
+    });
+
+    closeMap?.addEventListener("click", () => {
+        document.getElementById("map-modal")?.classList.remove("active");
+    });
+
+    document.querySelectorAll(".modal").forEach(modal => {
+        modal.addEventListener("click", event => {
+            if (event.target === modal) modal.classList.remove("active");
+        });
+    });
+
+    retryChoice?.addEventListener("click", () => {
         const scene8Index = findSceneIndex(8);
         if (scene8Index !== -1) loadScene(scene8Index);
-    };
+    });
 
-    document.getElementById("btn-restart-gameover").onclick = restartGame;
-    document.getElementById("btn-restart-ending").onclick = restartGame;
+    restartGameOver?.addEventListener("click", restartGame);
+    restartEnding?.addEventListener("click", restartGame);
 
-    dialogBox.onclick = event => {
+    dialogBox?.addEventListener("click", event => {
         event.stopPropagation();
         if (currentState === "running") advanceScene();
-    };
+    });
 
     document.addEventListener("keydown", event => {
-        const modalOpen = document.querySelector(".modal.active");
-        if (modalOpen) return;
+        if (document.querySelector(".modal.active")) return;
 
         if (currentState === "choice") {
             if (["1", "2", "3"].includes(event.key)) {
@@ -210,10 +214,15 @@ function loadScene(sceneIndex) {
     hideAllOverlays();
 
     const scene = roteiro.cenas[currentSceneIndex];
-    document.getElementById("top-nav").style.display = "flex";
-    document.getElementById("dialog-wrapper").style.display = "flex";
-    document.getElementById("scene-badge").textContent = `Cena ${scene.id}`;
-    document.getElementById("scene-location").textContent = scene.local;
+    const topNav = document.getElementById("top-nav");
+    const dialogWrapper = document.getElementById("dialog-wrapper");
+    const sceneBadge = document.getElementById("scene-badge");
+    const sceneLocation = document.getElementById("scene-location");
+
+    if (topNav) topNav.style.display = "flex";
+    if (dialogWrapper) dialogWrapper.style.display = "flex";
+    if (sceneBadge) sceneBadge.textContent = `Cena ${scene.id}`;
+    if (sceneLocation) sceneLocation.textContent = scene.local;
     document.title = `Sobrenatural: O Mapinguari — ${scene.local}`;
 
     updateBackground(scene.id);
@@ -223,18 +232,21 @@ function loadScene(sceneIndex) {
 
 function hideAllOverlays() {
     ["choices-overlay", "gameover-overlay", "ending-overlay", "log-modal", "map-modal"].forEach(id => {
-        document.getElementById(id).classList.remove("active");
+        document.getElementById(id)?.classList.remove("active");
     });
 }
 
 function updateBackground(sceneId) {
-    // O cenário é 100% CSS. Apenas trocamos o estado sem inserir imagens.
-    gameContainer.style.backgroundImage = "";
+    // O cenário é controlado exclusivamente pelo CSS através de data-scene.
+    // Não usamos background-image inline, para não sobrescrever backgrounds.css.
+    if (!gameContainer) return;
     gameContainer.dataset.scene = String(sceneId);
 }
 
 function renderCharacterPortrait(name) {
     const portraitContainer = document.getElementById("portrait-container");
+    if (!portraitContainer) return;
+
     const imageUrl = characterImages[name];
     const color = characterColors[name] || "#555";
     const initial = name ? name.charAt(0).toUpperCase() : "?";
@@ -256,8 +268,10 @@ function renderCharacterPortrait(name) {
 
 function renderPortraitFallback(initial, color) {
     const portraitContainer = document.getElementById("portrait-container");
+    if (!portraitContainer) return;
+
     portraitContainer.innerHTML = `
-        <div class="portrait-fallback" style="--fallback-color: ${color};">
+        <div class="portrait-fallback" style="--fallback-color: ${escapeHtml(color)};">
             ${escapeHtml(initial)}
         </div>
     `;
@@ -272,6 +286,8 @@ function advanceScene() {
     }
 
     const scene = roteiro.cenas[currentSceneIndex];
+    if (!scene) return;
+
     updateBackground(scene.id);
 
     // Eventos narrativos vêm antes dos diálogos.
@@ -341,17 +357,22 @@ function showScene8Choices() {
     currentState = "choice";
     const overlay = document.getElementById("choices-overlay");
     const container = document.getElementById("choices-container");
+    if (!overlay || !container) return;
+
     container.innerHTML = "";
 
     scene8Choices.forEach((choice, index) => {
         const button = document.createElement("button");
-        button.className = "choice-button";
+        button.className = "choice-btn";
         button.type = "button";
-        button.innerHTML = `<span class="choice-key">${index + 1}</span><span>${escapeHtml(choice.label)}</span>`;
-        button.onclick = event => {
+        button.innerHTML = `
+            <span class="choice-key">${index + 1}</span>
+            <span>${escapeHtml(choice.label)}</span>
+        `;
+        button.addEventListener("click", event => {
             event.stopPropagation();
             chooseScene8(index);
-        };
+        });
         container.appendChild(button);
     });
 
@@ -373,34 +394,48 @@ function chooseScene8(index) {
 
 function showGameOver() {
     currentState = "gameover";
-    document.getElementById("choices-overlay").classList.remove("active");
-    document.getElementById("gameover-overlay").classList.add("active");
+    document.getElementById("choices-overlay")?.classList.remove("active");
+    document.getElementById("gameover-overlay")?.classList.add("active");
 }
 
 function showEnding() {
     currentState = "ending";
-    document.getElementById("choices-overlay").classList.remove("active");
-    document.getElementById("ending-overlay").classList.add("active");
+    document.getElementById("choices-overlay")?.classList.remove("active");
+    document.getElementById("ending-overlay")?.classList.add("active");
 
     const endingText = document.getElementById("ending-text");
+    const endingActions = document.getElementById("ending-actions");
     const finalMessage = "Onde existe um… existem outros.";
+
+    if (!endingText) return;
     endingText.textContent = "";
+    if (endingActions) endingActions.style.display = "none";
 
     let index = 0;
     clearInterval(endingInterval);
     endingInterval = setInterval(() => {
         endingText.textContent += finalMessage.charAt(index++);
-        if (index >= finalMessage.length) clearInterval(endingInterval);
+        if (index >= finalMessage.length) {
+            clearInterval(endingInterval);
+            if (endingActions) endingActions.style.display = "block";
+        }
     }, 55);
 }
 
 function startTypewriter(text, element, onComplete) {
+    if (!element) return;
+
     clearTypewriter();
     typewriterText = String(text ?? "");
     typewriterIndex = 0;
     isTyping = true;
     currentOnComplete = onComplete;
     element.textContent = "";
+
+    if (typewriterText.length === 0) {
+        finishTypewriter();
+        return;
+    }
 
     typewriterInterval = setInterval(() => {
         element.textContent += typewriterText.charAt(typewriterIndex++);
@@ -410,9 +445,10 @@ function startTypewriter(text, element, onComplete) {
 
 function finishTypewriter() {
     if (!isTyping) return;
+
     clearInterval(typewriterInterval);
     typewriterInterval = null;
-    dialogText.textContent = typewriterText;
+    if (dialogText) dialogText.textContent = typewriterText;
     isTyping = false;
 
     const callback = currentOnComplete;
@@ -433,6 +469,9 @@ function addToLog(type, speaker, text) {
 
 function openLogModal() {
     const list = document.getElementById("log-list");
+    const modal = document.getElementById("log-modal");
+    if (!list || !modal) return;
+
     list.innerHTML = "";
 
     if (sceneLog.length === 0) {
@@ -441,18 +480,26 @@ function openLogModal() {
         sceneLog.forEach(entry => {
             const item = document.createElement("div");
             item.className = `log-entry ${entry.type}`;
-            const title = entry.speaker || "Narrativa";
-            item.innerHTML = `<strong>${escapeHtml(title)}</strong><p>${escapeHtml(entry.text)}</p>`;
+
+            const title = document.createElement("strong");
+            title.className = "log-char";
+            title.textContent = entry.speaker || "Narrativa";
+
+            const text = document.createElement("p");
+            text.className = "log-text";
+            text.textContent = entry.text;
+
+            item.append(title, text);
             list.appendChild(item);
         });
     }
 
-    document.getElementById("log-modal").classList.add("active");
+    modal.classList.add("active");
 }
 
 function openMapModal() {
     buildSceneMap();
-    document.getElementById("map-modal").classList.add("active");
+    document.getElementById("map-modal")?.classList.add("active");
 }
 
 function buildSceneMap() {
@@ -463,13 +510,20 @@ function buildSceneMap() {
     roteiro.cenas.forEach((scene, index) => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "scene-map-item";
+        button.className = "scene-card";
         button.dataset.sceneId = scene.id;
-        button.innerHTML = `<span>${escapeHtml(String(scene.id))}</span><small>${escapeHtml(scene.local)}</small>`;
-        button.onclick = () => {
-            document.getElementById("map-modal").classList.remove("active");
+
+        const number = document.createElement("span");
+        number.textContent = String(scene.id);
+
+        const location = document.createElement("small");
+        location.textContent = scene.local;
+
+        button.append(number, location);
+        button.addEventListener("click", () => {
+            document.getElementById("map-modal")?.classList.remove("active");
             loadScene(index);
-        };
+        });
         map.appendChild(button);
     });
 
@@ -480,7 +534,7 @@ function updateSceneMapSelection() {
     const scene = roteiro?.cenas?.[currentSceneIndex];
     if (!scene) return;
 
-    document.querySelectorAll(".scene-map-item").forEach(item => {
+    document.querySelectorAll(".scene-card").forEach(item => {
         item.classList.toggle("active", Number(item.dataset.sceneId) === Number(scene.id));
     });
 }
