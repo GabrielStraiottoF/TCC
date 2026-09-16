@@ -1,0 +1,145 @@
+/*
+ * Cenários provisórios do TCC — desenhados somente com CSS.
+ * Cada cena corresponde ao local descrito em roteiro.json.
+ * As artes finais podem substituir este arquivo sem alterar a lógica do jogo.
+ */
+
+/* 1 — Rodoviária de Manacapuru: piso, iluminação fluorescente e estrutura do terminal. */
+#game-container[data-scene="1"] {
+    background-image:
+        radial-gradient(circle at 16% 22%, rgba(255,225,148,.55) 0 3px, transparent 4px),
+        radial-gradient(circle at 47% 19%, rgba(255,225,148,.45) 0 3px, transparent 4px),
+        linear-gradient(180deg, rgba(239,220,171,.16) 0 42%, transparent 43%),
+        repeating-linear-gradient(90deg, transparent 0 72px, rgba(74,57,38,.32) 73px 78px, transparent 79px 150px),
+        linear-gradient(180deg, #6e654f 0%, #393329 48%, #211b17 49%, #100c0b 100%) !important;
+    background-size: auto, auto, auto, auto, auto;
+}
+
+/* 2 — Ônibus rumo à Ponte Phelippe Daou: janelas laterais e luzes internas. */
+#game-container[data-scene="2"] {
+    background-image:
+        radial-gradient(ellipse at 50% 22%, rgba(255,221,135,.28) 0 8%, transparent 28%),
+        repeating-linear-gradient(90deg, #161616 0 14%, transparent 14.2% 25%, #111 25.2% 27%),
+        linear-gradient(90deg, transparent 0 9%, rgba(64,105,83,.42) 9.2% 22%, transparent 22.5% 38%, rgba(53,93,77,.34) 38.5% 52%, transparent 52.5% 100%),
+        linear-gradient(180deg, #211c18 0 55%, #090909 56% 100%);
+}
+
+/* 3 — Posto e píer à beira do rio: posto iluminado, margem e água. */
+#game-container[data-scene="3"] {
+    background-image:
+        radial-gradient(circle at 20% 25%, rgba(255,218,116,.65) 0 3%, transparent 4%),
+        linear-gradient(160deg, transparent 0 48%, rgba(5,20,22,.94) 49% 100%),
+        repeating-linear-gradient(175deg, transparent 0 18px, rgba(83,157,161,.20) 19px 21px, transparent 22px 38px),
+        linear-gradient(135deg, #46351d 0 25%, #1c2e2a 26% 48%, #0b3940 49% 72%, #06181d 73% 100%);
+}
+
+/* 4 — Rio e floresta amazônica: rio largo, mata fechada e algo submerso. */
+#game-container[data-scene="4"] {
+    background-image:
+        radial-gradient(ellipse at 58% 57%, rgba(41,116,119,.80) 0 9%, transparent 10%),
+        radial-gradient(ellipse at 58% 57%, rgba(9,34,37,.70) 0 2%, transparent 3%),
+        repeating-linear-gradient(170deg, transparent 0 16px, rgba(112,187,178,.18) 17px 20px, transparent 21px 38px),
+        linear-gradient(90deg, #071e13 0 22%, transparent 23% 77%, #071b12 78% 100%),
+        linear-gradient(180deg, #0c3025 0 43%, #0c4a50 44% 68%, #06272d 69% 100%);
+}
+
+/* 5 — Margem do rio e início da mata: água atrás, barranco e entrada da floresta. */
+#game-container[data-scene="5"] {
+    background-image:
+        radial-gradient(ellipse at 78% 36%, rgba(94,167,137,.32) 0 9%, transparent 30%),
+        repeating-linear-gradient(105deg, transparent 0 34px, rgba(35,89,44,.46) 35px 44px, transparent 45px 76px),
+        linear-gradient(150deg, transparent 0 46%, #4d3925 47% 52%, #172a18 53% 100%),
+        linear-gradient(180deg, #16484c 0 43%, #0c3130 44% 50%, #183a1b 51% 100%);
+}
+
+/* 6 — Clareira destruída: árvores quebradas, terra exposta e rastros enormes. */
+#game-container[data-scene="6"] {
+    background-image:
+        radial-gradient(ellipse at 52% 62%, rgba(151,103,52,.70) 0 13%, transparent 14%),
+        radial-gradient(ellipse at 50% 63%, rgba(30,20,12,.70) 0 5%, transparent 6%),
+        repeating-linear-gradient(78deg, transparent 0 65px, rgba(91,61,37,.62) 66px 73px, transparent 74px 130px),
+        linear-gradient(180deg, #29451f 0 48%, #172515 49% 57%, #47331f 58% 100%);
+}
+
+/* 7 — Floresta durante a perseguição: vegetação passando rapidamente e foco vermelho. */
+#game-container[data-scene="7"] {
+    background-image:
+        radial-gradient(ellipse at 68% 52%, rgba(169,48,34,.38) 0 7%, transparent 22%),
+        repeating-linear-gradient(112deg, transparent 0 30px, rgba(77,135,53,.48) 31px 39px, transparent 40px 72px),
+        linear-gradient(102deg, transparent 0 20%, rgba(8,35,10,.84) 21% 28%, transparent 29% 52%, rgba(8,35,10,.78) 53% 61%, transparent 62%),
+        linear-gradient(180deg, #163e19 0%, #0b2910 48%, #020a04 100%);
+}
+
+/* 8 — Acampamento abandonado: barracas, vegetação e vestígio de fogueira. */
+#game-container[data-scene="8"] {
+    background-image:
+        radial-gradient(circle at 51% 61%, rgba(255,183,71,.75) 0 2%, rgba(190,85,27,.36) 3% 8%, transparent 18%),
+        linear-gradient(150deg, transparent 0 51%, rgba(72,62,42,.85) 52% 58%, transparent 59%),
+        linear-gradient(28deg, transparent 0 57%, rgba(119,105,71,.55) 58% 66%, transparent 67%),
+        repeating-linear-gradient(90deg, transparent 0 86px, rgba(47,78,37,.58) 87px 98px, transparent 99px 158px),
+        linear-gradient(180deg, #26371d 0 48%, #182315 49% 100%);
+}
+
+/* 9 — Final 1: armadilha de espinhos e explosão improvisada. */
+#game-container[data-scene="9"] {
+    background-image:
+        radial-gradient(circle at 51% 54%, rgba(255,198,81,.90) 0 3%, rgba(219,76,24,.70) 4% 9%, transparent 19%),
+        radial-gradient(circle at 51% 54%, rgba(255,237,164,.65) 0 1%, transparent 2%),
+        repeating-linear-gradient(112deg, transparent 0 26px, rgba(62,125,48,.68) 27px 34px, transparent 35px 62px),
+        linear-gradient(180deg, #28551b 0 50%, #112a0b 51% 100%);
+}
+
+/* 10 — Final 2: confronto direto e tiro no ponto fraco. */
+#game-container[data-scene="10"] {
+    background-image:
+        radial-gradient(circle at 50% 49%, rgba(255,222,116,.96) 0 2%, rgba(210,67,38,.72) 3% 7%, transparent 18%),
+        radial-gradient(ellipse at 50% 52%, rgba(107,25,18,.52) 0 10%, transparent 28%),
+        repeating-linear-gradient(108deg, transparent 0 38px, rgba(48,104,40,.56) 39px 48px, transparent 49px 88px),
+        linear-gradient(180deg, #1e4818 0 44%, #092109 45% 100%);
+}
+
+/* 11 — Final 3: armadilha de cordas rompida e avanço da criatura. */
+#game-container[data-scene="11"] {
+    background-image:
+        radial-gradient(ellipse at 55% 52%, rgba(167,39,34,.58) 0 9%, transparent 25%),
+        repeating-linear-gradient(22deg, transparent 0 88px, rgba(177,143,91,.46) 89px 93px, transparent 94px 160px),
+        repeating-linear-gradient(115deg, transparent 0 44px, rgba(45,91,38,.52) 45px 55px, transparent 56px 100px),
+        linear-gradient(180deg, #173914 0 45%, #061707 46% 100%);
+}
+
+/* 12 — Pós-vitória: floresta silenciosa, abertura de luz e corpo da criatura ao centro. */
+#game-container[data-scene="12"] {
+    background-image:
+        radial-gradient(ellipse at 50% 40%, rgba(255,211,112,.55) 0 9%, transparent 31%),
+        radial-gradient(ellipse at 50% 67%, rgba(23,19,13,.74) 0 8%, transparent 20%),
+        repeating-linear-gradient(110deg, transparent 0 52px, rgba(64,119,49,.48) 53px 64px, transparent 65px 116px),
+        linear-gradient(180deg, #315727 0 48%, #183316 49% 100%);
+}
+
+/* 13 — Oficina de beira de estrada: galpão, luz industrial e chão de oficina. */
+#game-container[data-scene="13"] {
+    background-image:
+        radial-gradient(ellipse at 68% 25%, rgba(255,218,126,.78) 0 6%, transparent 18%),
+        repeating-linear-gradient(90deg, transparent 0 80px, rgba(117,117,117,.32) 81px 88px, transparent 89px 160px),
+        linear-gradient(180deg, #55514a 0 52%, #292722 53% 70%, #11100e 71% 100%);
+}
+
+/* 14 — Estrada ao pôr do sol: asfalto, horizonte, árvores e sol baixo. */
+#game-container[data-scene="14"] {
+    background-image:
+        radial-gradient(circle at 75% 28%, rgba(255,222,133,.98) 0 5%, rgba(246,142,60,.62) 6% 13%, transparent 26%),
+        linear-gradient(170deg, transparent 0 57%, #15100c 58% 100%),
+        linear-gradient(86deg, transparent 0 12%, rgba(45,62,29,.78) 13% 23%, transparent 24% 39%, rgba(45,62,29,.70) 40% 52%, transparent 53%),
+        linear-gradient(180deg, #d87945 0%, #a8492b 39%, #51301d 58%, #15100c 100%);
+}
+
+/* Evita que a camada escura deixe os cenários completamente apagados. */
+#game-container .background-overlay {
+    background: radial-gradient(circle at center, rgba(10,8,7,.12) 0%, rgba(0,0,0,.56) 100%);
+}
+
+@media (max-width: 560px) {
+    #game-container .background-overlay {
+        background: radial-gradient(circle at center, rgba(10,8,7,.10) 0%, rgba(0,0,0,.48) 100%);
+    }
+}
