@@ -101,23 +101,22 @@
 .player-coat::before { left: -9px; }
 .player-coat::after { right: -9px; }
 
+/* Pontos de interação são marcadores do mundo, não botões de escolha. */
 .interaction-point {
     position: absolute;
     z-index: 10;
     transform: translate(-50%, -50%);
-    min-width: 48px;
-    min-height: 42px;
-    padding: 5px 9px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    color: var(--text-color);
-    background: rgba(12,10,9,.78);
-    border: 2px dashed var(--gold-color);
+    color: var(--gold-color);
+    background: rgba(12,10,9,.38);
+    border: 1px dashed rgba(232,220,199,.48);
+    border-radius: 50%;
     font-family: var(--font-pixel);
-    font-size: 17px;
     cursor: pointer;
     pointer-events: auto;
     text-shadow: 1px 1px #000;
@@ -126,7 +125,7 @@
 
 .interaction-point:hover,
 .interaction-point:focus-visible {
-    background: rgba(90,24,24,.92);
+    background: rgba(90,24,24,.65);
     outline: 2px solid var(--gold-color);
     outline-offset: 2px;
 }
@@ -134,6 +133,17 @@
 .interaction-icon {
     color: var(--gold-color);
     font-size: 14px;
+}
+
+.discovery-point {
+    width: 24px;
+    height: 24px;
+    border-style: dotted;
+    background: rgba(8,7,7,.24);
+}
+
+.discovery-point .interaction-icon {
+    font-size: 11px;
 }
 
 .interaction-prompt {
@@ -166,18 +176,18 @@
 }
 
 @keyframes interaction-pulse {
-    50% { transform: translate(-50%, -50%) scale(1.04); }
+    50% { transform: translate(-50%, -50%) scale(1.08); }
 }
 
 @media (max-width: 850px) {
-    .interaction-point { font-size: 15px; min-height: 40px; }
+    .interaction-point { width: 28px; height: 28px; }
     .movement-help { right: 10px; bottom: 15%; font-size: 15px; }
     .interaction-prompt { bottom: 25%; font-size: 18px; }
 }
 
 @media (max-width: 560px) {
     .player { transform: translate(-50%, -50%) scale(.85); }
-    .interaction-point { min-width: 42px; min-height: 38px; padding: 4px 6px; font-size: 14px; }
+    .interaction-point { width: 25px; height: 25px; }
     .movement-help { left: 8px; right: auto; bottom: 25%; font-size: 14px; }
     .interaction-prompt { bottom: 31%; font-size: 16px; }
 }
