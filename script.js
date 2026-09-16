@@ -39,94 +39,9 @@ const characterImages = {
     "Mecânico": "imagens/mecanico.png"
 };
 
-// Fundos temporários feitos apenas com CSS.
-// Quando as artes finais forem produzidas, basta trocar/remover estes valores.
-const backgroundScenes = {
-    1: [
-        "radial-gradient(circle at 18% 28%, rgba(255,214,120,.28) 0 3%, transparent 4%),",
-        "linear-gradient(180deg, transparent 0 62%, rgba(12,8,5,.88) 63%),",
-        "repeating-linear-gradient(90deg, transparent 0 78px, rgba(207,171,60,.10) 79px 82px, transparent 83px 150px),",
-        "linear-gradient(135deg, #49351b 0%, #21150c 42%, #090807 100%)"
-    ].join(" "),
-    2: [
-        "radial-gradient(ellipse at 50% 38%, rgba(214,164,75,.20) 0 20%, transparent 48%),",
-        "linear-gradient(180deg, rgba(10,12,15,.15) 0 45%, rgba(0,0,0,.82) 46%),",
-        "repeating-linear-gradient(90deg, transparent 0 110px, rgba(207,171,60,.08) 111px 114px, transparent 115px 190px),",
-        "linear-gradient(160deg, #40301c 0%, #18130e 50%, #050505 100%)"
-    ].join(" "),
-    3: [
-        "radial-gradient(ellipse at 72% 58%, rgba(54,155,176,.30) 0 12%, transparent 40%),",
-        "linear-gradient(170deg, transparent 0 52%, rgba(5,22,23,.9) 53%),",
-        "repeating-linear-gradient(105deg, transparent 0 42px, rgba(70,120,83,.12) 43px 48px, transparent 49px 90px),",
-        "linear-gradient(135deg, #16383d 0%, #0c2225 48%, #030a0c 100%)"
-    ].join(" "),
-    4: [
-        "radial-gradient(ellipse at 55% 55%, rgba(34,117,104,.38) 0 14%, transparent 50%),",
-        "repeating-linear-gradient(72deg, transparent 0 55px, rgba(57,103,58,.20) 56px 68px, transparent 69px 125px),",
-        "linear-gradient(180deg, rgba(3,19,18,.05) 0 45%, rgba(1,8,8,.72) 100%),",
-        "linear-gradient(135deg, #0d3932 0%, #09251f 48%, #010706 100%)"
-    ].join(" "),
-    5: [
-        "radial-gradient(circle at 70% 36%, rgba(120,170,93,.18) 0 8%, transparent 32%),",
-        "repeating-linear-gradient(118deg, transparent 0 35px, rgba(63,113,54,.18) 36px 44px, transparent 45px 76px),",
-        "linear-gradient(180deg, rgba(15,49,24,.05) 0 52%, rgba(2,10,5,.84) 53%),",
-        "linear-gradient(135deg, #0b3a20 0%, #082615 50%, #010a04 100%)"
-    ].join(" "),
-    6: [
-        "radial-gradient(ellipse at 50% 48%, rgba(139,100,48,.26) 0 16%, transparent 45%),",
-        "linear-gradient(180deg, rgba(9,20,8,.10) 0 48%, rgba(4,7,3,.86) 49%),",
-        "repeating-linear-gradient(105deg, transparent 0 72px, rgba(86,59,34,.20) 73px 80px, transparent 81px 145px),",
-        "linear-gradient(135deg, #233417 0%, #181b0d 48%, #050602 100%)"
-    ].join(" "),
-    7: [
-        "radial-gradient(ellipse at 58% 50%, rgba(164,49,37,.22) 0 7%, transparent 34%),",
-        "repeating-linear-gradient(112deg, transparent 0 45px, rgba(44,92,39,.24) 46px 55px, transparent 56px 95px),",
-        "linear-gradient(180deg, rgba(6,28,6,.12), rgba(0,5,0,.88)),",
-        "linear-gradient(135deg, #12310d 0%, #071c07 52%, #010501 100%)"
-    ].join(" "),
-    8: [
-        "radial-gradient(circle at 50% 56%, rgba(207,171,60,.25) 0 5%, transparent 6%),",
-        "radial-gradient(ellipse at 50% 65%, rgba(153,80,29,.20) 0 18%, transparent 42%),",
-        "repeating-linear-gradient(90deg, transparent 0 100px, rgba(80,104,54,.18) 101px 110px, transparent 111px 180px),",
-        "linear-gradient(135deg, #3a3217 0%, #1c2411 45%, #060a03 100%)"
-    ].join(" "),
-    9: [
-        "radial-gradient(ellipse at 50% 60%, rgba(211,171,65,.34) 0 10%, transparent 38%),",
-        "linear-gradient(155deg, transparent 0 58%, rgba(32,67,24,.62) 59%),",
-        "repeating-linear-gradient(112deg, transparent 0 50px, rgba(52,105,42,.22) 51px 61px, transparent 62px 105px),",
-        "linear-gradient(135deg, #1b4212 0%, #0c2508 50%, #020702 100%)"
-    ].join(" "),
-    10: [
-        "radial-gradient(circle at 50% 54%, rgba(207,171,60,.38) 0 4%, transparent 5%),",
-        "radial-gradient(ellipse at 50% 54%, rgba(174,47,36,.18) 0 12%, transparent 35%),",
-        "repeating-linear-gradient(108deg, transparent 0 45px, rgba(55,105,43,.25) 46px 56px, transparent 57px 100px),",
-        "linear-gradient(135deg, #15380e 0%, #092008 50%, #010501 100%)"
-    ].join(" "),
-    11: [
-        "radial-gradient(ellipse at 50% 55%, rgba(168,42,42,.28) 0 12%, transparent 40%),",
-        "linear-gradient(180deg, rgba(5,25,5,.10), rgba(0,3,0,.93)),",
-        "repeating-linear-gradient(115deg, transparent 0 52px, rgba(43,85,37,.18) 53px 64px, transparent 65px 110px),",
-        "linear-gradient(135deg, #17350f 0%, #071b06 50%, #000300 100%)"
-    ].join(" "),
-    12: [
-        "radial-gradient(ellipse at 50% 50%, rgba(207,171,60,.20) 0 10%, transparent 42%),",
-        "linear-gradient(180deg, rgba(20,55,19,.08), rgba(2,11,2,.76)),",
-        "repeating-linear-gradient(110deg, transparent 0 60px, rgba(60,112,48,.18) 61px 70px, transparent 71px 125px),",
-        "linear-gradient(135deg, #174212 0%, #0a2608 50%, #020702 100%)"
-    ].join(" "),
-    13: [
-        "radial-gradient(circle at 68% 40%, rgba(207,171,60,.22) 0 4%, transparent 5%),",
-        "repeating-linear-gradient(90deg, transparent 0 92px, rgba(116,116,116,.12) 93px 98px, transparent 99px 160px),",
-        "linear-gradient(180deg, rgba(70,70,70,.14) 0 55%, rgba(5,5,5,.90) 56%),",
-        "linear-gradient(135deg, #393939 0%, #202020 48%, #080808 100%)"
-    ].join(" "),
-    14: [
-        "radial-gradient(ellipse at 74% 28%, rgba(255,175,72,.42) 0 8%, transparent 34%),",
-        "linear-gradient(180deg, rgba(255,125,48,.08) 0 45%, rgba(18,7,2,.72) 46%),",
-        "repeating-linear-gradient(95deg, transparent 0 90px, rgba(120,75,31,.16) 91px 97px, transparent 98px 170px),",
-        "linear-gradient(160deg, #8a421d 0%, #4a2110 45%, #0d0502 100%)"
-    ].join(" ")
-};
+// Os cenários são renderizados integralmente por backgrounds.css.
+// O JavaScript só informa qual cena está ativa através de data-scene.
+// Isso evita background-image inline sobrescrevendo os gradientes CSS.
 
 // As três decisões da cena 8 correspondem aos três caminhos já existentes no roteiro.
 const scene8Choices = [
@@ -313,8 +228,8 @@ function hideAllOverlays() {
 }
 
 function updateBackground(sceneId) {
-    const background = backgroundScenes[sceneId] || "linear-gradient(135deg, #111 0%, #000 100%)";
-    gameContainer.style.backgroundImage = background;
+    // O cenário é 100% CSS. Apenas trocamos o estado sem inserir imagens.
+    gameContainer.style.backgroundImage = "";
     gameContainer.dataset.scene = String(sceneId);
 }
 
@@ -390,98 +305,39 @@ function advanceScene() {
         return;
     }
 
-    handleSceneEnd(scene);
-}
-
-function startTypewriter(text, targetElement, onComplete) {
-    clearTypewriter();
-    targetElement.textContent = "";
-    typewriterText = text || "";
-    typewriterIndex = 0;
-    isTyping = true;
-    currentOnComplete = onComplete;
-    if (cursorBlink) cursorBlink.style.display = "none";
-
-    const speed = 22;
-    typewriterInterval = setInterval(() => {
-        if (typewriterIndex >= typewriterText.length) {
-            finishTypewriter();
-            return;
-        }
-        targetElement.textContent += typewriterText.charAt(typewriterIndex++);
-    }, speed);
-}
-
-function finishTypewriter() {
-    clearInterval(typewriterInterval);
-    typewriterInterval = null;
-    dialogText.textContent = typewriterText;
-    isTyping = false;
-    if (cursorBlink) cursorBlink.style.display = "inline";
-
-    const callback = currentOnComplete;
-    currentOnComplete = null;
-    if (callback) callback();
-}
-
-function clearTypewriter() {
-    clearInterval(typewriterInterval);
-    typewriterInterval = null;
-    isTyping = false;
-    currentOnComplete = null;
-    typewriterText = "";
-    typewriterIndex = 0;
-    if (cursorBlink) cursorBlink.style.display = "inline";
-}
-
-function handleSceneEnd(scene) {
-    const sceneId = Number(scene.id);
-
-    if (sceneId === 8) {
-        showChoices();
+    if (Number(scene.id) === 8) {
+        showScene8Choices();
         return;
     }
 
-    if (sceneId === 11) {
+    if (Number(scene.id) === 11) {
         showGameOver();
         return;
     }
 
-    if (sceneId === 14) {
+    const nextSceneId = getNextSceneId(scene);
+    if (nextSceneId === null) {
         showEnding();
         return;
     }
 
-    const nextSceneId = {
-        1: 2,
-        2: 3,
-        3: 4,
-        4: 5,
-        5: 6,
-        6: 7,
-        7: 8,
-        9: 12,
-        10: 12,
-        12: 13,
-        13: 14
-    }[sceneId];
-
-    if (nextSceneId !== undefined) {
-        const nextIndex = findSceneIndex(nextSceneId);
-        if (nextIndex !== -1) {
-            loadScene(nextIndex);
-            return;
-        }
-    }
-
-    if (currentSceneIndex < roteiro.cenas.length - 1) {
-        loadScene(currentSceneIndex + 1);
-    } else {
+    const nextSceneIndex = findSceneIndex(nextSceneId);
+    if (nextSceneIndex === -1) {
         showEnding();
+        return;
     }
+
+    loadScene(nextSceneIndex);
 }
 
-function showChoices() {
+function getNextSceneId(scene) {
+    const next = scene.proximaCena ?? scene.proxima_cena ?? scene.nextScene ?? scene.proxima;
+    if (next === undefined || next === null || next === "") return null;
+    const numeric = Number(next);
+    return Number.isNaN(numeric) ? next : numeric;
+}
+
+function showScene8Choices() {
     currentState = "choice";
     const overlay = document.getElementById("choices-overlay");
     const container = document.getElementById("choices-container");
@@ -489,120 +345,144 @@ function showChoices() {
 
     scene8Choices.forEach((choice, index) => {
         const button = document.createElement("button");
+        button.className = "choice-button";
         button.type = "button";
-        button.className = "retro-btn choice-btn";
-        button.textContent = `${index + 1}. ${choice.label}`;
-        button.addEventListener("click", event => {
+        button.innerHTML = `<span class="choice-key">${index + 1}</span><span>${escapeHtml(choice.label)}</span>`;
+        button.onclick = event => {
             event.stopPropagation();
             chooseScene8(index);
-        });
+        };
         container.appendChild(button);
     });
 
     overlay.classList.add("active");
 }
 
-function chooseScene8(choiceIndex) {
-    const choice = scene8Choices[choiceIndex];
+function chooseScene8(index) {
+    const choice = scene8Choices[index];
     if (!choice) return;
 
     const targetIndex = findSceneIndex(choice.sceneId);
-    if (targetIndex !== -1) loadScene(targetIndex);
+    if (targetIndex === -1) {
+        showGameOver();
+        return;
+    }
+
+    loadScene(targetIndex);
 }
 
 function showGameOver() {
-    clearTypewriter();
     currentState = "gameover";
+    document.getElementById("choices-overlay").classList.remove("active");
     document.getElementById("gameover-overlay").classList.add("active");
 }
 
 function showEnding() {
-    clearTypewriter();
-    clearInterval(endingInterval);
     currentState = "ending";
+    document.getElementById("choices-overlay").classList.remove("active");
+    document.getElementById("ending-overlay").classList.add("active");
 
-    const overlay = document.getElementById("ending-overlay");
-    const textElement = document.getElementById("ending-text");
-    const actions = document.getElementById("ending-actions");
-    const endingText = "Onde existe um… existem outros.";
-
-    overlay.classList.add("active");
-    actions.style.display = "none";
-    textElement.textContent = "";
+    const endingText = document.getElementById("ending-text");
+    const finalMessage = "Onde existe um… existem outros.";
+    endingText.textContent = "";
 
     let index = 0;
+    clearInterval(endingInterval);
     endingInterval = setInterval(() => {
-        textElement.textContent = endingText.slice(0, ++index);
-        if (index >= endingText.length) {
-            clearInterval(endingInterval);
-            endingInterval = null;
-            actions.style.display = "block";
-        }
+        endingText.textContent += finalMessage.charAt(index++);
+        if (index >= finalMessage.length) clearInterval(endingInterval);
     }, 55);
 }
 
-function addToLog(type, character, text) {
-    sceneLog.push({ type, character, text });
+function startTypewriter(text, element, onComplete) {
+    clearTypewriter();
+    typewriterText = String(text ?? "");
+    typewriterIndex = 0;
+    isTyping = true;
+    currentOnComplete = onComplete;
+    element.textContent = "";
+
+    typewriterInterval = setInterval(() => {
+        element.textContent += typewriterText.charAt(typewriterIndex++);
+        if (typewriterIndex >= typewriterText.length) finishTypewriter();
+    }, 22);
+}
+
+function finishTypewriter() {
+    if (!isTyping) return;
+    clearInterval(typewriterInterval);
+    typewriterInterval = null;
+    dialogText.textContent = typewriterText;
+    isTyping = false;
+
+    const callback = currentOnComplete;
+    currentOnComplete = null;
+    if (typeof callback === "function") callback();
+}
+
+function clearTypewriter() {
+    clearInterval(typewriterInterval);
+    typewriterInterval = null;
+    isTyping = false;
+    currentOnComplete = null;
+}
+
+function addToLog(type, speaker, text) {
+    sceneLog.push({ type, speaker, text });
 }
 
 function openLogModal() {
-    const body = document.getElementById("log-body");
-    body.innerHTML = "";
+    const list = document.getElementById("log-list");
+    list.innerHTML = "";
 
     if (sceneLog.length === 0) {
-        body.innerHTML = '<p class="map-subtitle">Nenhum diálogo registrado nesta cena.</p>';
+        list.innerHTML = "<p>Nenhum registro nesta cena.</p>";
     } else {
         sceneLog.forEach(entry => {
-            const wrapper = document.createElement("div");
-            wrapper.className = `log-entry ${entry.type}`;
-
-            if (entry.type === "dialogue") {
-                const character = document.createElement("span");
-                character.className = "log-char";
-                character.textContent = `${entry.character}: `;
-                wrapper.appendChild(character);
-            }
-
-            const text = document.createElement("span");
-            text.className = "log-text";
-            text.textContent = entry.text;
-            wrapper.appendChild(text);
-            body.appendChild(wrapper);
+            const item = document.createElement("div");
+            item.className = `log-entry ${entry.type}`;
+            const title = entry.speaker || "Narrativa";
+            item.innerHTML = `<strong>${escapeHtml(title)}</strong><p>${escapeHtml(entry.text)}</p>`;
+            list.appendChild(item);
         });
     }
 
     document.getElementById("log-modal").classList.add("active");
 }
 
-function buildSceneMap() {
-    const grid = document.getElementById("scene-grid");
-    grid.innerHTML = "";
+function openMapModal() {
+    buildSceneMap();
+    document.getElementById("map-modal").classList.add("active");
+}
 
+function buildSceneMap() {
+    const map = document.getElementById("scene-map");
+    if (!map || !roteiro) return;
+
+    map.innerHTML = "";
     roteiro.cenas.forEach((scene, index) => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "scene-card";
-        button.dataset.sceneIndex = index;
-        button.textContent = `Cena ${scene.id} — ${scene.local}`;
-        button.addEventListener("click", () => {
-            loadScene(index);
+        button.className = "scene-map-item";
+        button.dataset.sceneId = scene.id;
+        button.innerHTML = `<span>${escapeHtml(String(scene.id))}</span><small>${escapeHtml(scene.local)}</small>`;
+        button.onclick = () => {
             document.getElementById("map-modal").classList.remove("active");
-        });
-        grid.appendChild(button);
+            loadScene(index);
+        };
+        map.appendChild(button);
     });
 
     updateSceneMapSelection();
 }
 
 function updateSceneMapSelection() {
-    document.querySelectorAll(".scene-card").forEach(card => {
-        card.classList.toggle("active", Number(card.dataset.sceneIndex) === currentSceneIndex);
-    });
-}
+    const scene = roteiro?.cenas?.[currentSceneIndex];
+    if (!scene) return;
 
-function openMapModal() {
-    updateSceneMapSelection();
-    document.getElementById("map-modal").classList.add("active");
+    document.querySelectorAll(".scene-map-item").forEach(item => {
+        item.classList.toggle("active", Number(item.dataset.sceneId) === Number(scene.id));
+    });
 }
 
 function escapeHtml(value) {
