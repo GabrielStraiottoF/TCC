@@ -1,145 +1,417 @@
 /*
- * Cenários provisórios do TCC — desenhados somente com CSS.
- * Cada cena corresponde ao local descrito em roteiro.json.
- * As artes finais podem substituir este arquivo sem alterar a lógica do jogo.
+ * SOBRENATURAL: O MAPINGUARI
+ * CENARIOS 100% CSS PURO
+ *
+ * Nenhum PNG, SVG, canvas ou imagem embutida e usado aqui.
+ * As cenas sao compostas por hard-stop gradients, formas geometricas
+ * em pseudo-elementos e pequenos blocos cromaticos para preservar
+ * uma leitura de pixel art sem depender de arquivos de imagem.
  */
 
-/* 1 — Rodoviária de Manacapuru: piso, iluminação fluorescente e estrutura do terminal. */
+#game-container {
+    background-color: #050706;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    image-rendering: pixelated;
+    overflow: hidden;
+}
+
+#game-container::before,
+#game-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ================================================================
+   1 — RODOVIARIA DE MANACAPURU
+   ================================================================ */
 #game-container[data-scene="1"] {
     background-image:
-        radial-gradient(circle at 16% 22%, rgba(255,225,148,.55) 0 3px, transparent 4px),
-        radial-gradient(circle at 47% 19%, rgba(255,225,148,.45) 0 3px, transparent 4px),
-        linear-gradient(180deg, rgba(239,220,171,.16) 0 42%, transparent 43%),
-        repeating-linear-gradient(90deg, transparent 0 72px, rgba(74,57,38,.32) 73px 78px, transparent 79px 150px),
-        linear-gradient(180deg, #6e654f 0%, #393329 48%, #211b17 49%, #100c0b 100%) !important;
-    background-size: auto, auto, auto, auto, auto;
+        radial-gradient(circle at 18% 19%, #f5d47a 0 3px, transparent 4px),
+        radial-gradient(circle at 49% 19%, #e8c86f 0 3px, transparent 4px),
+        radial-gradient(circle at 82% 19%, #d8b960 0 3px, transparent 4px),
+        repeating-linear-gradient(90deg, transparent 0 76px, #292a24 77px 84px, transparent 85px 150px),
+        linear-gradient(180deg, #5c5847 0 5%, #716b55 5% 43%, #34332d 44% 58%, #171512 59% 100%);
+}
+#game-container[data-scene="1"]::before {
+    background:
+        linear-gradient(90deg, transparent 0 7%, #26251f 7% 10%, transparent 10% 88%, #211f1b 88% 92%, transparent 92%),
+        linear-gradient(180deg, transparent 0 42%, rgba(0,0,0,.55) 43% 44%, transparent 45%),
+        repeating-linear-gradient(90deg, transparent 0 18%, rgba(198,177,116,.18) 18.2% 18.7%, transparent 19% 35%);
+    opacity: .9;
+}
+#game-container[data-scene="1"]::after {
+    background:
+        linear-gradient(176deg, transparent 0 77%, #27251f 78% 79%, transparent 80%),
+        radial-gradient(ellipse at 32% 91%, #0b0d09 0 8%, transparent 9%),
+        radial-gradient(ellipse at 71% 89%, #11130e 0 10%, transparent 11%);
+    opacity: .9;
 }
 
-/* 2 — Ônibus rumo à Ponte Phelippe Daou: janelas laterais e luzes internas. */
+/* ================================================================
+   2 — INTERIOR DO ONIBUS
+   ================================================================ */
 #game-container[data-scene="2"] {
     background-image:
-        radial-gradient(ellipse at 50% 22%, rgba(255,221,135,.28) 0 8%, transparent 28%),
-        repeating-linear-gradient(90deg, #161616 0 14%, transparent 14.2% 25%, #111 25.2% 27%),
-        linear-gradient(90deg, transparent 0 9%, rgba(64,105,83,.42) 9.2% 22%, transparent 22.5% 38%, rgba(53,93,77,.34) 38.5% 52%, transparent 52.5% 100%),
-        linear-gradient(180deg, #211c18 0 55%, #090909 56% 100%);
+        radial-gradient(ellipse at 50% 13%, #f4d879 0 2%, rgba(244,216,121,.3) 3% 11%, transparent 22%),
+        repeating-linear-gradient(90deg, #0b0c0c 0 11%, transparent 11.5% 22%, #090a09 22.5% 25%, transparent 25.5% 38%),
+        linear-gradient(90deg, #102522 0 9%, #1d4339 10% 21%, #07120f 22% 28%, #1b3d34 29% 40%, #07110e 41% 60%, #193a32 61% 72%, #06100d 73% 100%),
+        linear-gradient(180deg, #29251e 0 13%, #171613 14% 58%, #090a09 59% 100%);
+}
+#game-container[data-scene="2"]::before {
+    background:
+        linear-gradient(90deg, transparent 0 46%, #37322a 46.5% 53.5%, transparent 54%),
+        repeating-linear-gradient(90deg, transparent 0 9%, rgba(193,165,104,.22) 9.2% 10%, transparent 10.2% 19%),
+        linear-gradient(180deg, transparent 0 61%, rgba(0,0,0,.7) 62% 100%);
+}
+#game-container[data-scene="2"]::after {
+    background:
+        radial-gradient(ellipse at 50% 78%, rgba(72,96,73,.45) 0 8%, transparent 9%),
+        repeating-linear-gradient(0deg, transparent 0 15px, rgba(197,180,125,.08) 16px 18px, transparent 19px 32px);
+    opacity: .8;
 }
 
-/* 3 — Posto e píer à beira do rio: posto iluminado, margem e água. */
+/* ================================================================
+   3 — POSTO + PIER
+   ================================================================ */
 #game-container[data-scene="3"] {
     background-image:
-        radial-gradient(circle at 20% 25%, rgba(255,218,116,.65) 0 3%, transparent 4%),
-        linear-gradient(160deg, transparent 0 48%, rgba(5,20,22,.94) 49% 100%),
-        repeating-linear-gradient(175deg, transparent 0 18px, rgba(83,157,161,.20) 19px 21px, transparent 22px 38px),
-        linear-gradient(135deg, #46351d 0 25%, #1c2e2a 26% 48%, #0b3940 49% 72%, #06181d 73% 100%);
+        radial-gradient(circle at 18% 24%, #f4d176 0 4px, rgba(244,209,118,.35) 5px 24px, transparent 25px),
+        repeating-linear-gradient(175deg, transparent 0 18px, rgba(90,164,160,.3) 19px 21px, transparent 22px 39px),
+        linear-gradient(90deg, #5a4325 0 25%, #2e3828 26% 43%, #0d3438 44% 73%, #06191e 74% 100%),
+        linear-gradient(180deg, #19281d 0 43%, #3a2b1c 44% 52%, #0a3238 53% 100%);
+}
+#game-container[data-scene="3"]::before {
+    background:
+        linear-gradient(90deg, #4b3821 0 18%, transparent 18.5% 100%),
+        linear-gradient(180deg, transparent 0 45%, #6a4c29 46% 50%, transparent 51%),
+        linear-gradient(158deg, transparent 0 29%, #6b4b27 30% 33%, transparent 34%),
+        linear-gradient(90deg, transparent 0 10%, #81704a 10.5% 12%, transparent 12.5% 22%, #64583a 22.5% 24%, transparent 24.5%);
+    opacity: .95;
+}
+#game-container[data-scene="3"]::after {
+    background:
+        repeating-linear-gradient(175deg, transparent 0 26px, rgba(138,203,192,.18) 27px 29px, transparent 30px 52px),
+        radial-gradient(ellipse at 73% 55%, rgba(19,66,67,.6) 0 12%, transparent 13%);
 }
 
-/* 4 — Rio e floresta amazônica: rio largo, mata fechada e algo submerso. */
+/* ================================================================
+   4 — RIO E FLORESTA AMAZONICA
+   ================================================================ */
 #game-container[data-scene="4"] {
     background-image:
-        radial-gradient(ellipse at 58% 57%, rgba(41,116,119,.80) 0 9%, transparent 10%),
-        radial-gradient(ellipse at 58% 57%, rgba(9,34,37,.70) 0 2%, transparent 3%),
-        repeating-linear-gradient(170deg, transparent 0 16px, rgba(112,187,178,.18) 17px 20px, transparent 21px 38px),
-        linear-gradient(90deg, #071e13 0 22%, transparent 23% 77%, #071b12 78% 100%),
-        linear-gradient(180deg, #0c3025 0 43%, #0c4a50 44% 68%, #06272d 69% 100%);
+        radial-gradient(circle at 50% 38%, #a9d0bc 0 2px, rgba(169,208,188,.24) 3px 7px, transparent 8px),
+        repeating-linear-gradient(169deg, transparent 0 17px, rgba(107,183,165,.2) 18px 20px, transparent 21px 40px),
+        linear-gradient(90deg, #061b12 0 16%, #0b2819 17% 27%, transparent 28% 72%, #0a2416 73% 84%, #04170d 85% 100%),
+        linear-gradient(180deg, #0d3323 0 39%, #0e4c50 40% 69%, #05272e 70% 100%);
+}
+#game-container[data-scene="4"]::before {
+    background:
+        linear-gradient(83deg, transparent 0 14%, #0b2415 14.5% 18%, transparent 18.5% 82%, #091f13 82.5% 87%, transparent 87.5%),
+        radial-gradient(ellipse at 49% 65%, rgba(5,22,23,.75) 0 5%, transparent 6%),
+        repeating-linear-gradient(90deg, transparent 0 12%, rgba(42,100,59,.32) 12.5% 14%, transparent 14.5% 26%);
+}
+#game-container[data-scene="4"]::after {
+    background:
+        radial-gradient(ellipse at 50% 53%, rgba(68,140,139,.2) 0 10%, transparent 24%),
+        repeating-linear-gradient(170deg, transparent 0 28px, rgba(142,204,194,.12) 29px 31px, transparent 32px 61px);
 }
 
-/* 5 — Margem do rio e início da mata: água atrás, barranco e entrada da floresta. */
+/* ================================================================
+   5 — MARGEM DO RIO / ENTRADA DA MATA
+   ================================================================ */
 #game-container[data-scene="5"] {
     background-image:
-        radial-gradient(ellipse at 78% 36%, rgba(94,167,137,.32) 0 9%, transparent 30%),
-        repeating-linear-gradient(105deg, transparent 0 34px, rgba(35,89,44,.46) 35px 44px, transparent 45px 76px),
-        linear-gradient(150deg, transparent 0 46%, #4d3925 47% 52%, #172a18 53% 100%),
-        linear-gradient(180deg, #16484c 0 43%, #0c3130 44% 50%, #183a1b 51% 100%);
+        repeating-linear-gradient(176deg, transparent 0 20px, rgba(106,178,166,.25) 21px 23px, transparent 24px 43px),
+        radial-gradient(ellipse at 80% 33%, rgba(87,157,111,.35) 0 8%, transparent 27%),
+        linear-gradient(153deg, transparent 0 43%, #574127 44% 51%, #172b18 52% 100%),
+        linear-gradient(180deg, #15474b 0 40%, #0c3032 41% 48%, #193c1e 49% 100%);
+}
+#game-container[data-scene="5"]::before {
+    background:
+        repeating-linear-gradient(105deg, transparent 0 38px, rgba(37,91,43,.58) 39px 47px, transparent 48px 82px),
+        linear-gradient(147deg, transparent 0 50%, #3b2b1b 51% 54%, transparent 55%),
+        radial-gradient(ellipse at 52% 76%, rgba(8,18,10,.75) 0 5%, transparent 6%);
+}
+#game-container[data-scene="5"]::after {
+    background:
+        linear-gradient(125deg, transparent 0 52%, rgba(111,76,42,.55) 53% 54%, transparent 55%),
+        linear-gradient(67deg, transparent 0 67%, rgba(48,104,47,.7) 68% 70%, transparent 71%),
+        radial-gradient(ellipse at 48% 67%, rgba(16,14,9,.7) 0 4%, transparent 5%);
 }
 
-/* 6 — Clareira destruída: árvores quebradas, terra exposta e rastros enormes. */
+/* ================================================================
+   6 — CLAREIRA DESTRUIDA
+   ================================================================ */
 #game-container[data-scene="6"] {
     background-image:
-        radial-gradient(ellipse at 52% 62%, rgba(151,103,52,.70) 0 13%, transparent 14%),
-        radial-gradient(ellipse at 50% 63%, rgba(30,20,12,.70) 0 5%, transparent 6%),
-        repeating-linear-gradient(78deg, transparent 0 65px, rgba(91,61,37,.62) 66px 73px, transparent 74px 130px),
-        linear-gradient(180deg, #29451f 0 48%, #172515 49% 57%, #47331f 58% 100%);
+        radial-gradient(ellipse at 51% 64%, #9b6938 0 10%, rgba(74,47,25,.75) 11% 18%, transparent 19%),
+        repeating-linear-gradient(79deg, transparent 0 62px, rgba(94,63,37,.72) 63px 71px, transparent 72px 126px),
+        linear-gradient(180deg, #2c4a20 0 43%, #172716 44% 56%, #4a3520 57% 100%);
+}
+#game-container[data-scene="6"]::before {
+    background:
+        linear-gradient(76deg, transparent 0 21%, #302317 21.5% 25%, transparent 25.5%),
+        linear-gradient(103deg, transparent 0 69%, #382718 69.5% 73%, transparent 73.5%),
+        radial-gradient(ellipse at 50% 65%, rgba(19,12,8,.82) 0 4%, transparent 5%);
+}
+#game-container[data-scene="6"]::after {
+    background:
+        linear-gradient(154deg, rgba(233,209,143,.22) 0 2%, transparent 3% 100%),
+        repeating-linear-gradient(90deg, transparent 0 17%, rgba(49,92,36,.35) 17.5% 19%, transparent 19.5% 32%);
 }
 
-/* 7 — Floresta durante a perseguição: vegetação passando rapidamente e foco vermelho. */
+/* ================================================================
+   7 — FLORESTA / PERSEGUICAO
+   ================================================================ */
 #game-container[data-scene="7"] {
     background-image:
-        radial-gradient(ellipse at 68% 52%, rgba(169,48,34,.38) 0 7%, transparent 22%),
-        repeating-linear-gradient(112deg, transparent 0 30px, rgba(77,135,53,.48) 31px 39px, transparent 40px 72px),
-        linear-gradient(102deg, transparent 0 20%, rgba(8,35,10,.84) 21% 28%, transparent 29% 52%, rgba(8,35,10,.78) 53% 61%, transparent 62%),
-        linear-gradient(180deg, #163e19 0%, #0b2910 48%, #020a04 100%);
+        radial-gradient(ellipse at 70% 51%, rgba(170,48,35,.42) 0 5%, transparent 20%),
+        repeating-linear-gradient(112deg, transparent 0 27px, rgba(72,129,49,.58) 28px 37px, transparent 38px 69px),
+        linear-gradient(102deg, transparent 0 18%, #09280d 19% 27%, transparent 28% 52%, #071f0b 53% 62%, transparent 63%),
+        linear-gradient(180deg, #173f1a 0 43%, #0b2810 44% 65%, #020a04 66% 100%);
+}
+#game-container[data-scene="7"]::before {
+    background:
+        linear-gradient(105deg, transparent 0 49%, rgba(0,0,0,.7) 50% 57%, transparent 58%),
+        radial-gradient(circle at 68% 47%, #bd3a2b 0 3px, transparent 4px),
+        radial-gradient(circle at 74% 47%, #bd3a2b 0 3px, transparent 4px);
+    animation: mapinguari-glint 2.8s steps(2,end) infinite;
+}
+#game-container[data-scene="7"]::after {
+    background: repeating-linear-gradient(102deg, transparent 0 46px, rgba(8,13,8,.68) 47px 58px, transparent 59px 96px);
+    animation: forest-drift 5s linear infinite;
 }
 
-/* 8 — Acampamento abandonado: barracas, vegetação e vestígio de fogueira. */
+/* ================================================================
+   8 — ACAMPAMENTO ABANDONADO
+   ================================================================ */
 #game-container[data-scene="8"] {
     background-image:
-        radial-gradient(circle at 51% 61%, rgba(255,183,71,.75) 0 2%, rgba(190,85,27,.36) 3% 8%, transparent 18%),
-        linear-gradient(150deg, transparent 0 51%, rgba(72,62,42,.85) 52% 58%, transparent 59%),
-        linear-gradient(28deg, transparent 0 57%, rgba(119,105,71,.55) 58% 66%, transparent 67%),
-        repeating-linear-gradient(90deg, transparent 0 86px, rgba(47,78,37,.58) 87px 98px, transparent 99px 158px),
-        linear-gradient(180deg, #26371d 0 48%, #182315 49% 100%);
+        radial-gradient(circle at 51% 61%, #ffc45d 0 2%, #b94c1f 3% 7%, rgba(95,31,15,.4) 8% 13%, transparent 20%),
+        linear-gradient(150deg, transparent 0 49%, rgba(101,88,58,.88) 50% 57%, transparent 58%),
+        linear-gradient(27deg, transparent 0 55%, rgba(128,112,73,.58) 56% 64%, transparent 65%),
+        repeating-linear-gradient(90deg, transparent 0 84px, rgba(47,78,37,.62) 85px 98px, transparent 99px 158px),
+        linear-gradient(180deg, #283b20 0 46%, #172516 47% 100%);
+}
+#game-container[data-scene="8"]::before {
+    background:
+        linear-gradient(151deg, transparent 0 44%, #776445 44.5% 46%, transparent 46.5%),
+        linear-gradient(29deg, transparent 0 53%, #8e7950 53.5% 55%, transparent 55.5%),
+        radial-gradient(ellipse at 31% 74%, rgba(25,23,17,.85) 0 7%, transparent 8%),
+        radial-gradient(ellipse at 68% 78%, rgba(22,18,12,.7) 0 5%, transparent 6%);
+}
+#game-container[data-scene="8"]::after {
+    background:
+        radial-gradient(ellipse at 50% 49%, rgba(0,0,0,.35) 0 10%, transparent 24%),
+        repeating-linear-gradient(113deg, transparent 0 40px, rgba(29,69,29,.38) 41px 47px, transparent 48px 90px);
+    animation: camp-breath 4s ease-in-out infinite;
 }
 
-/* 9 — Final 1: armadilha de espinhos e explosão improvisada. */
+/* ================================================================
+   9 — ARMADILHA + EXPLOSAO
+   ================================================================ */
 #game-container[data-scene="9"] {
     background-image:
-        radial-gradient(circle at 51% 54%, rgba(255,198,81,.90) 0 3%, rgba(219,76,24,.70) 4% 9%, transparent 19%),
-        radial-gradient(circle at 51% 54%, rgba(255,237,164,.65) 0 1%, transparent 2%),
-        repeating-linear-gradient(112deg, transparent 0 26px, rgba(62,125,48,.68) 27px 34px, transparent 35px 62px),
-        linear-gradient(180deg, #28551b 0 50%, #112a0b 51% 100%);
+        radial-gradient(circle at 51% 54%, #fff0a1 0 1.5%, #ffc84c 2% 4%, #df5c22 5% 9%, transparent 19%),
+        radial-gradient(circle at 47% 50%, rgba(255,236,158,.7) 0 1%, transparent 2%),
+        repeating-linear-gradient(112deg, transparent 0 24px, rgba(64,126,49,.7) 25px 33px, transparent 34px 60px),
+        linear-gradient(180deg, #28571c 0 48%, #112c0c 49% 100%);
+}
+#game-container[data-scene="9"]::before {
+    background:
+        linear-gradient(12deg, transparent 0 45%, rgba(171,130,65,.75) 45.5% 47%, transparent 47.5%),
+        linear-gradient(174deg, transparent 0 54%, rgba(171,130,65,.75) 54.5% 56%, transparent 56.5%),
+        radial-gradient(ellipse at 52% 54%, rgba(31,19,12,.7) 0 9%, transparent 20%);
+    animation: explosion-pulse 1.2s steps(2,end) infinite;
+}
+#game-container[data-scene="9"]::after {
+    background: repeating-linear-gradient(112deg, transparent 0 50px, rgba(218,207,135,.18) 51px 55px, transparent 56px 104px);
+    animation: forest-drift 2.8s linear infinite reverse;
 }
 
-/* 10 — Final 2: confronto direto e tiro no ponto fraco. */
+/* ================================================================
+   10 — CONFRONTO DIRETO
+   ================================================================ */
 #game-container[data-scene="10"] {
     background-image:
-        radial-gradient(circle at 50% 49%, rgba(255,222,116,.96) 0 2%, rgba(210,67,38,.72) 3% 7%, transparent 18%),
-        radial-gradient(ellipse at 50% 52%, rgba(107,25,18,.52) 0 10%, transparent 28%),
-        repeating-linear-gradient(108deg, transparent 0 38px, rgba(48,104,40,.56) 39px 48px, transparent 49px 88px),
-        linear-gradient(180deg, #1e4818 0 44%, #092109 45% 100%);
+        radial-gradient(circle at 50% 48%, #fff1a0 0 1.5%, #ffd65d 2% 4%, #c73c27 5% 9%, transparent 18%),
+        radial-gradient(ellipse at 50% 52%, rgba(106,26,18,.65) 0 10%, transparent 28%),
+        repeating-linear-gradient(108deg, transparent 0 36px, rgba(49,108,42,.62) 37px 47px, transparent 48px 87px),
+        linear-gradient(180deg, #204c19 0 43%, #092309 44% 100%);
+}
+#game-container[data-scene="10"]::before {
+    background:
+        linear-gradient(90deg, transparent 0 43%, rgba(32,19,14,.86) 44% 57%, transparent 58%),
+        radial-gradient(ellipse at 50% 39%, rgba(90,54,29,.9) 0 8%, transparent 9%),
+        radial-gradient(circle at 48% 38%, #d9b25e 0 3px, transparent 4px),
+        radial-gradient(circle at 53% 38%, #d9b25e 0 3px, transparent 4px);
+    animation: creature-pulse 3.4s steps(2,end) infinite;
+}
+#game-container[data-scene="10"]::after {
+    background:
+        linear-gradient(90deg, transparent 0 42%, #5a3a21 43% 46%, transparent 47% 54%, #5a3a21 55% 58%, transparent 59%),
+        repeating-linear-gradient(90deg, transparent 0 12%, rgba(22,54,21,.35) 12.5% 14%, transparent 14.5% 25%);
 }
 
-/* 11 — Final 3: armadilha de cordas rompida e avanço da criatura. */
+/* ================================================================
+   11 — ARMADILHA DE CORDAS ROMPIDA
+   ================================================================ */
 #game-container[data-scene="11"] {
     background-image:
-        radial-gradient(ellipse at 55% 52%, rgba(167,39,34,.58) 0 9%, transparent 25%),
-        repeating-linear-gradient(22deg, transparent 0 88px, rgba(177,143,91,.46) 89px 93px, transparent 94px 160px),
-        repeating-linear-gradient(115deg, transparent 0 44px, rgba(45,91,38,.52) 45px 55px, transparent 56px 100px),
-        linear-gradient(180deg, #173914 0 45%, #061707 46% 100%);
+        radial-gradient(ellipse at 55% 52%, rgba(167,39,34,.58) 0 8%, transparent 24%),
+        repeating-linear-gradient(22deg, transparent 0 86px, rgba(181,147,94,.5) 87px 91px, transparent 92px 156px),
+        repeating-linear-gradient(115deg, transparent 0 42px, rgba(47,96,39,.58) 43px 53px, transparent 54px 97px),
+        linear-gradient(180deg, #193c15 0 45%, #061806 46% 100%);
+}
+#game-container[data-scene="11"]::before {
+    background:
+        linear-gradient(28deg, transparent 0 48%, #a58351 48.5% 50%, transparent 50.5%),
+        linear-gradient(154deg, transparent 0 50%, #a58351 50.5% 52%, transparent 52.5%),
+        linear-gradient(92deg, transparent 0 49%, rgba(15,12,9,.85) 50% 59%, transparent 60%);
+}
+#game-container[data-scene="11"]::after {
+    background:
+        radial-gradient(circle at 54% 43%, #8e2e25 0 3px, transparent 4px),
+        radial-gradient(circle at 60% 43%, #8e2e25 0 3px, transparent 4px),
+        repeating-linear-gradient(112deg, transparent 0 57px, rgba(7,22,8,.7) 58px 69px, transparent 70px 115px);
+    animation: mapinguari-glint 3s steps(2,end) infinite;
 }
 
-/* 12 — Pós-vitória: floresta silenciosa, abertura de luz e corpo da criatura ao centro. */
+/* ================================================================
+   12 — POS-VITORIA / AMANHECER
+   ================================================================ */
 #game-container[data-scene="12"] {
     background-image:
-        radial-gradient(ellipse at 50% 40%, rgba(255,211,112,.55) 0 9%, transparent 31%),
-        radial-gradient(ellipse at 50% 67%, rgba(23,19,13,.74) 0 8%, transparent 20%),
-        repeating-linear-gradient(110deg, transparent 0 52px, rgba(64,119,49,.48) 53px 64px, transparent 65px 116px),
-        linear-gradient(180deg, #315727 0 48%, #183316 49% 100%);
+        radial-gradient(ellipse at 50% 35%, #ffd87d 0 7%, rgba(255,216,125,.36) 8% 20%, transparent 31%),
+        radial-gradient(ellipse at 50% 69%, rgba(28,21,13,.78) 0 7%, transparent 20%),
+        repeating-linear-gradient(110deg, transparent 0 51px, rgba(69,123,51,.5) 52px 63px, transparent 64px 114px),
+        linear-gradient(180deg, #3a5f2d 0 47%, #1b3819 48% 100%);
+}
+#game-container[data-scene="12"]::before {
+    background:
+        linear-gradient(80deg, transparent 0 46%, rgba(230,207,139,.18) 47% 49%, transparent 50%),
+        linear-gradient(100deg, transparent 0 50%, rgba(230,207,139,.15) 51% 53%, transparent 54%),
+        radial-gradient(ellipse at 50% 67%, rgba(8,11,8,.72) 0 8%, transparent 18%);
+}
+#game-container[data-scene="12"]::after {
+    background: repeating-linear-gradient(90deg, transparent 0 96px, rgba(31,67,28,.32) 97px 108px, transparent 109px 168px);
+    animation: dawn-breathe 6s ease-in-out infinite;
 }
 
-/* 13 — Oficina de beira de estrada: galpão, luz industrial e chão de oficina. */
+/* ================================================================
+   13 — OFICINA DE BEIRA DE ESTRADA
+   ================================================================ */
 #game-container[data-scene="13"] {
     background-image:
-        radial-gradient(ellipse at 68% 25%, rgba(255,218,126,.78) 0 6%, transparent 18%),
-        repeating-linear-gradient(90deg, transparent 0 80px, rgba(117,117,117,.32) 81px 88px, transparent 89px 160px),
-        linear-gradient(180deg, #55514a 0 52%, #292722 53% 70%, #11100e 71% 100%);
+        radial-gradient(ellipse at 68% 24%, #ffe08b 0 5%, rgba(255,224,139,.34) 6% 16%, transparent 23%),
+        repeating-linear-gradient(90deg, transparent 0 77px, rgba(124,123,113,.36) 78px 86px, transparent 87px 158px),
+        linear-gradient(180deg, #5b574f 0 50%, #302d28 51% 70%, #12110f 71% 100%);
+}
+#game-container[data-scene="13"]::before {
+    background:
+        linear-gradient(180deg, transparent 0 49%, #181714 50% 52%, transparent 53%),
+        radial-gradient(ellipse at 25% 72%, #161411 0 8%, transparent 9%),
+        radial-gradient(ellipse at 78% 78%, #25231e 0 9%, transparent 10%),
+        linear-gradient(90deg, transparent 0 64%, #25221d 65% 70%, transparent 71%);
+}
+#game-container[data-scene="13"]::after {
+    background:
+        repeating-linear-gradient(90deg, transparent 0 13%, rgba(213,191,133,.13) 13.5% 14%, transparent 14.5% 27%),
+        radial-gradient(circle at 28% 71%, #5c4b2c 0 3px, transparent 4px),
+        radial-gradient(circle at 79% 73%, #65512f 0 3px, transparent 4px);
 }
 
-/* 14 — Estrada ao pôr do sol: asfalto, horizonte, árvores e sol baixo. */
+/* ================================================================
+   14 — ESTRADA AO POR-DO-SOL
+   ================================================================ */
 #game-container[data-scene="14"] {
     background-image:
-        radial-gradient(circle at 75% 28%, rgba(255,222,133,.98) 0 5%, rgba(246,142,60,.62) 6% 13%, transparent 26%),
-        linear-gradient(170deg, transparent 0 57%, #15100c 58% 100%),
-        linear-gradient(86deg, transparent 0 12%, rgba(45,62,29,.78) 13% 23%, transparent 24% 39%, rgba(45,62,29,.70) 40% 52%, transparent 53%),
-        linear-gradient(180deg, #d87945 0%, #a8492b 39%, #51301d 58%, #15100c 100%);
+        radial-gradient(circle at 75% 27%, #ffe48a 0 5%, rgba(244,142,60,.62) 6% 13%, transparent 26%),
+        linear-gradient(170deg, transparent 0 57%, #16110d 58% 100%),
+        linear-gradient(86deg, transparent 0 12%, rgba(45,63,29,.8) 13% 23%, transparent 24% 39%, rgba(45,63,29,.72) 40% 52%, transparent 53%),
+        linear-gradient(180deg, #d97a46 0%, #a94b2c 39%, #56311d 58%, #15100c 100%);
+}
+#game-container[data-scene="14"]::before {
+    background:
+        linear-gradient(164deg, transparent 0 56%, #2a2119 56.5% 58%, transparent 58.5%),
+        linear-gradient(16deg, transparent 0 56%, #2a2119 56.5% 58%, transparent 58.5%),
+        repeating-linear-gradient(90deg, transparent 0 74px, rgba(26,41,20,.6) 75px 90px, transparent 91px 145px);
+}
+#game-container[data-scene="14"]::after {
+    background:
+        radial-gradient(circle at 51% 51%, rgba(10,8,6,.75) 0 2px, transparent 3px),
+        linear-gradient(90deg, transparent 0 49%, rgba(0,0,0,.55) 50% 51%, transparent 52%),
+        linear-gradient(180deg, transparent 0 78%, rgba(0,0,0,.3) 79% 100%);
+    animation: road-pulse 7s ease-in-out infinite;
 }
 
-/* Evita que a camada escura deixe os cenários completamente apagados. */
+/* ================================================================
+   ANIMACOES — CSS PURO, SEM JS EXTRA
+   ================================================================ */
+@keyframes forest-drift {
+    from { transform: translateX(-8px); }
+    to { transform: translateX(8px); }
+}
+
+@keyframes mapinguari-glint {
+    0%, 72% { opacity: .15; }
+    74%, 80% { opacity: .85; }
+    82%, 100% { opacity: .18; }
+}
+
+@keyframes camp-breath {
+    0%, 100% { opacity: .55; transform: scale(1); }
+    50% { opacity: .9; transform: scale(1.012); }
+}
+
+@keyframes explosion-pulse {
+    0%, 100% { transform: scale(1); opacity: .65; }
+    35% { transform: scale(1.025); opacity: 1; }
+    55% { transform: scale(.99); opacity: .72; }
+}
+
+@keyframes creature-pulse {
+    0%, 72% { opacity: .55; }
+    74%, 82% { opacity: .95; }
+    84%, 100% { opacity: .65; }
+}
+
+@keyframes dawn-breathe {
+    0%, 100% { opacity: .45; transform: translateY(0); }
+    50% { opacity: .7; transform: translateY(-5px); }
+}
+
+@keyframes road-pulse {
+    0%, 100% { opacity: .45; }
+    50% { opacity: .7; }
+}
+
+/*
+ * A camada de leitura permanece escura, mas deixa as cores da arte
+ * visiveis para que os detalhes CSS nao desaparecam atras do dialogo.
+ */
 #game-container .background-overlay {
-    background: radial-gradient(circle at center, rgba(10,8,7,.12) 0%, rgba(0,0,0,.56) 100%);
+    background:
+        radial-gradient(circle at center, rgba(7,8,6,.06) 0%, rgba(0,0,0,.46) 100%);
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #game-container::before,
+    #game-container::after {
+        animation: none !important;
+        transform: none !important;
+    }
 }
 
 @media (max-width: 560px) {
     #game-container .background-overlay {
-        background: radial-gradient(circle at center, rgba(10,8,7,.10) 0%, rgba(0,0,0,.48) 100%);
+        background:
+            radial-gradient(circle at center, rgba(7,8,6,.04) 0%, rgba(0,0,0,.38) 100%);
     }
 }
