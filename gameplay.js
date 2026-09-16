@@ -13,6 +13,10 @@
     const speed = 22;
     const playerRadius = 2.2;
 
+    // Estado de exploração. As decisões da cena 8 acontecem ao encontrar
+    // elementos no cenário, e não por meio de um menu de escolhas.
+    const discoveredItems = new Set();
+
     // Cenário de teste temporário compartilhado por todas as cenas.
     // Os valores são percentuais da área jogável (0-100).
     const testScene = {
@@ -44,25 +48,27 @@
         Array.from({ length: 14 }, (_, index) => [index + 1, testScene])
     );
 
+    // Os pontos representam elementos encontrados no mundo, não opções de menu.
+    // Na cena 8, a decisão é tomada pela ação do jogador sobre o elemento.
     const scenePoints = {
-        1: [{ x: 88, y: 72, label: "Entrada", action: "advance" }],
-        2: [{ x: 50, y: 55, label: "Corredor do ônibus", action: "advance" }],
-        3: [{ x: 76, y: 62, label: "Pier", action: "advance" }],
-        4: [{ x: 55, y: 68, label: "Margem do rio", action: "advance" }],
-        5: [{ x: 72, y: 70, label: "Entrada da mata", action: "advance" }],
-        6: [{ x: 50, y: 62, label: "Clareira", action: "advance" }],
-        7: [{ x: 70, y: 55, label: "Rastro", action: "advance" }],
+        1: [{ x: 88, y: 72, label: "Investigar", action: "advance" }],
+        2: [{ x: 50, y: 55, label: "Investigar", action: "advance" }],
+        3: [{ x: 76, y: 62, label: "Investigar", action: "advance" }],
+        4: [{ x: 55, y: 68, label: "Investigar", action: "advance" }],
+        5: [{ x: 72, y: 70, label: "Investigar", action: "advance" }],
+        6: [{ x: 50, y: 62, label: "Investigar", action: "advance" }],
+        7: [{ x: 70, y: 55, label: "Investigar", action: "advance" }],
         8: [
-            { x: 25, y: 58, label: "Armadilha e granada", action: "choice", index: 0 },
-            { x: 50, y: 58, label: "Arma", action: "choice", index: 1 },
-            { x: 75, y: 58, label: "Cordas", action: "choice", index: 2 }
+            { x: 25, y: 58, label: "Examinar o chão", action: "discovery", item: "grenade", index: 0 },
+            { x: 50, y: 58, label: "Examinar o equipamento", action: "discovery", item: "weapon", index: 1 },
+            { x: 75, y: 58, label: "Examinar as cordas", action: "discovery", item: "rope", index: 2 }
         ],
-        9: [{ x: 52, y: 55, label: "Local da explosão", action: "advance" }],
-        10: [{ x: 58, y: 57, label: "Ponto fraco", action: "advance" }],
-        11: [{ x: 48, y: 60, label: "Armadilha", action: "advance" }],
-        12: [{ x: 68, y: 64, label: "Trilha", action: "advance" }],
-        13: [{ x: 58, y: 65, label: "Estrada", action: "advance" }],
-        14: [{ x: 52, y: 62, label: "Opala", action: "advance" }]
+        9: [{ x: 52, y: 55, label: "Investigar", action: "advance" }],
+        10: [{ x: 58, y: 57, label: "Investigar", action: "advance" }],
+        11: [{ x: 48, y: 60, label: "Investigar", action: "advance" }],
+        12: [{ x: 68, y: 64, label: "Investigar", action: "advance" }],
+        13: [{ x: 58, y: 65, label: "Investigar", action: "advance" }],
+        14: [{ x: 52, y: 62, label: "Investigar", action: "advance" }]
     };
 
     function boot() {
@@ -89,7 +95,9 @@
         const choicesOverlay = document.getElementById("choices-overlay");
         if (choicesOverlay) {
             new MutationObserver(() => {
-                if (currentScene === 8 && choicesOverlay.classList.contains("active")) {
+                // O menu antigo fica desativado. A cena 8 agora é resolvida
+                // exclusivamente por exploração e interação no cenário.
+                if (choicesOverlay.classList.contains("active")) {
                     choicesOverlay.classList.remove("active");
                     updatePrompt();
                 }
@@ -161,12 +169,10 @@
         const nextX = x + (dx / length) * speed * dt;
         const nextY = y + (dy / length) * speed * dt;
 
-        // Teste simples de colisão AABB: o personagem não atravessa as caixas.
         if (!collides(nextX, nextY)) {
             x = Math.max(7, Math.min(93, nextX));
             y = Math.max(18, Math.min(82, nextY));
         } else {
-            // Permite deslizar pela lateral de um obstáculo.
             if (!collides(nextX, y)) x = Math.max(7, Math.min(93, nextX));
             if (!collides(x, nextY)) y = Math.max(18, Math.min(82, nextY));
         }
@@ -242,13 +248,16 @@
         layer.querySelectorAll(".interaction-point").forEach(point => point.remove());
 
         (scenePoints[currentScene] || []).forEach((point, index) => {
+            if (point.action === "discovery" && discoveredItems.has(point.item)) return;
+
             const button = document.createElement("button");
             button.type = "button";
-            button.className = "interaction-point";
+            button.className = `interaction-point ${point.action === "discovery" ? "discovery-point" : "advance-point"}`;
             button.dataset.index = String(index);
             button.style.left = `${point.x}%`;
             button.style.top = `${point.y}%`;
-            button.innerHTML = `<span class="interaction-icon">◆</span><span>${escapeHtml(point.label)}</span>`;
+            button.innerHTML = `<span class="interaction-icon">${point.action === "discovery" ? "◆" : "•"}</span>`;
+            button.setAttribute("aria-label", point.label);
             layer.appendChild(button);
         });
 
@@ -266,6 +275,8 @@
         let distance = Infinity;
 
         (scenePoints[currentScene] || []).forEach((point, index) => {
+            if (point.action === "discovery" && discoveredItems.has(point.item)) return;
+
             const currentDistance = Math.hypot(x - point.x, y - point.y);
             if (currentDistance < distance) {
                 distance = currentDistance;
@@ -286,7 +297,7 @@
         }
 
         prompt.hidden = false;
-        prompt.textContent = `E — ${nearest.point.label}`;
+        prompt.textContent = `E — ${nearest.point.action === "discovery" ? "Examinar" : "Investigar"}`;
     }
 
     function interactNearest() {
@@ -298,23 +309,21 @@
         const point = (scenePoints[currentScene] || [])[index];
         if (!point) return;
 
-        if (point.action === "choice" && typeof window.chooseScene8 === "function") {
-            window.chooseScene8(point.index);
+        if (point.action === "discovery") {
+            discoveredItems.add(point.item);
+            createScenePoints();
+
+            // A decisão é tomada pela descoberta/interação do objeto no mundo.
+            // Nenhuma opção de escolha é apresentada ao jogador.
+            if (currentScene === 8 && typeof window.chooseScene8 === "function") {
+                window.chooseScene8(point.index);
+            }
             return;
         }
 
         if (point.action === "advance" && typeof window.advanceScene === "function") {
             window.advanceScene();
         }
-    }
-
-    function escapeHtml(value) {
-        return String(value ?? "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
     }
 
     window.addEventListener("beforeunload", () => {
