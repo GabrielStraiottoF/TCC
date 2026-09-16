@@ -13,33 +13,36 @@
     const speed = 22;
     const playerRadius = 2.2;
 
-    // Mapa de teste da cena 1.
+    // Cenário de teste temporário compartilhado por todas as cenas.
     // Os valores são percentuais da área jogável (0-100).
-    const sceneGameplay = {
-        1: {
-            testMap: true,
-            collisions: [
-                { x: 8, y: 12, width: 17, height: 22, label: "Árvores" },
-                { x: 34, y: 8, width: 32, height: 12, label: "Casa" },
-                { x: 74, y: 14, width: 17, height: 24, label: "Árvores" },
-                { x: 7, y: 44, width: 25, height: 12, label: "Rio" },
-                { x: 43, y: 44, width: 13, height: 10, label: "Pedras" },
-                { x: 69, y: 45, width: 23, height: 11, label: "Vegetação" },
-                { x: 22, y: 68, width: 12, height: 8, label: "Tronco" },
-                { x: 66, y: 68, width: 14, height: 8, label: "Pedras" }
-            ],
-            decorations: [
-                { type: "trees", x: 8, y: 12, width: 17, height: 22 },
-                { type: "house", x: 34, y: 8, width: 32, height: 12 },
-                { type: "trees", x: 74, y: 14, width: 17, height: 24 },
-                { type: "river", x: 7, y: 44, width: 25, height: 12 },
-                { type: "rocks", x: 43, y: 44, width: 13, height: 10 },
-                { type: "bushes", x: 69, y: 45, width: 23, height: 11 },
-                { type: "log", x: 22, y: 68, width: 12, height: 8 },
-                { type: "rocks", x: 66, y: 68, width: 14, height: 8 }
-            ]
-        }
+    const testScene = {
+        testMap: true,
+        collisions: [
+            { x: 8, y: 12, width: 17, height: 22, label: "Árvores" },
+            { x: 34, y: 8, width: 32, height: 12, label: "Casa" },
+            { x: 74, y: 14, width: 17, height: 24, label: "Árvores" },
+            { x: 7, y: 44, width: 25, height: 12, label: "Rio" },
+            { x: 43, y: 44, width: 13, height: 10, label: "Pedras" },
+            { x: 69, y: 45, width: 23, height: 11, label: "Vegetação" },
+            { x: 22, y: 68, width: 12, height: 8, label: "Tronco" },
+            { x: 66, y: 68, width: 14, height: 8, label: "Pedras" }
+        ],
+        decorations: [
+            { type: "trees", x: 8, y: 12, width: 17, height: 22 },
+            { type: "house", x: 34, y: 8, width: 32, height: 12 },
+            { type: "trees", x: 74, y: 14, width: 17, height: 24 },
+            { type: "river", x: 7, y: 44, width: 25, height: 12 },
+            { type: "rocks", x: 43, y: 44, width: 13, height: 10 },
+            { type: "bushes", x: 69, y: 45, width: 23, height: 11 },
+            { type: "log", x: 22, y: 68, width: 12, height: 8 },
+            { type: "rocks", x: 66, y: 68, width: 14, height: 8 }
+        ]
     };
+
+    // Durante o teste, todas as cenas usam temporariamente o mesmo cenário.
+    const sceneGameplay = Object.fromEntries(
+        Array.from({ length: 14 }, (_, index) => [index + 1, testScene])
+    );
 
     const scenePoints = {
         1: [{ x: 88, y: 72, label: "Entrada", action: "advance" }],
