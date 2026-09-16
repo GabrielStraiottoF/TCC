@@ -32,30 +32,30 @@
     animation: scene-enter .55s steps(5, end);
 }
 
-#game-container.scene-7 #pixel-art-canvas,
-#game-container.scene-9 #pixel-art-canvas,
-#game-container.scene-10 #pixel-art-canvas,
-#game-container.scene-11 #pixel-art-canvas {
+#game-container.scene-chase #pixel-art-canvas,
+#game-container.scene-explosion #pixel-art-canvas,
+#game-container.scene-confrontation #pixel-art-canvas,
+#game-container.scene-trap #pixel-art-canvas {
     transform: scale(1.05);
 }
 
-#game-container.scene-7 .background-overlay {
+#game-container.scene-chase .background-overlay {
     animation: danger-pulse 1.2s steps(4, end) infinite;
 }
 
-#game-container.scene-9 .background-overlay {
+#game-container.scene-explosion .background-overlay {
     animation: explosion-flash 1.05s steps(8, end);
 }
 
-#game-container.scene-10 .background-overlay {
+#game-container.scene-confrontation .background-overlay {
     animation: muzzle-flash 1.1s steps(8, end);
 }
 
-#game-container.scene-11 #pixel-art-canvas {
+#game-container.scene-trap #pixel-art-canvas {
     animation: creature-lurch 1.6s steps(5, end) infinite;
 }
 
-#game-container.scene-14 #pixel-art-canvas {
+#game-container.scene-sunset #pixel-art-canvas {
     transform: scale(1.025);
     animation: ending-pan 12s linear infinite alternate;
 }
@@ -69,6 +69,8 @@
 }
 
 .dialog-box:hover .portrait-container { transform: translateY(-1px); }
+
+.action-pop { animation: action-pop .16s steps(3, end); }
 
 @keyframes scene-enter {
     0% { opacity: .2; transform: scale(1.08); filter: brightness(1.45) contrast(.9); }
@@ -110,11 +112,17 @@
     100% { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes action-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(.98); }
+    100% { transform: scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
     #pixel-art-canvas,
-    #game-container.scene-7 .background-overlay,
-    #game-container.scene-11 #pixel-art-canvas,
-    #game-container.scene-14 #pixel-art-canvas {
+    #game-container.scene-chase .background-overlay,
+    #game-container.scene-trap #pixel-art-canvas,
+    #game-container.scene-sunset #pixel-art-canvas {
         animation: none !important;
         transition: none !important;
     }
