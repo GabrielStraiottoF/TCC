@@ -14,6 +14,15 @@
     <div class="game-container" id="game-container">
         <div class="background-overlay"></div>
 
+        <div id="exploration-layer" aria-label="Área de exploração">
+            <div id="player" class="player" role="img" aria-label="Alex, personagem controlável">
+                <span class="player-shadow"></span>
+                <span class="player-body"><span class="player-head"></span><span class="player-coat"></span></span>
+            </div>
+            <div id="interaction-prompt" class="interaction-prompt" hidden>E — Interagir</div>
+            <div class="movement-help">WASD / Setas: mover &nbsp; • &nbsp; E: interagir</div>
+        </div>
+
         <div id="loading-overlay" class="overlay active">
             <div class="overlay-content">
                 <h1 class="blink-fast">CARREGANDO ROTEIRO...</h1>
@@ -109,5 +118,6 @@
 
     <script src="app.js"></script>
     <script src="restore-fix.js"></script>
+    <script src="gameplay.js"></script>
 </body>
 </html>
