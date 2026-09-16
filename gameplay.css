@@ -7,72 +7,103 @@
     overflow: hidden;
 }
 
+/* Personagem controlável — visual temporário em pixel art CSS. */
 .player {
     position: absolute;
-    width: 34px;
-    height: 48px;
+    z-index: 12;
+    width: 46px;
+    height: 64px;
     transform: translate(-50%, -50%);
     transition: left .03s linear, top .03s linear;
     pointer-events: none;
-    filter: drop-shadow(3px 4px 0 rgba(0,0,0,.65));
+    filter: drop-shadow(4px 5px 0 rgba(0,0,0,.75));
 }
 
 .player-shadow {
     position: absolute;
     left: 50%;
-    bottom: -3px;
-    width: 30px;
-    height: 9px;
+    bottom: -4px;
+    width: 38px;
+    height: 11px;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: rgba(0,0,0,.55);
+    background: rgba(0,0,0,.62);
 }
 
 .player-body {
     position: absolute;
-    left: 7px;
-    top: 10px;
-    width: 20px;
-    height: 30px;
-    background: #20252b;
-    border: 3px solid #0b0d0f;
-    border-radius: 3px;
+    left: 9px;
+    top: 17px;
+    width: 28px;
+    height: 38px;
+    background: #242a32;
+    border: 3px solid #090b0d;
+    border-radius: 4px 4px 2px 2px;
+    box-shadow: inset 0 -7px rgba(0,0,0,.22);
 }
 
 .player-head {
     position: absolute;
-    left: 3px;
-    top: -12px;
-    width: 14px;
-    height: 14px;
-    background: #c78f68;
-    border: 3px solid #0b0d0f;
-    border-radius: 2px;
+    left: 4px;
+    top: -19px;
+    width: 20px;
+    height: 20px;
+    background: #c9926b;
+    border: 3px solid #090b0d;
+    border-radius: 3px;
+    box-shadow: inset 0 -3px rgba(100,50,35,.2);
+}
+
+.player-head::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    top: -7px;
+    width: 21px;
+    height: 9px;
+    background: #151719;
+    border: 3px solid #090b0d;
+    border-bottom: 0;
 }
 
 .player-head::after {
     content: "";
     position: absolute;
-    left: -3px;
-    top: -4px;
-    width: 14px;
-    height: 5px;
-    background: #171717;
-    border: 2px solid #0b0d0f;
+    right: 2px;
+    top: 8px;
+    width: 3px;
+    height: 3px;
+    background: #111;
+    box-shadow: -10px 0 #111;
 }
 
 .player-coat {
     position: absolute;
-    left: 2px;
-    top: 5px;
-    width: 10px;
-    height: 19px;
-    background: #4a2020;
-    box-shadow: 7px 0 #4a2020;
+    left: 4px;
+    top: 7px;
+    width: 14px;
+    height: 26px;
+    background: #572526;
+    box-shadow: 10px 0 #572526;
 }
+
+.player-coat::before,
+.player-coat::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    width: 5px;
+    height: 21px;
+    background: #161a1e;
+    border: 2px solid #090b0d;
+}
+
+.player-coat::before { left: -9px; }
+.player-coat::after { right: -9px; }
 
 .interaction-point {
     position: absolute;
+    z-index: 10;
     transform: translate(-50%, -50%);
     min-width: 48px;
     min-height: 42px;
@@ -107,6 +138,7 @@
 
 .interaction-prompt {
     position: absolute;
+    z-index: 13;
     left: 50%;
     bottom: 24%;
     transform: translateX(-50%);
@@ -122,6 +154,7 @@
 
 .movement-help {
     position: absolute;
+    z-index: 13;
     right: 18px;
     bottom: 18px;
     padding: 6px 10px;
