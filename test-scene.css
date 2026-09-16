@@ -1,12 +1,16 @@
 /* Cenário CSS de teste da cena 1 e visualização das caixas de colisão. */
-.test-map {
+#exploration-layer .test-map {
     position: absolute;
     inset: 0;
+    z-index: 2;
     pointer-events: none;
     overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 35%, rgba(65, 91, 49, .45), transparent 35%),
+        linear-gradient(180deg, #172718 0%, #203820 48%, #2d3822 49%, #202619 100%);
 }
 
-.test-map::before {
+#exploration-layer .test-map::before {
     content: "CENÁRIO DE TESTE — COLISÕES ATIVAS";
     position: absolute;
     top: 7%;
@@ -14,12 +18,21 @@
     transform: translateX(-50%);
     padding: 5px 10px;
     color: #f5e6c8;
-    background: rgba(8, 7, 7, .82);
+    background: rgba(8, 7, 7, .9);
     border: 2px solid #b99b62;
     font-family: var(--font-pixel);
     font-size: 18px;
     letter-spacing: 1px;
     text-shadow: 2px 2px #000;
+}
+
+.test-map::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(0deg, transparent 0 42px, rgba(0,0,0,.08) 43px 45px),
+        repeating-linear-gradient(90deg, transparent 0 55px, rgba(0,0,0,.07) 56px 58px);
 }
 
 .test-object {
@@ -101,17 +114,18 @@
 /* As caixas são visíveis propositalmente durante o teste. */
 .collision-box {
     position: absolute;
-    z-index: 5;
+    z-index: 6;
     box-sizing: border-box;
     display: flex;
     align-items: flex-start;
     justify-content: center;
     padding-top: 3px;
     color: #ffdede;
-    background: rgba(180, 35, 35, .16);
-    border: 2px dashed #ff6b6b;
+    background: rgba(210, 35, 35, .28);
+    border: 3px dashed #ff6b6b;
     font-family: var(--font-pixel);
     font-size: 14px;
+    font-weight: bold;
     text-align: center;
     text-shadow: 1px 1px #000;
     pointer-events: none;
@@ -123,5 +137,5 @@
     right: 3px;
     bottom: 2px;
     font-size: 11px;
-    opacity: .85;
+    opacity: .95;
 }
