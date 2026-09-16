@@ -1,7 +1,7 @@
 // Compatibilidade com o roteiro atual: as cenas principais seguem em ordem.
 // As escolhas da cena 8 continuam sendo controladas pelo script.js.
 window.getNextSceneId = function (scene) {
-    if (!scene || !window.roteiro) return null;
+    if (!scene) return null;
 
     const explicitNext = scene.proximaCena ?? scene.proxima_cena ?? scene.nextScene ?? scene.proxima;
     if (explicitNext !== undefined && explicitNext !== null && explicitNext !== "") {
@@ -9,9 +9,21 @@ window.getNextSceneId = function (scene) {
         return Number.isNaN(numeric) ? explicitNext : numeric;
     }
 
-    const cenas = window.roteiro.cenas;
-    const currentIndex = cenas.findIndex(item => Number(item.id) === Number(scene.id));
+    const sequentialNext = {
+        1: 2,
+        2: 3,
+        3: 4,
+        4: 5,
+        5: 6,
+        6: 7,
+        7: 8,
+        9: 12,
+        10: 12,
+        12: 13,
+        13: 14
+    };
 
-    if (currentIndex === -1 || currentIndex >= cenas.length - 1) return null;
-    return cenas[currentIndex + 1].id;
+    return Object.prototype.hasOwnProperty.call(sequentialNext, Number(scene.id))
+        ? sequentialNext[Number(scene.id)]
+        : null;
 };
