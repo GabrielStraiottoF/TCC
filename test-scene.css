@@ -1,0 +1,127 @@
+/* Cenário CSS de teste da cena 1 e visualização das caixas de colisão. */
+.test-map {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.test-map::before {
+    content: "CENÁRIO DE TESTE — COLISÕES ATIVAS";
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    color: #f5e6c8;
+    background: rgba(8, 7, 7, .82);
+    border: 2px solid #b99b62;
+    font-family: var(--font-pixel);
+    font-size: 18px;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px #000;
+}
+
+.test-object {
+    position: absolute;
+    box-sizing: border-box;
+    opacity: .96;
+}
+
+.test-object-trees {
+    background:
+        radial-gradient(circle at 18% 28%, #24351f 0 13%, transparent 14%),
+        radial-gradient(circle at 48% 18%, #314a28 0 17%, transparent 18%),
+        radial-gradient(circle at 78% 32%, #263d22 0 16%, transparent 17%),
+        linear-gradient(90deg, transparent 0 13%, #35291e 13% 19%, transparent 19% 44%, #30251b 44% 50%, transparent 50% 74%, #382b20 74% 80%, transparent 80%);
+    border-bottom: 8px solid #172116;
+}
+
+.test-object-house {
+    background: #47372c;
+    border: 4px solid #201914;
+    box-shadow: inset 0 -35px rgba(20, 14, 11, .35);
+}
+
+.test-object-house::before {
+    content: "";
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: -42%;
+    height: 48%;
+    background: #29211d;
+    border: 4px solid #171311;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.test-object-house::after {
+    content: "";
+    position: absolute;
+    left: 43%;
+    bottom: 0;
+    width: 14%;
+    height: 52%;
+    background: #201713;
+    border: 3px solid #120e0c;
+}
+
+.test-object-river {
+    background:
+        repeating-linear-gradient(165deg, rgba(173, 194, 177, .18) 0 4px, transparent 4px 18px),
+        #283e42;
+    border-top: 4px solid #6c827d;
+    border-bottom: 4px solid #182a2e;
+    transform: rotate(-3deg);
+}
+
+.test-object-rocks {
+    background:
+        radial-gradient(ellipse at 20% 55%, #777064 0 18%, transparent 19%),
+        radial-gradient(ellipse at 48% 35%, #8a8273 0 21%, transparent 22%),
+        radial-gradient(ellipse at 78% 62%, #625d55 0 20%, transparent 21%);
+}
+
+.test-object-bushes {
+    background:
+        radial-gradient(circle at 12% 70%, #344426 0 15%, transparent 16%),
+        radial-gradient(circle at 32% 45%, #40542d 0 18%, transparent 19%),
+        radial-gradient(circle at 54% 65%, #2d3e22 0 19%, transparent 20%),
+        radial-gradient(circle at 77% 40%, #3c4d28 0 17%, transparent 18%),
+        radial-gradient(circle at 94% 68%, #29391f 0 15%, transparent 16%);
+}
+
+.test-object-log {
+    background: #4a3020;
+    border: 4px solid #24170f;
+    border-radius: 45%;
+    transform: rotate(-8deg);
+}
+
+/* As caixas são visíveis propositalmente durante o teste. */
+.collision-box {
+    position: absolute;
+    z-index: 5;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 3px;
+    color: #ffdede;
+    background: rgba(180, 35, 35, .16);
+    border: 2px dashed #ff6b6b;
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    text-align: center;
+    text-shadow: 1px 1px #000;
+    pointer-events: none;
+}
+
+.collision-box::after {
+    content: "COLLISION";
+    position: absolute;
+    right: 3px;
+    bottom: 2px;
+    font-size: 11px;
+    opacity: .85;
+}
