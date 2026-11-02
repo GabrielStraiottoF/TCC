@@ -196,3 +196,12 @@
     .interaction-point { animation: none; }
     .player { transition: none; }
 }
+
+
+/* Caderno de investigação */
+#investigation-modal .modal-content { width: min(92%, 760px); }
+.investigation-section { padding: 10px 0; border-bottom: 1px dashed rgba(232,220,199,.25); }
+.investigation-section h4 { color: var(--gold-color); font-size: 22px; margin-bottom: 8px; }
+.investigation-section p, .investigation-section li { font-size: 18px; line-height: 1.35; }
+.investigation-empty { color: var(--text-muted); font-style: italic; }
+#btn-investigation { white-space: nowrap; }
