@@ -59,13 +59,13 @@ TCC/
 
 O projeto separa o conteúdo narrativo da execução do jogo. O `roteiro.json` mantém personagens, cenas, eventos e diálogos, enquanto `app.js` interpreta esses dados e controla a interface.
 
-As transições comuns seguem a ordem das cenas declarada no JSON quando não existe uma propriedade explícita de próxima cena. A decisão da cena 8 continua direcionando para os três caminhos já definidos no roteiro: cenas 9, 10 e 11.
+As transições comuns seguem a ordem das cenas declarada no JSON quando não existe uma propriedade explícita de próxima cena. A cena 8 apresenta três estratégias e permite escolher por botões ou teclado. A exploração das cenas 6 a 8 registra evidências e recursos no caderno; esses dados são compartilhados com o motor narrativo e persistidos no save. A rota das cordas pode produzir fuga quando os requisitos mínimos forem atendidos.
 
 A aplicação também possui validação do roteiro antes da inicialização, tratamento de erros, fallback para retratos ausentes e verificação das referências usadas pelas escolhas.
 
 ## Persistência
 
-O progresso da sessão é salvo no `localStorage` do navegador. São armazenados a cena atual, a posição dos eventos e diálogos, o histórico e as cenas visitadas.
+O progresso da sessão é salvo no `localStorage` do navegador. São armazenados a cena atual, a posição dos eventos e diálogos, o histórico, as cenas visitadas, as evidências, os recursos e a estratégia escolhida. Saves anteriores continuam sendo aceitos.
 
 O progresso é removido ao concluir um final, ao ocorrer o game over ou ao reiniciar a história.
 
@@ -78,10 +78,14 @@ Antes da apresentação, verificar:
 - as três escolhas da cena 8;
 - caminho 9 → 12 → 13 → 14;
 - caminho 10 → 12 → 13 → 14;
-- caminho 11 → game over;
+- caminho 11 → fuga ou game over conforme os requisitos de investigação e recursos;
 - reinício da história;
 - restauração após atualizar a página;
 - histórico da jornada;
+- coleta de evidências nas cenas 6, 7 e 8;
+- atualização do caderno;
+- persistência do caderno após recarregar a página;
+- resultados de vitória, fuga e derrota;
 - bloqueio das cenas ainda não visitadas no mapa;
 - carregamento dos retratos;
 - funcionamento em telas menores.
