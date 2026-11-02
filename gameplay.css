@@ -205,3 +205,24 @@
 .investigation-section p, .investigation-section li { font-size: 18px; line-height: 1.35; }
 .investigation-empty { color: var(--text-muted); font-style: italic; }
 #btn-investigation { white-space: nowrap; }
+
+
+/* Feedback simples de deslocamento para o sprite provisório de Alex. */
+.player.is-walking .player-body {
+    animation: player-step .22s steps(2, end) infinite;
+}
+.player.is-walking .player-coat {
+    animation: coat-step .22s steps(2, end) infinite;
+}
+@keyframes player-step {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+@keyframes coat-step {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .player.is-walking .player-body,
+    .player.is-walking .player-coat { animation: none; }
+}
