@@ -4,109 +4,104 @@ Projeto de Trabalho de Conclusão de Curso desenvolvido como uma experiência na
 
 ## Objetivo
 
-Desenvolver um jogo narrativo em que o jogador acompanha a jornada de Alex e pode tomar uma decisão durante a caçada ao Mapinguari, resultando em diferentes caminhos e desfechos.
+Desenvolver um jogo narrativo em que o jogador acompanha a jornada de Alex, investiga vestígios do Mapinguari e escolhe como enfrentar ou evitar a criatura, chegando a diferentes resultados.
 
 ## Tecnologias
 
-- HTML5 — estrutura da aplicação
-- CSS3 — interface, responsividade e cenários
-- JavaScript — motor do jogo, diálogos, navegação, escolhas e persistência
-- JSON — armazenamento do roteiro e dos dados narrativos
+- HTML5 — estrutura da aplicação.
+- CSS3 — interface, responsividade, mapas e fundos.
+- JavaScript — motor narrativo, exploração, investigação, escolhas e persistência.
+- JSON — armazenamento dos personagens, cenas, eventos e diálogos.
 
 ## Como executar
 
-O jogo utiliza `fetch()` para carregar `roteiro.json`. Por isso, recomenda-se executar por um servidor HTTP local em vez de abrir `index.html` diretamente.
+O jogo utiliza `fetch()` para carregar `roteiro.json`. Execute por um servidor HTTP local em vez de abrir `index.html` diretamente.
 
 ### VS Code
 
 1. Abra a pasta do projeto no VS Code.
-2. Execute com uma extensão como Live Server.
-3. Abra a página gerada pelo servidor.
+2. Inicie um servidor com Live Server.
+3. Abra o endereço local informado pela extensão.
 
 ### Servidor simples
-
-Também é possível utilizar qualquer servidor HTTP estático, por exemplo:
 
 ```bash
 npx http-server
 ```
 
-Depois, acesse o endereço informado pelo servidor.
+Acesse o endereço local informado pelo servidor.
 
 ## Como jogar
 
-- Clique na caixa de diálogo para avançar.
-- Use `Enter`, `Espaço` ou `Seta para a direita` para avançar.
-- Na cena de escolha, use os botões ou as teclas `1`, `2` e `3`.
-- Use **Histórico** para consultar os registros da jornada.
-- Use **Mapa** para retornar a cenas que já foram visitadas.
-- Use **Reiniciar** para começar novamente.
+- **W, A, S, D:** movimentar Alex.
+- **E:** interagir com o ponto mais próximo.
+- **Enter, Espaço ou Seta para a direita:** avançar narração e diálogos.
+- Na cena 8, escolha uma das três estratégias pelo painel apresentado.
+- **Caderno:** consultar evidências, hipóteses, recursos e estratégia escolhida.
+- **Histórico:** consultar os registros da jornada.
+- **Mapa:** navegar pelas cenas já visitadas.
+- **Reiniciar:** começar novamente.
 
 ## Estrutura
 
 ```text
 TCC/
-├── index.html          # Interface principal
-├── app.js              # Motor do jogo e navegação
-├── investigation.js    # Estado compartilhado, evidências e caderno
-├── gameplay.js         # Exploração e interações por cena
-├── roteiro.json        # Roteiro e dados narrativos
-├── style.css           # Estilos da interface
-├── backgrounds.css     # Cenários e fundos
-├── imagens/            # Retratos dos personagens
-└── README.md           # Documentação do projeto
+├── index.html
+├── app.js
+├── investigation.js
+├── gameplay.js
+├── restore-fix.js
+├── roteiro.json
+├── style.css
+├── backgrounds.css
+├── gameplay.css
+├── test-scene.css
+├── imagens/
+└── docs/
+    ├── GDD_Roteiro_Sobrenatural_Mapinguari_v1.2.md
+    ├── RELATORIO_PROGRAMACAO.md
+    └── RELATORIO_ENREDO.md
 ```
 
 ## Arquitetura
 
-O projeto separa o conteúdo narrativo da execução do jogo. O `roteiro.json` mantém personagens, cenas, eventos e diálogos, enquanto `app.js` interpreta esses dados e controla a interface.
+O projeto separa o conteúdo narrativo da execução. O `roteiro.json` mantém personagens, cenas, eventos e diálogos; `app.js` interpreta esses dados e controla a interface; `gameplay.js` administra exploração e interações; `investigation.js` mantém o estado compartilhado de investigação; e `restore-fix.js` restaura o progresso salvo.
 
-As transições comuns seguem a ordem das cenas declarada no JSON quando não existe uma propriedade explícita de próxima cena. A cena 8 apresenta três estratégias e permite escolher por botões ou teclado. A exploração das cenas 6 a 8 registra evidências e recursos no caderno; esses dados são compartilhados com o motor narrativo e persistidos no save. A rota das cordas pode produzir fuga quando os requisitos mínimos forem atendidos.
-
-A aplicação também possui validação do roteiro antes da inicialização, tratamento de erros, fallback para retratos ausentes e verificação das referências usadas pelas escolhas.
+As cenas 6, 7 e 8 possuem mapas de exploração específicos. A investigação registra evidências e recursos, que são consultados na resolução das três estratégias apresentadas na cena 8.
 
 ## Persistência
 
-O progresso da sessão é salvo no `localStorage` do navegador. São armazenados a cena atual, a posição dos eventos e diálogos, o histórico, as cenas visitadas, as evidências, os recursos e a estratégia escolhida. Saves anteriores continuam sendo aceitos.
+O progresso é salvo no `localStorage` do navegador. O save versão 3 armazena cena atual, posição dos eventos e diálogos, histórico, cenas visitadas e estado da investigação. O restaurador aceita saves das versões 2 e 3.
 
-O progresso é removido ao concluir um final, ao ocorrer o game over ou ao reiniciar a história.
+O progresso é removido ao concluir um final, ao ocorrer game over ou ao reiniciar a história. Os dados não são sincronizados entre dispositivos.
+
+## Documentação
+
+- [Relatório de programação](RELATORIO_PROGRAMACAO.md) — arquitetura, módulos, controles, exploração, investigação, estratégias, persistência, histórico de alterações, testes e limitações.
+- [Relatório de enredo](RELATORIO_ENREDO.md) — personagens, resumo das 14 cenas, evidências, estratégias, finais e decisões narrativas pendentes.
+- [GDD e roteiro v1.2](GDD_Roteiro_Sobrenatural_Mapinguari_v1.2.md) — direção de game design, critérios de aceite e decisões aprovadas.
 
 ## Testes recomendados
 
 Antes da apresentação, verificar:
-
-- carregamento do roteiro;
-- execução das cenas 1 a 8;
-- as três escolhas da cena 8;
-- caminho 9 → 12 → 13 → 14;
-- caminho 10 → 12 → 13 → 14;
-- caminho 11 → fuga ou game over conforme os requisitos de investigação e recursos;
-- reinício da história;
-- restauração após atualizar a página;
-- histórico da jornada;
-- coleta de evidências nas cenas 6, 7 e 8;
-- atualização do caderno;
-- persistência do caderno após recarregar a página;
-- resultados de vitória, fuga e derrota;
-- bloqueio das cenas ainda não visitadas no mapa;
-- carregamento dos retratos;
-- funcionamento em telas menores.
+- carregamento do roteiro e execução das 14 cenas;
+- movimento, colisões e pontos de interação;
+- coleta das evidências nas cenas 6, 7 e 8;
+- painel e seleção das três estratégias;
+- vitória, fuga e derrota;
+- caminhos 9 → 12 → 13 → 14 e 10 → 12 → 13 → 14;
+- rota 11 com e sem requisitos de fuga;
+- save/load, reinício, histórico e mapa;
+- fundos e mapas em diferentes resoluções;
+- carregamento dos retratos e fallback.
 
 ## Limitações conhecidas
 
-- O jogo é uma aplicação estática e não possui servidor ou banco de dados.
-- O progresso é armazenado apenas no navegador e não é sincronizado entre dispositivos.
-- As escolhas da cena 8 são uma configuração de jogo mantida no motor JavaScript para preservar exatamente os caminhos definidos pelo roteiro.
+- A aplicação é estática, sem servidor ou banco de dados.
+- O progresso fica restrito ao navegador/dispositivo.
+- Apenas as cenas 6–8 possuem mapas de exploração específicos; as demais ainda usam o mapa genérico do módulo.
+- As hipóteses do caderno são textos fixos; não há árvore dinâmica de dedução.
+- A resolução do confronto é determinística por requisitos de pistas e recursos, não um sistema completo de combate por turnos.
+- Os fundos são composições CSS e precisam de validação visual no navegador.
+- Não há, até a data dos relatórios, teste ponta a ponta automatizado em navegador.
 
-## Trabalhos futuros
-
-- adicionar efeitos sonoros e trilha sonora;
-- ampliar o sistema de decisões;
-- adicionar novos capítulos e personagens;
-- implementar uma tela inicial e configurações;
-- criar testes automatizados para o motor de navegação;
-- disponibilizar o jogo em uma hospedagem pública.
-
-## Observação sobre o roteiro
-
-O conteúdo narrativo existente foi preservado. As alterações técnicas concentram-se no funcionamento da aplicação, navegação, validação, histórico, mapa e persistência, sem modificar as falas dos personagens.
