@@ -139,3 +139,137 @@
     font-size: 11px;
     opacity: .95;
 }
+
+
+/* Mapas específicos das cenas de investigação. As colisões permanecem
+   invisíveis durante o jogo; a geometria é aplicada pelo gameplay.js. */
+#exploration-layer .scene-map {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+#exploration-layer .scene-map::before {
+    content: attr(data-map-title);
+    position: absolute;
+    z-index: 4;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 10px;
+    color: rgba(245,230,200,.88);
+    background: rgba(8,7,7,.56);
+    border: 1px solid rgba(185,155,98,.55);
+    font-family: var(--font-pixel);
+    font-size: clamp(14px, 1.6vw, 20px);
+    letter-spacing: 1px;
+    text-shadow: 2px 2px #000;
+    white-space: nowrap;
+}
+.scene-map .test-object { position:absolute; box-sizing:border-box; opacity:.96; }
+
+/* Cena 6 — clareira aberta, solo revolvido e árvores quebradas. */
+.scene-map-6 {
+    background:
+        radial-gradient(ellipse at 50% 54%, rgba(145,105,57,.42) 0 24%, transparent 55%),
+        linear-gradient(180deg, rgba(11,28,12,.10), rgba(5,12,7,.22));
+}
+.scene-map-6::after {
+    content:""; position:absolute; inset:0; opacity:.55;
+    background:repeating-linear-gradient(164deg,transparent 0 38px,rgba(30,22,13,.16) 39px 41px,transparent 42px 73px);
+}
+.scene-map-6 .test-object-fallen-tree {
+    background:linear-gradient(8deg,#24180f 0 12%,#62452b 13% 45%,#392718 46% 63%,#1b160f 64%);
+    border:4px solid #1a120d; border-radius:45%;
+    box-shadow:inset 0 5px rgba(190,145,87,.22),0 5px 0 rgba(0,0,0,.35);
+    transform:rotate(-13deg);
+}
+.scene-map-6 .test-object-broken-trunk {
+    background:linear-gradient(90deg,#1b160f,#67472b 32%,#2e2116 65%,#17120d);
+    border:4px solid #160f0a;
+}
+.scene-map-6 .test-object-broken-trunk::before {
+    content:""; position:absolute; left:12%; top:-8%; width:78%; height:17%;
+    background:#765437; clip-path:polygon(0 50%,12% 0,100% 35%,84% 100%);
+}
+.scene-map-6 .test-object-roots {
+    background:repeating-linear-gradient(35deg,transparent 0 12px,#3b2a19 13px 17px,transparent 18px 26px);
+}
+.scene-map-6 .test-object-debris {
+    background:radial-gradient(ellipse at 20% 45%,#6c5235 0 13%,transparent 15%),radial-gradient(ellipse at 58% 55%,#39291b 0 17%,transparent 19%),radial-gradient(ellipse at 83% 30%,#80603a 0 12%,transparent 14%);
+}
+.scene-map-6 .test-object-tracks {
+    background:radial-gradient(ellipse at 22% 28%,rgba(27,19,12,.78) 0 8%,transparent 10%),radial-gradient(ellipse at 68% 70%,rgba(27,19,12,.78) 0 9%,transparent 11%),radial-gradient(ellipse at 48% 49%,rgba(27,19,12,.55) 0 7%,transparent 9%);
+}
+.scene-map-6 .test-object-fur {
+    background:repeating-linear-gradient(65deg,transparent 0 5px,#b6a17c 6px 8px,transparent 9px 13px);
+    filter:drop-shadow(1px 2px 1px #000);
+}
+
+/* Cena 7 — corredor estreito de mata, vegetação comprimida pela perseguição. */
+.scene-map-7 {
+    background:linear-gradient(90deg,rgba(2,10,4,.34),transparent 28% 72%,rgba(2,10,4,.34)),linear-gradient(180deg,transparent 0 15%,rgba(22,34,16,.22) 16% 75%,rgba(0,0,0,.18));
+}
+.scene-map-7 .test-object-dense-forest {
+    background:radial-gradient(ellipse at 20% 18%,#263e1c 0 19%,transparent 21%),radial-gradient(ellipse at 68% 35%,#1c3216 0 24%,transparent 26%),radial-gradient(ellipse at 43% 75%,#30451e 0 22%,transparent 24%),linear-gradient(90deg,transparent 0 25%,#211b12 26% 31%,transparent 32% 62%,#201a12 63% 68%,transparent 69%);
+    border-bottom:7px solid #101b0d;
+}
+.scene-map-7 .test-object-trunk {
+    background:linear-gradient(90deg,#1b140d,#69452a 35%,#3b2819 70%,#17110b);
+    border:3px solid #17100a; border-radius:45%;
+    transform:rotate(12deg);
+}
+.scene-map-7 .test-object-blood-trail {
+    background:radial-gradient(ellipse at 25% 38%,#8e2018 0 7%,transparent 10%),radial-gradient(ellipse at 53% 57%,#6c1713 0 10%,transparent 13%),radial-gradient(ellipse at 80% 30%,#9c2b1d 0 6%,transparent 9%);
+}
+.scene-map-7 .test-object-thorn-bush {
+    background:radial-gradient(circle at 20% 50%,#35451e 0 22%,transparent 24%),radial-gradient(circle at 55% 36%,#485729 0 25%,transparent 27%),radial-gradient(circle at 82% 62%,#2a3b1b 0 21%,transparent 23%);
+}
+.scene-map-7 .test-object-thorn-bush::after {
+    content:""; position:absolute; inset:12%;
+    background:repeating-linear-gradient(45deg,transparent 0 9px,#b5a16a 10px 12px,transparent 13px 20px);
+}
+.scene-map-7 .test-object-bent-grass {
+    background:repeating-linear-gradient(165deg,transparent 0 8px,rgba(124,148,72,.65) 9px 12px,transparent 13px 20px);
+}
+
+/* Cena 8 — acampamento, barracas, mesa de suprimentos e fogueira apagando. */
+.scene-map-8 {
+    background:radial-gradient(ellipse at 50% 53%,rgba(185,119,49,.16) 0 19%,transparent 48%),linear-gradient(180deg,rgba(8,16,8,.12),rgba(0,0,0,.2));
+}
+.scene-map-8 .test-object-tent {
+    background:linear-gradient(145deg,#51452d 0 48%,#2c281c 49% 100%);
+    border:3px solid #1c1a12; clip-path:polygon(50% 0,100% 100%,0 100%);
+    filter:drop-shadow(4px 5px 0 rgba(0,0,0,.45));
+}
+.scene-map-8 .test-object-tent::after {
+    content:""; position:absolute; left:43%; bottom:0; width:16%; height:53%; background:#17150f;
+}
+.scene-map-8 .test-object-supply-table {
+    background:linear-gradient(180deg,#71502e 0 25%,#392819 26% 43%,#21170f 44% 100%);
+    border:3px solid #17100b; box-shadow:inset 0 4px rgba(202,158,91,.25);
+}
+.scene-map-8 .test-object-campfire {
+    border-radius:50%;
+    background:radial-gradient(ellipse at 50% 65%,#e6a33e 0 12%,#a83d19 13% 27%,rgba(74,25,12,.8) 28% 46%,transparent 68%);
+    filter:drop-shadow(0 0 8px rgba(209,103,34,.4));
+}
+.scene-map-8 .test-object-book-site {
+    background:linear-gradient(145deg,#4d3724 0 48%,#1c1711 49% 55%,#9b7846 56% 100%);
+    border:2px solid #1b140d; transform:rotate(-8deg);
+}
+.scene-map-8 .test-object-crate {
+    background:repeating-linear-gradient(0deg,#68492b 0 7px,#3c2819 8px 10px);
+    border:3px solid #1b130c;
+}
+.scene-map-8 .test-object-bedroll {
+    background:linear-gradient(90deg,#29333a,#59605a 45%,#262d2a);
+    border:3px solid #171b19; border-radius:40%;
+    transform:rotate(8deg);
+}
+.scene-map-8 .collision-box { display:none; }
+
+.scene-map-6 .collision-box,
+.scene-map-7 .collision-box { display:none; }
