@@ -47,7 +47,9 @@ Depois, acesse o endereço informado pelo servidor.
 ```text
 TCC/
 ├── index.html          # Interface principal
-├── app.js              # Motor do jogo
+├── app.js              # Motor do jogo e navegação
+├── investigation.js    # Estado compartilhado, evidências e caderno
+├── gameplay.js         # Exploração e interações por cena
 ├── roteiro.json        # Roteiro e dados narrativos
 ├── style.css           # Estilos da interface
 ├── backgrounds.css     # Cenários e fundos
