@@ -159,6 +159,7 @@ function setupGameControls() {
     const retryChoice = document.getElementById("btn-retry-choice");
     const restartGameOver = document.getElementById("btn-restart-gameover");
     const restartEnding = document.getElementById("btn-restart-ending");
+    document.getElementById("btn-restart-escape")?.addEventListener("click", restartGame);
 
     btnLog?.addEventListener("click", event => {
         event.stopPropagation();
@@ -238,6 +239,7 @@ function resetJourneyState() {
     sceneLog = [];
     journeyLog = [];
     visitedScenes = new Set();
+    window.Investigation?.reset();
     clearSavedGame();
 }
 
@@ -306,7 +308,7 @@ function loadScene(sceneIndex, save = true) {
 }
 
 function hideAllOverlays() {
-    ["choices-overlay", "gameover-overlay", "ending-overlay", "log-modal", "map-modal"].forEach(id => {
+    ["choices-overlay", "gameover-overlay", "ending-overlay", "escape-overlay", "log-modal", "map-modal"].forEach(id => {
         document.getElementById(id)?.classList.remove("active");
     });
 }
@@ -349,6 +351,8 @@ function renderPortraitFallback(initial, color) {
         </div>
     `;
 }
+
+window.advanceScene = advanceScene;
 
 function advanceScene() {
     if (!roteiro || currentState !== "running") return;
@@ -401,7 +405,9 @@ function advanceScene() {
     }
 
     if (Number(scene.id) === 11) {
-        showGameOver();
+        const result = window.Investigation?.resolve() ?? "defeat";
+        if (result === "escape") showEscapeEnding();
+        else showGameOver();
         return;
     }
 
@@ -447,6 +453,8 @@ function showScene8Choices() {
     saveGame();
 }
 
+window.chooseScene8 = chooseScene8;
+
 function chooseScene8(index) {
     const choice = scene8Choices[index];
     if (!choice) return;
@@ -457,8 +465,16 @@ function chooseScene8(index) {
         return;
     }
 
+    window.Investigation?.chooseStrategy(index);
     journeyLog.push({ type: "choice", sceneId: 8, choice: choice.label });
     loadScene(targetIndex);
+}
+
+function showEscapeEnding() {
+    currentState = "ending";
+    document.getElementById("choices-overlay")?.classList.remove("active");
+    document.getElementById("escape-overlay")?.classList.add("active");
+    clearSavedGame();
 }
 
 function showGameOver() {
@@ -634,6 +650,8 @@ function updateSceneMapSelection() {
     });
 }
 
+window.saveGame = saveGame;
+
 function saveGame() {
     if (!roteiro || currentState === "gameover" || currentState === "ending") return;
 
@@ -641,8 +659,9 @@ function saveGame() {
     if (!scene) return;
 
     const payload = {
-        version: 2,
+        version: 3,
         sceneId: Number(scene.id),
+        investigation: window.Investigation?.getState() ?? null,
         eventIndex: currentEventIndex,
         dialogueIndex: currentDialogueIndex,
         sceneLog,
@@ -670,7 +689,7 @@ function restoreSave() {
         return false;
     }
 
-    if (!payload || payload.version !== 2 || findSceneIndex(payload.sceneId) === -1) {
+    if (!payload || ![2, 3].includes(payload.version) || findSceneIndex(payload.sceneId) === -1) {
         clearSavedGame();
         return false;
     }
@@ -682,6 +701,7 @@ function restoreSave() {
     journeyLog = Array.isArray(payload.journeyLog) ? payload.journeyLog : [];
     visitedScenes = new Set(Array.isArray(payload.visitedScenes) ? payload.visitedScenes.map(Number) : []);
     visitedScenes.add(Number(payload.sceneId));
+    window.Investigation?.restore(payload.investigation);
 
     loadScene(currentSceneIndex, false);
     return true;
