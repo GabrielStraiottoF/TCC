@@ -50,6 +50,7 @@
             </div>
             <div class="nav-controls">
                 <button id="btn-log" class="retro-btn btn-small" title="Ver Histórico de Diálogos">📜 Histórico</button>
+                <button id="btn-investigation" class="retro-btn btn-small" type="button">Caderno</button>
                 <button id="btn-map" class="retro-btn btn-small" title="Ver Mapa de Cenas">🗺️ Mapa</button>
                 <button id="btn-restart" class="retro-btn btn-small" title="Reiniciar do Início">🔄 Reiniciar</button>
             </div>
@@ -89,6 +90,13 @@
             </div>
         </div>
 
+        <div id="escape-overlay" class="overlay">
+            <div class="overlay-content ending-box">
+                <div class="ending-text-container"><p>Alex consegue escapar. O Mapinguari permanece vivo, em algum ponto da mata.</p></div>
+                <div class="ending-actions"><button id="btn-restart-escape" class="retro-btn" type="button">Jogar novamente</button></div>
+            </div>
+        </div>
+
         <div id="ending-overlay" class="overlay">
             <div class="overlay-content ending-box">
                 <div class="ending-text-container"><p id="ending-text"></p></div>
@@ -111,6 +119,7 @@
     </div>
 
     <script src="app.js"></script>
+    <script src="investigation.js"></script>
     <script src="restore-fix.js"></script>
     <script src="gameplay.js"></script>
 </body>
