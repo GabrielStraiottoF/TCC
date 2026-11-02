@@ -411,6 +411,14 @@ function advanceScene() {
         return;
     }
 
+    if ([9, 10].includes(Number(scene.id))) {
+        const result = window.Investigation?.resolve() ?? "defeat";
+        if (result !== "victory") {
+            showGameOver();
+            return;
+        }
+    }
+
     const nextSceneId = getNextSceneId(scene);
     if (nextSceneId === null) {
         showEnding();
