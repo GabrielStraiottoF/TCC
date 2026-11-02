@@ -126,7 +126,7 @@
     function onKeyDown(event) {
         if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
 
-        const movementKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "w", "a", "s", "d", "W", "A", "S", "D"];
+        const movementKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "w", "a", "s", "d", "W", "A", "S", "D"];
         if (movementKeys.includes(event.key)) {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -156,15 +156,23 @@
         if (!player) return;
 
         const blocked = document.querySelector(".modal.active, .overlay.active");
-        if (blocked) return;
+        if (blocked) {
+            keys.clear();
+            player.classList.remove("is-walking");
+            return;
+        }
 
         let dx = 0;
         let dy = 0;
         if (keys.has("ArrowLeft") || keys.has("a") || keys.has("A")) dx -= 1;
-        if (keys.has("ArrowRight") || keys.has("d") || keys.has("D")) dx += 1;
+        if (keys.has("d") || keys.has("D")) dx += 1;
         if (keys.has("ArrowUp") || keys.has("w") || keys.has("W")) dy -= 1;
         if (keys.has("ArrowDown") || keys.has("s") || keys.has("S")) dy += 1;
-        if (!dx && !dy) return;
+        if (!dx && !dy) {
+            player.classList.remove("is-walking");
+            return;
+        }
+        player.classList.add("is-walking");
 
         const length = Math.hypot(dx, dy) || 1;
         const nextX = x + (dx / length) * speed * dt;
