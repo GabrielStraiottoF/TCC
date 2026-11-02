@@ -273,7 +273,7 @@ function getNextSceneId(scene) {
     return nextScene ? Number(nextScene.id) : null;
 }
 
-function loadScene(sceneIndex, save = true) {
+function loadScene(sceneIndex, save = true, startNarrative = true) {
     if (!roteiro || sceneIndex < 0 || sceneIndex >= roteiro.cenas.length) return;
 
     clearTypewriter();
@@ -304,7 +304,7 @@ function loadScene(sceneIndex, save = true) {
     updateSceneMapSelection();
 
     if (save) saveGame();
-    advanceScene();
+    if (startNarrative) advanceScene();
 }
 
 function hideAllOverlays() {
