@@ -13,7 +13,7 @@ function restoreSave() {
         return false;
     }
 
-    if (!payload || payload.version !== 2 || findSceneIndex(payload.sceneId) === -1) {
+    if (!payload || ![2, 3].includes(payload.version) || findSceneIndex(payload.sceneId) === -1) {
         clearSavedGame();
         return false;
     }
@@ -33,6 +33,7 @@ function restoreSave() {
     journeyLog = savedJourneyLog;
     visitedScenes = new Set(savedVisitedScenes);
     visitedScenes.add(Number(payload.sceneId));
+    window.Investigation?.restore(payload.investigation);
     currentState = "running";
     updateSceneMapSelection();
     advanceScene();
