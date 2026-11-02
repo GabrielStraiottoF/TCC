@@ -34,6 +34,7 @@ function restoreSave() {
     visitedScenes = new Set(savedVisitedScenes);
     visitedScenes.add(Number(payload.sceneId));
     window.Investigation?.restore(payload.investigation);
+    window.refreshExplorationState?.();
     currentState = "running";
     updateSceneMapSelection();
     advanceScene();
