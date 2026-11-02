@@ -85,8 +85,7 @@
         prompt = document.getElementById("interaction-prompt");
         if (!layer || !player) return;
 
-        const savedInvestigation = window.Investigation?.getState();
-        [...(savedInvestigation?.clues || []), ...(savedInvestigation?.items || [])].forEach(id => discoveredItems.add(id));
+        syncDiscoveredItems();
         createScenePoints();
         createTestMap();
         bindControls();
@@ -135,14 +134,11 @@
             return;
         }
 
-        if (["Enter", " ", "ArrowRight"].includes(event.key)) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            interactNearest();
-            return;
-        }
-
+        // Enter, Espaço e Seta para direita pertencem ao motor narrativo.
+        // A exploração usa exclusivamente E para interagir, evitando bloquear diálogos.
         if (event.key === "e" || event.key === "E") {
+            const blocked = document.querySelector(".modal.active, .overlay.active");
+            if (blocked) return;
             event.preventDefault();
             event.stopImmediatePropagation();
             interactNearest();
@@ -205,10 +201,27 @@
         currentScene = scene;
         x = 50;
         y = 72;
+        syncDiscoveredItems();
         createScenePoints();
         createTestMap();
         renderPlayer();
     }
+
+    function syncDiscoveredItems() {
+        const state = window.Investigation?.getState();
+        if (!state) return;
+
+        discoveredItems.clear();
+        [...(state.clues || []), ...(state.items || [])].forEach(id => discoveredItems.add(id));
+    }
+
+    // Chamado pelo restaurador depois de aplicar um save, inclusive quando
+    // a cena restaurada é a mesma que já estava carregada.
+    window.refreshExplorationState = function refreshExplorationState() {
+        syncDiscoveredItems();
+        createScenePoints();
+        updatePrompt();
+    };
 
     function createTestMap() {
         if (!layer) return;
