@@ -330,6 +330,7 @@
 {
 "id": 9,
 "local": "Floresta - Final Alternativo 1",
+"proximaCena": 12,
 "eventos": [
 "Alex prepara uma armadilha.",
 "O Mapinguari fica preso temporariamente em espinhos.",
@@ -346,6 +347,7 @@
 {
 "id": 10,
 "local": "Floresta - Final Alternativo 2",
+"proximaCena": 12,
 "eventos": [
 "Alex utiliza uma arma com apenas uma munição.",
 "O Mapinguari tenta devorá-lo.",
