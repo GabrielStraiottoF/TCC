@@ -85,6 +85,8 @@
         prompt = document.getElementById("interaction-prompt");
         if (!layer || !player) return;
 
+        const savedInvestigation = window.Investigation?.getState();
+        [...(savedInvestigation?.clues || []), ...(savedInvestigation?.items || [])].forEach(id => discoveredItems.add(id));
         createScenePoints();
         createTestMap();
         bindControls();
