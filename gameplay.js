@@ -305,7 +305,7 @@
     function createTestMap() {
         if (!layer) return;
 
-        layer.querySelectorAll(".test-map, .collision-box").forEach(element => element.remove());
+        layer.querySelectorAll(".test-map, .scene-map, .collision-box").forEach(element => element.remove());
 
         const config = sceneGameplay[currentScene];
         if (!config?.decorations?.length) return;
@@ -313,6 +313,7 @@
         const map = document.createElement("div");
         map.className = config.mapClass ? `scene-map ${config.mapClass}` : "test-map";
         map.setAttribute("aria-hidden", "true");
+        if (config.mapTitle) map.setAttribute("data-map-title", config.mapTitle);
 
         config.decorations.forEach(decoration => {
             const element = document.createElement("div");
