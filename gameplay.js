@@ -56,12 +56,20 @@
         3: [{ x: 76, y: 62, label: "Investigar", action: "advance" }],
         4: [{ x: 55, y: 68, label: "Investigar", action: "advance" }],
         5: [{ x: 72, y: 70, label: "Investigar", action: "advance" }],
-        6: [{ x: 50, y: 62, label: "Investigar", action: "advance" }],
-        7: [{ x: 70, y: 55, label: "Investigar", action: "advance" }],
+        6: [
+            { x: 30, y: 56, label: "Examinar pegadas", action: "clue", clue: "tracks" },
+            { x: 70, y: 56, label: "Examinar pelos", action: "clue", clue: "fur" },
+            { x: 50, y: 74, label: "Continuar", action: "advance" }
+        ],
+        7: [
+            { x: 30, y: 58, label: "Examinar sangue", action: "clue", clue: "blood" },
+            { x: 70, y: 58, label: "Recolher galho espinhoso", action: "item", item: "thorn_branch" },
+            { x: 50, y: 74, label: "Continuar", action: "advance" }
+        ],
         8: [
-            { x: 25, y: 58, label: "Examinar o chão", action: "discovery", item: "grenade", index: 0 },
-            { x: 50, y: 58, label: "Examinar o equipamento", action: "discovery", item: "weapon", index: 1 },
-            { x: 75, y: 58, label: "Examinar as cordas", action: "discovery", item: "rope", index: 2 }
+            { x: 25, y: 58, label: "Ler o livro", action: "clue", clue: "field_book" },
+            { x: 50, y: 58, label: "Recolher explosivo improvisado", action: "item", item: "improvised_grenade" },
+            { x: 75, y: 58, label: "Verificar arma e cordas", action: "item", item: "weapon_and_rope" }
         ],
         9: [{ x: 52, y: 55, label: "Investigar", action: "advance" }],
         10: [{ x: 58, y: 57, label: "Investigar", action: "advance" }],
@@ -95,12 +103,7 @@
         const choicesOverlay = document.getElementById("choices-overlay");
         if (choicesOverlay) {
             new MutationObserver(() => {
-                // O menu antigo fica desativado. A cena 8 agora é resolvida
-                // exclusivamente por exploração e interação no cenário.
-                if (choicesOverlay.classList.contains("active")) {
-                    choicesOverlay.classList.remove("active");
-                    updatePrompt();
-                }
+                if (choicesOverlay.classList.contains("active")) updatePrompt();
             }).observe(choicesOverlay, {
                 attributes: true,
                 attributeFilter: ["class"]
@@ -248,15 +251,15 @@
         layer.querySelectorAll(".interaction-point").forEach(point => point.remove());
 
         (scenePoints[currentScene] || []).forEach((point, index) => {
-            if (point.action === "discovery" && discoveredItems.has(point.item)) return;
+            if (["clue", "item"].includes(point.action) && discoveredItems.has(point.clue || point.item)) return;
 
             const button = document.createElement("button");
             button.type = "button";
-            button.className = `interaction-point ${point.action === "discovery" ? "discovery-point" : "advance-point"}`;
+            button.className = `interaction-point ${["clue", "item"].includes(point.action) ? "discovery-point" : "advance-point"}`;
             button.dataset.index = String(index);
             button.style.left = `${point.x}%`;
             button.style.top = `${point.y}%`;
-            button.innerHTML = `<span class="interaction-icon">${point.action === "discovery" ? "◆" : "•"}</span>`;
+            button.innerHTML = `<span class="interaction-icon">${["clue", "item"].includes(point.action) ? "◆" : "•"}</span>`;
             button.setAttribute("aria-label", point.label);
             layer.appendChild(button);
         });
@@ -275,7 +278,7 @@
         let distance = Infinity;
 
         (scenePoints[currentScene] || []).forEach((point, index) => {
-            if (point.action === "discovery" && discoveredItems.has(point.item)) return;
+            if (["clue", "item"].includes(point.action) && discoveredItems.has(point.clue || point.item)) return;
 
             const currentDistance = Math.hypot(x - point.x, y - point.y);
             if (currentDistance < distance) {
@@ -297,7 +300,7 @@
         }
 
         prompt.hidden = false;
-        prompt.textContent = `E — ${nearest.point.action === "discovery" ? "Examinar" : "Investigar"}`;
+        prompt.textContent = `E — ${["clue", "item"].includes(nearest.point.action) ? "Examinar" : "Investigar"}`;
     }
 
     function interactNearest() {
@@ -309,15 +312,12 @@
         const point = (scenePoints[currentScene] || [])[index];
         if (!point) return;
 
-        if (point.action === "discovery") {
-            discoveredItems.add(point.item);
+        if (point.action === "clue" || point.action === "item") {
+            const key = point.clue || point.item;
+            discoveredItems.add(key);
+            if (point.action === "clue") window.Investigation?.addClue(point.clue);
+            else window.Investigation?.addItem(point.item);
             createScenePoints();
-
-            // A decisão é tomada pela descoberta/interação do objeto no mundo.
-            // Nenhuma opção de escolha é apresentada ao jogador.
-            if (currentScene === 8 && typeof window.chooseScene8 === "function") {
-                window.chooseScene8(point.index);
-            }
             return;
         }
 
