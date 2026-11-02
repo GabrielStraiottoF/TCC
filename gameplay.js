@@ -43,10 +43,81 @@
         ]
     };
 
-    // Durante o teste, todas as cenas usam temporariamente o mesmo cenário.
+    // Mapas próprios das cenas de investigação. Coordenadas e colisões usam
+    // percentuais da área jogável; as áreas livres preservam acesso aos pontos.
+    const investigationScenes = {
+        6: {
+            mapClass: "scene-map-6",
+            mapTitle: "CLAREIRA DESTRUÍDA",
+            collisions: [
+                { x: 5, y: 14, width: 17, height: 28, label: "Árvore caída" },
+                { x: 78, y: 12, width: 17, height: 30, label: "Troncos" },
+                { x: 29, y: 22, width: 13, height: 11, label: "Raízes" },
+                { x: 60, y: 28, width: 14, height: 10, label: "Destroços" },
+                { x: 15, y: 66, width: 18, height: 9, label: "Galhos" },
+                { x: 70, y: 67, width: 17, height: 10, label: "Raízes" }
+            ],
+            decorations: [
+                { type: "fallen-tree", x: 3, y: 13, width: 22, height: 15 },
+                { type: "broken-trunk", x: 78, y: 10, width: 18, height: 31 },
+                { type: "roots", x: 27, y: 21, width: 16, height: 13 },
+                { type: "debris", x: 58, y: 27, width: 17, height: 12 },
+                { type: "tracks", x: 23, y: 47, width: 17, height: 13 },
+                { type: "fur", x: 64, y: 45, width: 13, height: 12 },
+                { type: "debris", x: 13, y: 65, width: 21, height: 11 },
+                { type: "roots", x: 68, y: 65, width: 20, height: 12 }
+            ]
+        },
+        7: {
+            mapClass: "scene-map-7",
+            mapTitle: "TRILHA DA PERSEGUIÇÃO",
+            collisions: [
+                { x: 4, y: 12, width: 19, height: 34, label: "Vegetação densa" },
+                { x: 77, y: 10, width: 19, height: 36, label: "Vegetação densa" },
+                { x: 28, y: 28, width: 12, height: 15, label: "Tronco" },
+                { x: 59, y: 19, width: 13, height: 16, label: "Tronco" },
+                { x: 10, y: 67, width: 17, height: 10, label: "Arbusto" },
+                { x: 75, y: 64, width: 18, height: 12, label: "Arbusto" }
+            ],
+            decorations: [
+                { type: "dense-forest", x: 2, y: 10, width: 22, height: 39 },
+                { type: "dense-forest", x: 76, y: 8, width: 22, height: 41 },
+                { type: "trunk", x: 27, y: 27, width: 14, height: 17 },
+                { type: "trunk", x: 58, y: 18, width: 15, height: 18 },
+                { type: "blood-trail", x: 23, y: 48, width: 15, height: 12 },
+                { type: "thorn-bush", x: 66, y: 52, width: 19, height: 17 },
+                { type: "bent-grass", x: 39, y: 17, width: 19, height: 10 },
+                { type: "bent-grass", x: 39, y: 63, width: 20, height: 10 }
+            ]
+        },
+        8: {
+            mapClass: "scene-map-8",
+            mapTitle: "ACAMPAMENTO ABANDONADO",
+            collisions: [
+                { x: 8, y: 17, width: 22, height: 23, label: "Barraca" },
+                { x: 69, y: 16, width: 22, height: 24, label: "Barraca" },
+                { x: 37, y: 18, width: 23, height: 12, label: "Mesa" },
+                { x: 15, y: 61, width: 15, height: 11, label: "Caixas" },
+                { x: 73, y: 61, width: 15, height: 11, label: "Suprimentos" }
+            ],
+            decorations: [
+                { type: "tent", x: 7, y: 15, width: 24, height: 26 },
+                { type: "tent", x: 68, y: 14, width: 24, height: 27 },
+                { type: "supply-table", x: 36, y: 17, width: 25, height: 13 },
+                { type: "campfire", x: 43, y: 43, width: 15, height: 16 },
+                { type: "book-site", x: 17, y: 48, width: 16, height: 12 },
+                { type: "crate", x: 13, y: 60, width: 18, height: 13 },
+                { type: "bedroll", x: 66, y: 47, width: 17, height: 12 },
+                { type: "crate", x: 72, y: 60, width: 18, height: 13 }
+            ]
+        }
+    };
+
+    // As demais cenas mantêm o mapa de teste atual enquanto são trabalhadas.
     const sceneGameplay = Object.fromEntries(
         Array.from({ length: 14 }, (_, index) => [index + 1, testScene])
     );
+    Object.assign(sceneGameplay, investigationScenes);
 
     // Os pontos representam elementos encontrados no mundo, não opções de menu.
     // Na cena 8, a decisão é tomada pela ação do jogador sobre o elemento.
@@ -57,19 +128,19 @@
         4: [{ x: 55, y: 68, label: "Investigar", action: "advance" }],
         5: [{ x: 72, y: 70, label: "Investigar", action: "advance" }],
         6: [
-            { x: 30, y: 56, label: "Examinar pegadas", action: "clue", clue: "tracks" },
-            { x: 70, y: 56, label: "Examinar pelos", action: "clue", clue: "fur" },
-            { x: 50, y: 74, label: "Continuar", action: "advance" }
+            { x: 31, y: 54, label: "Examinar pegadas", action: "clue", clue: "tracks" },
+            { x: 70, y: 51, label: "Examinar pelos", action: "clue", clue: "fur" },
+            { x: 50, y: 22, label: "Seguir pela clareira", action: "advance" }
         ],
         7: [
-            { x: 30, y: 58, label: "Examinar sangue", action: "clue", clue: "blood" },
-            { x: 70, y: 58, label: "Recolher galho espinhoso", action: "item", item: "thorn_branch" },
-            { x: 50, y: 74, label: "Continuar", action: "advance" }
+            { x: 29, y: 55, label: "Examinar sangue", action: "clue", clue: "blood" },
+            { x: 73, y: 58, label: "Recolher galho espinhoso", action: "item", item: "thorn_branch" },
+            { x: 50, y: 19, label: "Escapar da perseguição", action: "advance" }
         ],
         8: [
-            { x: 25, y: 58, label: "Ler o livro", action: "clue", clue: "field_book" },
-            { x: 50, y: 58, label: "Recolher explosivo improvisado", action: "item", item: "improvised_grenade" },
-            { x: 75, y: 58, label: "Verificar arma e cordas", action: "item", item: "weapon_and_rope" }
+            { x: 25, y: 54, label: "Ler o livro", action: "clue", clue: "field_book" },
+            { x: 50, y: 64, label: "Recolher explosivo improvisado", action: "item", item: "improvised_grenade" },
+            { x: 77, y: 54, label: "Verificar arma e cordas", action: "item", item: "weapon_and_rope" }
         ],
         9: [{ x: 52, y: 55, label: "Investigar", action: "advance" }],
         10: [{ x: 58, y: 57, label: "Investigar", action: "advance" }],
@@ -237,10 +308,10 @@
         layer.querySelectorAll(".test-map, .collision-box").forEach(element => element.remove());
 
         const config = sceneGameplay[currentScene];
-        if (!config?.testMap) return;
+        if (!config?.decorations?.length) return;
 
         const map = document.createElement("div");
-        map.className = "test-map";
+        map.className = config.mapClass ? `scene-map ${config.mapClass}` : "test-map";
         map.setAttribute("aria-hidden", "true");
 
         config.decorations.forEach(decoration => {
@@ -253,17 +324,19 @@
             map.appendChild(element);
         });
 
-        config.collisions.forEach(box => {
-            const element = document.createElement("div");
-            element.className = "collision-box";
-            element.style.left = `${box.x}%`;
-            element.style.top = `${box.y}%`;
-            element.style.width = `${box.width}%`;
-            element.style.height = `${box.height}%`;
-            element.textContent = box.label;
-            element.setAttribute("aria-hidden", "true");
-            layer.appendChild(element);
-        });
+        if (!config.mapClass) {
+            config.collisions.forEach(box => {
+                const element = document.createElement("div");
+                element.className = "collision-box";
+                element.style.left = `${box.x}%`;
+                element.style.top = `${box.y}%`;
+                element.style.width = `${box.width}%`;
+                element.style.height = `${box.height}%`;
+                element.textContent = box.label;
+                element.setAttribute("aria-hidden", "true");
+                layer.appendChild(element);
+            });
+        }
 
         layer.insertBefore(map, player);
     }
