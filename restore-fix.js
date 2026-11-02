@@ -25,7 +25,7 @@ function restoreSave() {
     const savedJourneyLog = Array.isArray(payload.journeyLog) ? payload.journeyLog : [];
     const savedVisitedScenes = Array.isArray(payload.visitedScenes) ? payload.visitedScenes.map(Number) : [];
 
-    loadScene(savedSceneIndex, false);
+    loadScene(savedSceneIndex, false, false);
     clearTypewriter();
     currentEventIndex = savedEventIndex;
     currentDialogueIndex = savedDialogueIndex;
