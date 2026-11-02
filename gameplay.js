@@ -332,6 +332,7 @@
     }
 
     function interact(index) {
+        if (document.querySelector(".modal.active, .overlay.active")) return;
         const point = (scenePoints[currentScene] || [])[index];
         if (!point) return;
 
