@@ -1,6 +1,8 @@
 // Camada de exploração 2D sobre o motor narrativo existente.
 // Não altera roteiro.json nem os textos narrativos.
 (() => {
+    // true mostra o mapa de teste (fundo CSS e caixas de colisão) nas cenas sem mapa próprio.
+    const SHOW_TEST_MAP = false;
     let player = null;
     let layer = null;
     let prompt = null;
@@ -309,6 +311,8 @@
 
         const config = sceneGameplay[currentScene];
         if (!config?.decorations?.length) return;
+        // Sem o mapa de teste visível, o fundo da cena aparece. As colisões continuam ativas.
+        if (!config.mapClass && !SHOW_TEST_MAP) return;
 
         const map = document.createElement("div");
         map.className = config.mapClass ? `scene-map ${config.mapClass}` : "test-map";

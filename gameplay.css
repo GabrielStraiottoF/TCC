@@ -7,13 +7,15 @@
     overflow: hidden;
 }
 
-/* Personagem controlável — visual temporário em pixel art CSS. */
+/* Personagem controlável — sprite do Alex (imagens/alex/).
+   Altura = 35,56 / 240 do cenário, a mesma proporção usada no protótipo
+   (prototipo20.html). Os pés ficam na posição (x, y), como no protótipo. */
 .player {
     position: absolute;
     z-index: 12;
-    width: 46px;
-    height: 64px;
-    transform: translate(-50%, -50%);
+    height: 14.8%;
+    aspect-ratio: 72 / 80;
+    transform: translate(-50%, -100%);
     transition: left .03s linear, top .03s linear;
     pointer-events: none;
     filter: drop-shadow(4px 5px 0 rgba(0,0,0,.75));
@@ -22,84 +24,32 @@
 .player-shadow {
     position: absolute;
     left: 50%;
-    bottom: -4px;
-    width: 38px;
-    height: 11px;
+    bottom: -2%;
+    width: 60%;
+    height: 9%;
     transform: translateX(-50%);
     border-radius: 50%;
     background: rgba(0,0,0,.62);
 }
 
-.player-body {
+/* Parado: 6 quadros de 72x80 em imagens/alex/alex-idle.png */
+.player-sprite {
     position: absolute;
-    left: 9px;
-    top: 17px;
-    width: 28px;
-    height: 38px;
-    background: #242a32;
-    border: 3px solid #090b0d;
-    border-radius: 4px 4px 2px 2px;
-    box-shadow: inset 0 -7px rgba(0,0,0,.22);
+    inset: 0;
+    background: url("imagens/alex/alex-idle.png") 0 0 / 600% 100% no-repeat;
+    image-rendering: pixelated;
+    animation: alex-idle .9s steps(5) infinite;
 }
 
-.player-head {
-    position: absolute;
-    left: 4px;
-    top: -19px;
-    width: 20px;
-    height: 20px;
-    background: #c9926b;
-    border: 3px solid #090b0d;
-    border-radius: 3px;
-    box-shadow: inset 0 -3px rgba(100,50,35,.2);
+/* Andando: 8 quadros em imagens/alex/alex-walk.png */
+.player.is-walking .player-sprite {
+    background-image: url("imagens/alex/alex-walk.png");
+    background-size: 800% 100%;
+    animation: alex-walk .8s steps(7) infinite;
 }
 
-.player-head::before {
-    content: "";
-    position: absolute;
-    left: -4px;
-    top: -7px;
-    width: 21px;
-    height: 9px;
-    background: #151719;
-    border: 3px solid #090b0d;
-    border-bottom: 0;
-}
-
-.player-head::after {
-    content: "";
-    position: absolute;
-    right: 2px;
-    top: 8px;
-    width: 3px;
-    height: 3px;
-    background: #111;
-    box-shadow: -10px 0 #111;
-}
-
-.player-coat {
-    position: absolute;
-    left: 4px;
-    top: 7px;
-    width: 14px;
-    height: 26px;
-    background: #572526;
-    box-shadow: 10px 0 #572526;
-}
-
-.player-coat::before,
-.player-coat::after {
-    content: "";
-    position: absolute;
-    top: 5px;
-    width: 5px;
-    height: 21px;
-    background: #161a1e;
-    border: 2px solid #090b0d;
-}
-
-.player-coat::before { left: -9px; }
-.player-coat::after { right: -9px; }
+@keyframes alex-idle { from { background-position: 0 0; } to { background-position: 100% 0; } }
+@keyframes alex-walk { from { background-position: 0 0; } to { background-position: 100% 0; } }
 
 /* Pontos de interação são marcadores do mundo, não botões de escolha. */
 .interaction-point {
@@ -186,7 +136,7 @@
 }
 
 @media (max-width: 560px) {
-    .player { transform: translate(-50%, -50%) scale(.85); }
+    .player { transform: translate(-50%, -100%) scale(.85); }
     .interaction-point { width: 25px; height: 25px; }
     .movement-help { left: 8px; right: auto; bottom: 25%; font-size: 14px; }
     .interaction-prompt { bottom: 31%; font-size: 16px; }
@@ -207,22 +157,9 @@
 #btn-investigation { white-space: nowrap; }
 
 
-/* Feedback simples de deslocamento para o sprite provisório de Alex. */
-.player.is-walking .player-body {
-    animation: player-step .22s steps(2, end) infinite;
-}
-.player.is-walking .player-coat {
-    animation: coat-step .22s steps(2, end) infinite;
-}
-@keyframes player-step {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-}
-@keyframes coat-step {
-    0%, 100% { transform: translateX(0); }
+
     50% { transform: translateX(2px); }
 }
 @media (prefers-reduced-motion: reduce) {
-    .player.is-walking .player-body,
-    .player.is-walking .player-coat { animation: none; }
+    .player-sprite, .player.is-walking .player-sprite { animation: none; }
 }
