@@ -1,0 +1,37 @@
+/* Responsividade geral: telas baixas (celular deitado), dispositivos de toque e
+   caixas que precisam rolar quando não cabem na altura da tela. */
+
+/* Telas baixas, como celular na horizontal */
+@media (max-height: 520px) {
+    .game-container { min-height: 0; padding: 6px 10px; }
+    .top-nav { padding: 4px 8px; }
+    .scene-badge { font-size: 15px; }
+    .scene-location { font-size: 17px; }
+    .retro-btn.btn-small { font-size: 15px; padding: 3px 8px; }
+    .dialog-wrapper { gap: 8px; }
+    .portrait-container { display: none; }
+    .dialog-box { min-height: 88px; padding: 16px 14px 8px; }
+    #dialog-text { font-size: 18px; }
+    .name-tag { top: -16px; font-size: 16px; }
+    .touch-controls { bottom: 146px; }
+    .joystick { width: 96px; height: 96px; }
+    .menu-box { padding: 16px 20px; }
+    .menu-title { font-size: 40px; }
+    .menu-box h2 { font-size: 26px; margin-bottom: 10px; }
+    .menu-box > .retro-btn { margin-top: 12px; }
+    .overlay-content { padding: 16px 20px; }
+    .modal-content { max-height: 94vh; }
+}
+
+/* Caixas de overlay nunca passam da altura visível; o conteúdo rola internamente */
+.overlay-content, .menu-box, .modal-content {
+    max-height: calc(100vh - 16px);
+    max-height: calc(100dvh - 16px);
+    overflow-y: auto;
+}
+
+/* Em dispositivos de toque, a barra de comandos é substituída pelos botões na tela
+   e pela tela "Como jogar". Ela deixa de competir com a caixa de narrativa. */
+@media (pointer: coarse) {
+    .movement-help { display: none; }
+}
