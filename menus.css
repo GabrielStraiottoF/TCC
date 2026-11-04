@@ -1,0 +1,115 @@
+/* Menus (título, dificuldade e como jogar) e controles de toque. */
+[hidden] { display: none !important; }
+
+.menu-box {
+    width: min(92%, 560px);
+    padding: 36px 28px;
+    background: var(--dialog-bg);
+    border: 4px solid var(--dialog-border);
+    box-shadow: 0 0 0 4px var(--dialog-border-dark), 8px 8px 0 rgba(0,0,0,.6);
+    text-align: center;
+}
+
+.menu-title {
+    font-family: var(--font-pixel);
+    font-size: clamp(46px, 9vw, 76px);
+    line-height: 1;
+    letter-spacing: 3px;
+    color: var(--gold-color);
+    text-shadow: 4px 4px #000;
+}
+
+.menu-subtitle { color: var(--text-muted); font-size: 22px; margin: 10px 0 26px; }
+
+.menu-box h2 { color: var(--gold-color); font-size: 36px; margin-bottom: 22px; }
+
+.menu-actions { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+.menu-actions .retro-btn { min-width: 260px; font-size: 24px; }
+
+.menu-box > .retro-btn { margin-top: 22px; min-width: 200px; }
+
+.howto-box { width: min(94%, 720px); }
+
+.howto-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+    text-align: left;
+}
+
+.howto-columns h3 { color: var(--gold-color); font-size: 26px; margin-bottom: 8px; }
+
+.howto-columns ul { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 20px; color: var(--text-color); }
+
+.howto-columns kbd {
+    font-family: var(--font-pixel);
+    font-size: 18px;
+    padding: 0 6px;
+    color: var(--gold-color);
+    background: #2a2020;
+    border: 2px solid var(--dialog-border);
+}
+
+/* Controles de toque: joystick à esquerda, botões à direita, acima da caixa de diálogo */
+.touch-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 236px;
+    z-index: 14;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 16px;
+    pointer-events: none;
+}
+
+.joystick {
+    position: relative;
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    background: rgba(20,14,14,.55);
+    border: 3px solid rgba(207,171,60,.55);
+    touch-action: none;
+    pointer-events: auto;
+}
+
+.joystick-knob {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 56px;
+    height: 56px;
+    margin: -28px 0 0 -28px;
+    border-radius: 50%;
+    background: rgba(207,171,60,.75);
+    border: 3px solid #000;
+    pointer-events: none;
+}
+
+.touch-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    pointer-events: auto;
+}
+
+.touch-btn {
+    min-width: 104px;
+    min-height: 60px;
+    padding: 6px 10px;
+    font-family: var(--font-pixel);
+    font-size: 22px;
+    color: var(--text-color);
+    background: rgba(90,24,24,.85);
+    border: 3px solid #000;
+    box-shadow: 3px 3px 0 #000;
+    touch-action: none;
+    user-select: none;
+}
+
+.touch-btn.is-pressed { background: var(--btn-hover-bg); transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+
+.touch-btn-primary { grid-column: 1 / -1; }

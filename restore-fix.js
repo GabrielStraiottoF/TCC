@@ -18,6 +18,8 @@ function restoreSave() {
         return false;
     }
 
+    selectedDifficulty = DIFFICULTY_LABELS[payload.difficulty] ? payload.difficulty : "normal";
+    document.body.dataset.difficulty = selectedDifficulty;
     const savedSceneIndex = findSceneIndex(payload.sceneId);
     const savedEventIndex = Math.max(0, Number(payload.eventIndex) || 0);
     const savedDialogueIndex = Number.isInteger(payload.dialogueIndex) ? payload.dialogueIndex : -1;

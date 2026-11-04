@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobrenatural: O Mapinguari</title>
+    <title>Sons da Noite</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="backgrounds.css">
     <link rel="stylesheet" href="gameplay.css">
+    <link rel="stylesheet" href="menus.css">
     <link rel="stylesheet" href="test-scene.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,10 +20,21 @@
         <div id="exploration-layer" aria-label="Área de exploração">
             <div id="player" class="player" role="img" aria-label="Alex, personagem controlável">
                 <span class="player-shadow"></span>
-                <span class="player-sprite"></span>
+                <span class="player-lift"><span class="player-sprite"></span></span>
             </div>
             <div id="interaction-prompt" class="interaction-prompt" hidden>E — Interagir</div>
             <div class="movement-help">WASD: mover &nbsp; • &nbsp; E: interagir &nbsp; • &nbsp; Enter / Espaço / →: avançar</div>
+        </div>
+
+        <div id="touch-controls" class="touch-controls" hidden aria-label="Controles de toque">
+            <div id="joystick" class="joystick" aria-label="Joystick para mover Alex">
+                <div id="joystick-knob" class="joystick-knob"></div>
+            </div>
+            <div class="touch-buttons">
+                <button id="btn-touch-run" class="touch-btn" type="button">Correr</button>
+                <button id="btn-touch-jump" class="touch-btn" type="button">Pular</button>
+                <button id="btn-touch-interact" class="touch-btn touch-btn-primary" type="button">Interagir</button>
+            </div>
         </div>
 
         <div id="loading-overlay" class="overlay active">
@@ -40,6 +52,61 @@
                     <strong>Nota:</strong> Se você estiver abrindo o arquivo HTML diretamente no navegador, o CORS pode bloquear requisições fetch. Por favor, execute um servidor local (ex: <code>npx http-server</code> ou Live Server no VS Code).
                 </div>
                 <button onclick="window.location.reload()" class="retro-btn">Tentar Novamente</button>
+            </div>
+        </div>
+
+        <div id="title-overlay" class="overlay menu-overlay active" role="dialog" aria-modal="true" aria-labelledby="title-heading">
+            <div class="overlay-content menu-box">
+                <h1 id="title-heading" class="menu-title">SONS DA NOITE</h1>
+                <p class="menu-subtitle">Investigação e terror na Amazônia</p>
+                <div class="menu-actions">
+                    <button id="btn-continue" class="retro-btn" type="button" hidden>Continuar</button>
+                    <button id="btn-start" class="retro-btn" type="button">Começar jogo</button>
+                    <button id="btn-howto" class="retro-btn" type="button">Como jogar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="difficulty-overlay" class="overlay menu-overlay" role="dialog" aria-modal="true" aria-labelledby="difficulty-heading">
+            <div class="overlay-content menu-box">
+                <h2 id="difficulty-heading">ESCOLHA A DIFICULDADE</h2>
+                <div class="menu-actions">
+                    <button class="retro-btn difficulty-btn" type="button" data-difficulty="easy">Fácil</button>
+                    <button class="retro-btn difficulty-btn" type="button" data-difficulty="normal">Normal</button>
+                    <button class="retro-btn difficulty-btn" type="button" data-difficulty="hard">Difícil</button>
+                </div>
+                <button id="btn-difficulty-back" class="retro-btn btn-small" type="button">Voltar</button>
+            </div>
+        </div>
+
+        <div id="howto-overlay" class="overlay menu-overlay" role="dialog" aria-modal="true" aria-labelledby="howto-heading">
+            <div class="overlay-content menu-box howto-box">
+                <h2 id="howto-heading">COMO JOGAR</h2>
+                <div class="howto-columns">
+                    <section>
+                        <h3>Teclado</h3>
+                        <ul>
+                            <li><kbd>W A S D</kbd> mover Alex</li>
+                            <li><kbd>E</kbd> examinar o ponto próximo</li>
+                            <li><kbd>Shift</kbd> correr</li>
+                            <li><kbd>Q</kbd> pular</li>
+                            <li><kbd>Enter</kbd> / <kbd>Espaço</kbd> / <kbd>→</kbd> avançar a história</li>
+                            <li><kbd>1</kbd> a <kbd>3</kbd> escolher a estratégia (cena 8)</li>
+                            <li><kbd>Esc</kbd> fechar janelas</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Celular</h3>
+                        <ul>
+                            <li>Joystick: mover Alex</li>
+                            <li>Botão CORRER: andar mais rápido</li>
+                            <li>Botão PULAR: pular</li>
+                            <li>Botão INTERAGIR: examinar o ponto próximo</li>
+                            <li>Toque na caixa de diálogo: avançar</li>
+                        </ul>
+                    </section>
+                </div>
+                <button id="btn-howto-back" class="retro-btn" type="button">Voltar</button>
             </div>
         </div>
 

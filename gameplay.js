@@ -14,6 +14,11 @@
     const keys = new Set();
     const speed = 22;
     const playerRadius = 2.2;
+    const RUN_MULTIPLIER = 1.7;
+    // Entrada dos controles de toque: joystick (-1..1) e botão de correr.
+    const touch = { dx: 0, dy: 0, run: false };
+    let jumpTimer = null;
+    const clampAxis = value => Math.max(-1, Math.min(1, value));
 
     // Estado de exploração. As decisões da cena 8 acontecem ao encontrar
     // elementos no cenário, e não por meio de um menu de escolhas.
@@ -189,11 +194,68 @@
         document.addEventListener("keydown", onKeyDown, true);
         document.addEventListener("keyup", event => keys.delete(event.key), true);
         window.addEventListener("blur", () => keys.clear());
+        bindTouch();
+        window.ExplorationControls = {
+            setMove(dx, dy) { touch.dx = clampAxis(dx); touch.dy = clampAxis(dy); },
+            setRun(on) { touch.run = !!on; },
+            jump,
+            interact: interactNearest
+        };
 
         layer.addEventListener("click", event => {
             const point = event.target.closest(".interaction-point");
             if (point) interact(Number(point.dataset.index));
         });
+    }
+
+    function bindTouch() {
+        const controls = document.getElementById("touch-controls");
+        const joystick = document.getElementById("joystick");
+        const knob = document.getElementById("joystick-knob");
+        if (!controls || !joystick || !knob) return;
+        controls.hidden = !window.matchMedia("(pointer: coarse)").matches;
+        if (controls.hidden) return;
+
+        let joystickPointer = null;
+        const moveKnob = event => {
+            const rect = joystick.getBoundingClientRect();
+            const max = rect.width / 2;
+            let dx = event.clientX - (rect.left + max);
+            let dy = event.clientY - (rect.top + max);
+            const distance = Math.hypot(dx, dy);
+            if (distance > max) { dx = dx * max / distance; dy = dy * max / distance; }
+            knob.style.transform = `translate(${dx}px, ${dy}px)`;
+            window.ExplorationControls.setMove(dx / max, dy / max);
+        };
+        const releaseKnob = event => {
+            if (event.pointerId !== joystickPointer) return;
+            joystickPointer = null;
+            knob.style.transform = "";
+            window.ExplorationControls.setMove(0, 0);
+        };
+        joystick.addEventListener("pointerdown", event => {
+            joystickPointer = event.pointerId;
+            joystick.setPointerCapture(event.pointerId);
+            moveKnob(event);
+        });
+        joystick.addEventListener("pointermove", event => {
+            if (event.pointerId === joystickPointer) moveKnob(event);
+        });
+        joystick.addEventListener("pointerup", releaseKnob);
+        joystick.addEventListener("pointercancel", releaseKnob);
+
+        const run = document.getElementById("btn-touch-run");
+        const setRunButton = on => {
+            window.ExplorationControls.setRun(on);
+            run.classList.toggle("is-pressed", on);
+        };
+        run.addEventListener("pointerdown", event => { run.setPointerCapture(event.pointerId); setRunButton(true); });
+        run.addEventListener("pointerup", () => setRunButton(false));
+        run.addEventListener("pointercancel", () => setRunButton(false));
+        run.addEventListener("lostpointercapture", () => setRunButton(false));
+
+        document.getElementById("btn-touch-jump")?.addEventListener("click", () => window.ExplorationControls.jump());
+        document.getElementById("btn-touch-interact")?.addEventListener("click", () => window.ExplorationControls.interact());
     }
 
     function onKeyDown(event) {
@@ -204,6 +266,20 @@
             event.preventDefault();
             event.stopImmediatePropagation();
             keys.add(event.key);
+            return;
+        }
+
+        // Shift corre (segurado) e Q pula. Ambos são ignorados enquanto há janelas abertas.
+        if (event.key === "Shift") {
+            keys.add("Shift");
+            return;
+        }
+        if (event.key === "q" || event.key === "Q") {
+            const blocked = document.querySelector(".modal.active, .overlay.active");
+            if (blocked || event.repeat) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            jump();
             return;
         }
 
@@ -225,31 +301,57 @@
         animationFrame = requestAnimationFrame(loop);
     }
 
+    function setRunning(on) {
+        if (!player) return;
+        player.classList.toggle("is-running", !!on && player.classList.contains("is-walking"));
+    }
+
+    function jump() {
+        if (!player || jumpTimer || document.querySelector(".modal.active, .overlay.active")) return;
+        player.classList.add("is-jumping");
+        jumpTimer = setTimeout(() => {
+            player.classList.remove("is-jumping");
+            jumpTimer = null;
+        }, 520);
+    }
+
     function movePlayer(dt) {
         if (!player) return;
 
         const blocked = document.querySelector(".modal.active, .overlay.active");
         if (blocked) {
             keys.clear();
+            touch.dx = 0;
+            touch.dy = 0;
+            setRunning(false);
             player.classList.remove("is-walking");
             return;
         }
 
-        let dx = 0;
-        let dy = 0;
+        let dx = touch.dx;
+        let dy = touch.dy;
         if (keys.has("a") || keys.has("A")) dx -= 1;
         if (keys.has("d") || keys.has("D")) dx += 1;
         if (keys.has("w") || keys.has("W")) dy -= 1;
         if (keys.has("s") || keys.has("S")) dy += 1;
-        if (!dx && !dy) {
+        dx = clampAxis(dx);
+        dy = clampAxis(dy);
+
+        // O joystick é analógico: a intensidade do toque define a velocidade.
+        const magnitude = Math.min(1, Math.hypot(dx, dy));
+        if (!magnitude) {
+            setRunning(false);
             player.classList.remove("is-walking");
             return;
         }
         player.classList.add("is-walking");
+        const runActive = touch.run || keys.has("Shift");
+        setRunning(runActive);
 
         const length = Math.hypot(dx, dy) || 1;
-        const nextX = x + (dx / length) * speed * dt;
-        const nextY = y + (dy / length) * speed * dt;
+        const step = speed * (runActive ? RUN_MULTIPLIER : 1) * magnitude * dt;
+        const nextX = x + (dx / length) * step;
+        const nextY = y + (dy / length) * step;
 
         if (!collides(nextX, nextY)) {
             x = Math.max(7, Math.min(93, nextX));
@@ -260,9 +362,7 @@
         }
 
         renderPlayer();
-        updatePrompt();
     }
-
     function collides(testX, testY) {
         const config = sceneGameplay[currentScene];
         if (!config?.collisions) return false;

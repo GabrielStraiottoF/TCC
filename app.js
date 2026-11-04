@@ -68,11 +68,8 @@ async function initializeGame() {
 
         loadingOverlay?.classList.remove("active");
         setupGameControls();
-
-        if (!restoreSave()) {
-            resetJourneyState();
-            loadScene(0, false);
-        }
+        setupMenus();
+        showTitleMenu();
     } catch (err) {
         console.error("Erro ao inicializar o jogo:", err);
         loadingOverlay?.classList.remove("active");
@@ -201,6 +198,7 @@ function setupGameControls() {
     });
 
     document.addEventListener("keydown", event => {
+        if (document.querySelector(".menu-overlay.active")) return;
         if (document.querySelector(".modal.active")) {
             if (event.key === "Escape") closeModals();
             return;
@@ -299,7 +297,7 @@ function loadScene(sceneIndex, save = true, startNarrative = true) {
     if (sceneBadge) sceneBadge.textContent = `Cena ${scene.id}`;
     if (sceneLocation) sceneLocation.textContent = scene.local;
 
-    document.title = `Sobrenatural: O Mapinguari — ${scene.local}`;
+    document.title = `Sons da Noite — ${scene.local}`;
     updateBackground(scene.id);
     updateSceneMapSelection();
 
@@ -668,6 +666,7 @@ function saveGame() {
 
     const payload = {
         version: 3,
+        difficulty: selectedDifficulty,
         sceneId: Number(scene.id),
         investigation: window.Investigation?.getState() ?? null,
         eventIndex: currentEventIndex,
@@ -730,4 +729,67 @@ function escapeHtml(value) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+}
+
+// ---------- menu inicial, dificuldade e como jogar ----------
+const DIFFICULTY_LABELS = { easy: "Fácil", normal: "Normal", hard: "Difícil" };
+const MENU_IDS = ["title-overlay", "difficulty-overlay", "howto-overlay"];
+let selectedDifficulty = "normal";
+
+function hasSavedGame() {
+    try {
+        const raw = localStorage.getItem(SAVE_KEY);
+        if (!raw) return false;
+        const payload = JSON.parse(raw);
+        return !!payload && [2, 3].includes(payload.version);
+    } catch (error) {
+        return false;
+    }
+}
+
+function hideMenus() {
+    MENU_IDS.forEach(id => document.getElementById(id)?.classList.remove("active"));
+}
+
+function showMenu(id) {
+    MENU_IDS.forEach(menuId => document.getElementById(menuId)?.classList.toggle("active", menuId === id));
+    document.querySelector(`#${id} .retro-btn:not([hidden])`)?.focus();
+}
+
+function showTitleMenu() {
+    const continueButton = document.getElementById("btn-continue");
+    if (continueButton) continueButton.hidden = !hasSavedGame();
+    showMenu("title-overlay");
+}
+
+function startNewGame(difficulty) {
+    selectedDifficulty = DIFFICULTY_LABELS[difficulty] ? difficulty : "normal";
+    document.body.dataset.difficulty = selectedDifficulty;
+    hideMenus();
+    resetJourneyState();
+    loadScene(0, false);
+}
+
+function continueSavedGame() {
+    hideMenus();
+    if (!restoreSave()) {
+        resetJourneyState();
+        loadScene(0, false);
+    }
+}
+
+function setupMenus() {
+    document.getElementById("btn-start")?.addEventListener("click", () => showMenu("difficulty-overlay"));
+    document.getElementById("btn-howto")?.addEventListener("click", () => showMenu("howto-overlay"));
+    document.getElementById("btn-continue")?.addEventListener("click", continueSavedGame);
+    document.querySelectorAll(".difficulty-btn").forEach(button => {
+        button.addEventListener("click", () => startNewGame(button.dataset.difficulty));
+    });
+    document.getElementById("btn-difficulty-back")?.addEventListener("click", showTitleMenu);
+    document.getElementById("btn-howto-back")?.addEventListener("click", showTitleMenu);
+    document.addEventListener("keydown", event => {
+        if (event.key !== "Escape") return;
+        const subMenuOpen = ["difficulty-overlay", "howto-overlay"].some(id => document.getElementById(id)?.classList.contains("active"));
+        if (subMenuOpen) showTitleMenu();
+    });
 }

@@ -51,6 +51,23 @@
 @keyframes alex-idle { from { background-position: 0 0; } to { background-position: 100% 0; } }
 @keyframes alex-walk { from { background-position: 0 0; } to { background-position: 100% 0; } }
 
+/* Correr (botão CORRER no celular): 8 quadros em imagens/alex/alex-run.png */
+.player.is-running .player-sprite {
+    background-image: url("imagens/alex/alex-run.png");
+    background-size: 800% 100%;
+    animation: alex-run .5s steps(7) infinite;
+}
+@keyframes alex-run { from { background-position: 0 0; } to { background-position: 100% 0; } }
+
+/* Pular (botão PULAR): salto visual; o jogo ainda não tem obstáculos que dependam dele */
+.player-lift { position: absolute; inset: 0; }
+.player.is-jumping .player-lift { animation: alex-jump .52s ease-out; }
+@keyframes alex-jump {
+    0%   { transform: translateY(0); }
+    45%  { transform: translateY(-38%); }
+    100% { transform: translateY(0); }
+}
+
 /* Pontos de interação são marcadores do mundo, não botões de escolha. */
 .interaction-point {
     position: absolute;
@@ -161,5 +178,5 @@
     50% { transform: translateX(2px); }
 }
 @media (prefers-reduced-motion: reduce) {
-    .player-sprite, .player.is-walking .player-sprite { animation: none; }
+    .player-sprite, .player-lift { animation: none !important; }
 }
