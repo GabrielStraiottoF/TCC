@@ -783,7 +783,11 @@ function setupMenus() {
     document.getElementById("btn-howto")?.addEventListener("click", () => showMenu("howto-overlay"));
     document.getElementById("btn-continue")?.addEventListener("click", continueSavedGame);
     document.querySelectorAll(".difficulty-btn").forEach(button => {
-        button.addEventListener("click", () => startNewGame(button.dataset.difficulty));
+        button.addEventListener("click", () => {
+            // Começar um novo jogo apaga o progresso salvo; pede confirmação antes.
+            if (hasSavedGame() && !confirm("Começar um novo jogo apaga o progresso salvo. Deseja continuar?")) return;
+            startNewGame(button.dataset.difficulty);
+        });
     });
     document.getElementById("btn-difficulty-back")?.addEventListener("click", showTitleMenu);
     document.getElementById("btn-howto-back")?.addEventListener("click", showTitleMenu);

@@ -21,8 +21,16 @@ function restoreSave() {
     selectedDifficulty = DIFFICULTY_LABELS[payload.difficulty] ? payload.difficulty : "normal";
     document.body.dataset.difficulty = selectedDifficulty;
     const savedSceneIndex = findSceneIndex(payload.sceneId);
-    const savedEventIndex = Math.max(0, Number(payload.eventIndex) || 0);
-    const savedDialogueIndex = Number.isInteger(payload.dialogueIndex) ? payload.dialogueIndex : -1;
+    const savedScene = roteiro.cenas[savedSceneIndex];
+    // Índices fora do intervalo da cena são limitados para não pular a narração.
+    const clampIndex = (value, min, max) => Math.min(max, Math.max(min, value));
+    const rawEventIndex = Number(payload.eventIndex);
+    const savedEventIndex = Number.isInteger(rawEventIndex)
+        ? clampIndex(rawEventIndex, 0, savedScene.eventos.length)
+        : 0;
+    const savedDialogueIndex = Number.isInteger(payload.dialogueIndex)
+        ? clampIndex(payload.dialogueIndex, -1, savedScene.dialogos.length - 1)
+        : -1;
     const savedSceneLog = Array.isArray(payload.sceneLog) ? payload.sceneLog : [];
     const savedJourneyLog = Array.isArray(payload.journeyLog) ? payload.journeyLog : [];
     const savedVisitedScenes = Array.isArray(payload.visitedScenes) ? payload.visitedScenes.map(Number) : [];
