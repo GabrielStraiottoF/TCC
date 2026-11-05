@@ -1,4 +1,4 @@
-// Testes de integridade do save (SAVE-003 e SAVE-007).
+// Testes de integridade do save (SAVE-001, 002, 003, 005 e 007).
 // Execução: node tests/save-integrity.cjs
 // Requer Chromium e Playwright instalados no ambiente e python3 para o servidor local.
 
@@ -138,6 +138,75 @@ async function runSave007(browser) {
     await context.close();
 }
 
+async function seedRaw(page, raw) {
+    await page.evaluate(([key, value]) => localStorage.setItem(key, value), [SAVE_KEY, raw]);
+}
+
+async function runInvalidSaves(browser) {
+    console.log("SAVE-001/002/005 — saves inválidos são recusados e mantidos");
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const messages = [];
+    page.on("dialog", async dialog => {
+        messages.push(dialog.message());
+        await dialog.accept();
+    });
+    await openGame(page);
+
+    const invalid = [
+        ["inventário inválido (item desconhecido)", payload({ investigation: { version: 1, clues: [], items: ["ghost"], strategy: null, outcome: null } })],
+        ["inventário com tipo errado", payload({ investigation: { version: 1, clues: [], items: "x", strategy: null, outcome: null } })],
+        ["cena inexistente", payload({ sceneId: 99 })],
+        ["versão desconhecida", payload({ version: 7 })],
+        ["v3 sem investigação", payload({ investigation: undefined })],
+    ];
+    for (const [label, data] of invalid) {
+        messages.length = 0;
+        await seed(page, data);
+        const restored = await page.evaluate(() => restoreSave());
+        const kept = await page.evaluate(k => localStorage.getItem(k) !== null, SAVE_KEY);
+        check(`${label}: não restaura`, restored === false);
+        check(`${label}: save mantido`, kept);
+        check(`${label}: jogador é avisado`, messages.length === 1 && messages[0].includes("continua salvo"), JSON.stringify(messages));
+    }
+
+    for (const [label, raw] of [["JSON truncado", "{"], ["payload nulo", "null"]]) {
+        messages.length = 0;
+        await seedRaw(page, raw);
+        const restored = await page.evaluate(() => restoreSave());
+        const kept = await page.evaluate(k => localStorage.getItem(k) !== null, SAVE_KEY);
+        check(`${label}: não restaura`, restored === false);
+        check(`${label}: save mantido`, kept);
+        check(`${label}: jogador é avisado`, messages.length === 1, JSON.stringify(messages));
+    }
+
+    // "Continuar" com save recusado volta ao menu inicial e não inicia jogo novo.
+    messages.length = 0;
+    await seed(page, payload({ sceneId: 99 }));
+    await page.evaluate(() => continueSavedGame());
+    const onTitle = await page.evaluate(() => document.getElementById("title-overlay").classList.contains("active"));
+    const keptAfterContinue = await page.evaluate(k => localStorage.getItem(k) !== null, SAVE_KEY);
+    check("continuar com save recusado volta ao menu inicial", onTitle);
+    check("continuar com save recusado não apaga o save", keptAfterContinue);
+
+    // Saves válidos continuam sendo restaurados.
+    messages.length = 0;
+    await seed(page, payload({ sceneId: 1 }));
+    const validRestored = await page.evaluate(() => restoreSave());
+    check("save válido é restaurado", validRestored === true);
+    check("save válido não gera aviso", messages.length === 0, JSON.stringify(messages));
+
+    // Save v2 sem investigação (dado antigo) continua aceito, como antes.
+    messages.length = 0;
+    const v2 = payload({ version: 2 });
+    delete v2.investigation;
+    await seed(page, v2);
+    const v2Restored = await page.evaluate(() => restoreSave());
+    check("save v2 sem investigação continua aceito", v2Restored === true && messages.length === 0);
+
+    await context.close();
+}
+
 (async () => {
     const server = spawn("python3", ["-m", "http.server", String(PORT), "--bind", "127.0.0.1", "--directory", ROOT], {
         stdio: "ignore",
@@ -148,6 +217,7 @@ async function runSave007(browser) {
         browser = await chromium.launch();
         await runSave003(browser);
         await runSave007(browser);
+        await runInvalidSaves(browser);
     } catch (error) {
         failed++;
         console.log(`  ERRO ${error.message}`);

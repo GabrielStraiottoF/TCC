@@ -35,8 +35,18 @@
     function chooseStrategy(i){if(![0,1,2].includes(i))return;state.strategy=i;state.outcome=null;window.saveGame?.();}
     function resolve(){if(state.outcome)return state.outcome;const has=id=>state.items.includes(id),clue=id=>state.clues.includes(id);if(state.strategy===0)state.outcome=has("thorn_branch")&&has("improvised_grenade")?"victory":"defeat";else if(state.strategy===1)state.outcome=has("weapon_and_rope")&&clue("blood")&&clue("field_book")?"victory":"defeat";else if(state.strategy===2)state.outcome=has("weapon_and_rope")&&(clue("tracks")||clue("blood"))?"escape":"defeat";else state.outcome="defeat";window.saveGame?.();return state.outcome;}
     function getState(){return JSON.parse(JSON.stringify(state));}
+    // Validação estrita: retorna false se o estado contiver qualquer valor desconhecido.
+    const hasOwn=(obj,key)=>Object.prototype.hasOwnProperty.call(obj,key);
+    function isValidState(s){
+        if(!s||typeof s!=="object"||s.version!==1)return false;
+        if(!Array.isArray(s.clues)||!s.clues.every(x=>hasOwn(clueCatalog,x)))return false;
+        if(!Array.isArray(s.items)||!s.items.every(x=>hasOwn(itemCatalog,x)))return false;
+        if(!(s.strategy==null||[0,1,2].includes(s.strategy)))return false;
+        if(!(s.outcome==null||["victory","escape","defeat"].includes(s.outcome)))return false;
+        return true;
+    }
     function restore(s){state=s&&s.version===1?{version:1,clues:Array.isArray(s.clues)?s.clues.filter(x=>clueCatalog[x]):[],items:Array.isArray(s.items)?s.items.filter(x=>itemCatalog[x]):[],strategy:[0,1,2].includes(s.strategy)?s.strategy:null,outcome:["victory","escape","defeat"].includes(s.outcome)?s.outcome:null}:fresh();}
     function reset(){state=fresh();render();}
-    window.Investigation={addClue,addItem,chooseStrategy,resolve,getState,restore,reset};
+    window.Investigation={addClue,addItem,chooseStrategy,resolve,getState,restore,reset,isValidState};
     window.addEventListener("DOMContentLoaded",ensureUI);window.addEventListener("load",ensureUI);
 })();

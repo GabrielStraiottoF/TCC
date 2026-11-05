@@ -736,6 +736,15 @@ const DIFFICULTY_LABELS = { easy: "Fácil", normal: "Normal", hard: "Difícil" }
 const MENU_IDS = ["title-overlay", "difficulty-overlay", "howto-overlay"];
 let selectedDifficulty = "normal";
 
+// Existe algum dado salvo, mesmo que inválido (para não apagá-lo sem confirmação).
+function hasSaveData() {
+    try {
+        return localStorage.getItem(SAVE_KEY) !== null;
+    } catch (error) {
+        return false;
+    }
+}
+
 function hasSavedGame() {
     try {
         const raw = localStorage.getItem(SAVE_KEY);
@@ -772,10 +781,8 @@ function startNewGame(difficulty) {
 
 function continueSavedGame() {
     hideMenus();
-    if (!restoreSave()) {
-        resetJourneyState();
-        loadScene(0, false);
-    }
+    // Se o save for recusado, ele é mantido e o jogador volta ao menu inicial.
+    if (!restoreSave()) showTitleMenu();
 }
 
 function setupMenus() {
@@ -785,7 +792,7 @@ function setupMenus() {
     document.querySelectorAll(".difficulty-btn").forEach(button => {
         button.addEventListener("click", () => {
             // Começar um novo jogo apaga o progresso salvo; pede confirmação antes.
-            if (hasSavedGame() && !confirm("Começar um novo jogo apaga o progresso salvo. Deseja continuar?")) return;
+            if (hasSaveData() && !confirm("Começar um novo jogo apaga o progresso salvo. Deseja continuar?")) return;
             startNewGame(button.dataset.difficulty);
         });
     });
