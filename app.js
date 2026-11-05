@@ -150,6 +150,7 @@ function validateRoteiro(data) {
 }
 
 function setupGameControls() {
+    setupDisplayControls();
     const btnLog = document.getElementById("btn-log");
     const btnMap = document.getElementById("btn-map");
     const btnRestart = document.getElementById("btn-restart");
@@ -570,7 +571,62 @@ function startTypewriter(text, element, onComplete) {
     typewriterInterval = setInterval(() => {
         element.textContent += typewriterText.charAt(typewriterIndex++);
         if (typewriterIndex >= typewriterText.length) finishTypewriter();
-    }, 22);
+    }, textSpeed === "fast" ? 8 : 22);
+}
+
+// Velocidade do texto: "normal" ou "fast". A preferência fica no navegador e não afeta o save.
+const TEXT_SPEED_KEY = "tcc-mapinguari-text-speed";
+let textSpeed = readTextSpeed();
+
+function readTextSpeed() {
+    try {
+        return localStorage.getItem(TEXT_SPEED_KEY) === "fast" ? "fast" : "normal";
+    } catch (_) {
+        return "normal";
+    }
+}
+
+function setTextSpeed(value) {
+    textSpeed = value === "fast" ? "fast" : "normal";
+    try {
+        localStorage.setItem(TEXT_SPEED_KEY, textSpeed);
+    } catch (_) {
+        // Sem armazenamento disponível, a preferência vale só nesta sessão.
+    }
+    updateTextSpeedButton();
+}
+
+function updateTextSpeedButton() {
+    const button = document.getElementById("btn-text-speed");
+    if (button) button.textContent = textSpeed === "fast" ? "Texto: rápido" : "Texto: normal";
+}
+
+function setupDisplayControls() {
+    updateTextSpeedButton();
+    document.getElementById("btn-text-speed")?.addEventListener("click", event => {
+        event.stopPropagation();
+        setTextSpeed(textSpeed === "fast" ? "normal" : "fast");
+    });
+
+    const fullscreenButton = document.getElementById("btn-fullscreen");
+    if (!fullscreenButton) return;
+    if (!document.fullscreenEnabled) {
+        fullscreenButton.hidden = true;
+        return;
+    }
+    const updateFullscreenButton = () => {
+        fullscreenButton.textContent = document.fullscreenElement ? "Sair da tela cheia" : "Tela cheia";
+    };
+    fullscreenButton.addEventListener("click", event => {
+        event.stopPropagation();
+        const request = document.fullscreenElement
+            ? document.exitFullscreen()
+            : document.documentElement.requestFullscreen();
+        // Recusas do navegador (por exemplo, sem gesto do usuário) não devem gerar erro na página.
+        Promise.resolve(request).catch(() => {});
+    });
+    document.addEventListener("fullscreenchange", updateFullscreenButton);
+    updateFullscreenButton();
 }
 
 function finishTypewriter() {
