@@ -34,7 +34,9 @@ Acesse o endereço local informado pelo servidor.
 ## Como jogar
 
 - **W, A, S, D:** movimentar Alex.
-- **E:** interagir com o ponto mais próximo.
+- **E:** interagir com o ponto mais próximo; sem ponto por perto, esconde-se em uma moita (E de novo para sair).
+- **C:** agachar ou levantar. Agachado, Alex anda em silêncio e não corre.
+- **Shift:** correr (faz barulho, que pode atrair o Mapinguari).
 - **Enter, Espaço ou Seta para a direita:** avançar narração e diálogos.
 - Na cena 8, escolha uma das três estratégias pelo painel apresentado.
 - **Caderno:** consultar evidências, hipóteses, recursos e estratégia escolhida.

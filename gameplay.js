@@ -20,6 +20,34 @@
     let jumpTimer = null;
     const clampAxis = value => Math.max(-1, Math.min(1, value));
 
+    // Mapinguari na perseguição (portado de Mapinguari_IA_ataque.html). Só existe nas cenas listadas aqui.
+    // Coordenadas em porcentagem, como Alex. Velocidades em porcentagem por segundo.
+    const CHASE_SCENES = {
+        7: {
+            spawn: { x: 50, y: 90 },
+            hideSpots: [
+                { x: 44, y: 52, radius: 6 },
+                { x: 58, y: 40, radius: 6 }
+            ]
+        }
+    };
+    const CHASE_SPEED = { patrulha: 5, investigando: 9, vasculhando: 7, caçando: 14, arrancada: 22 };
+    const CHASE_RADIUS = 2.6;
+    const CHASE_CAUGHT_DISTANCE = 3.2;
+    const chase = {
+        active: false,
+        crouched: false,
+        hiddenIn: null,         // esconderijo em que Alex está, ou null
+        moving: false,
+        running: false,
+        noise: { x: 0, y: 0, radius: 0, t: 0 },
+        alertText: "",
+        alertT: 0,
+        creature: { x: 50, y: 90, state: "patrulha", memoryX: 50, memoryY: 90, memoryT: 0,
+            searchX: 50, searchY: 90, searchT: 0, burstT: 0, burstCd: 2 },
+        elements: { creature: null, spots: [] }
+    };
+
     // Estado de exploração. As decisões da cena 8 acontecem ao encontrar
     // elementos no cenário, e não por meio de um menu de escolhas.
     const discoveredItems = new Set();
@@ -166,6 +194,7 @@
         syncDiscoveredItems();
         createScenePoints();
         createTestMap();
+        resetChase();
         bindControls();
         syncScene();
         renderPlayer();
@@ -285,6 +314,16 @@
 
         // Enter, Espaço e Seta para direita pertencem ao motor narrativo.
         // A exploração usa exclusivamente E para interagir, evitando bloquear diálogos.
+        // C agacha ou levanta. Não funciona enquanto Alex está escondido.
+        if (event.key === "c" || event.key === "C") {
+            const blocked = document.querySelector(".modal.active, .overlay.active");
+            if (blocked || event.repeat || chase.hiddenIn) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            toggleCrouch();
+            return;
+        }
+
         if (event.key === "e" || event.key === "E") {
             const blocked = document.querySelector(".modal.active, .overlay.active");
             if (blocked) return;
@@ -298,6 +337,7 @@
         const dt = Math.min((time - lastTime) / 1000 || 0, 0.05);
         lastTime = time;
         movePlayer(dt);
+        updateChase(dt);
         animationFrame = requestAnimationFrame(loop);
     }
 
@@ -328,6 +368,18 @@
             return;
         }
 
+        chase.moving = false;
+        chase.running = false;
+        // Escondido, Alex não se move até sair do esconderijo.
+        if (chase.hiddenIn) {
+            keys.clear();
+            touch.dx = 0;
+            touch.dy = 0;
+            setRunning(false);
+            player.classList.remove("is-walking");
+            return;
+        }
+
         let dx = touch.dx;
         let dy = touch.dy;
         if (keys.has("a") || keys.has("A")) dx -= 1;
@@ -345,11 +397,15 @@
             return;
         }
         player.classList.add("is-walking");
-        const runActive = touch.run || keys.has("Shift");
+        // Agachado não corre e anda mais devagar, sem fazer barulho.
+        const runActive = !chase.crouched && (touch.run || keys.has("Shift"));
         setRunning(runActive);
+        chase.moving = true;
+        chase.running = runActive;
 
         const length = Math.hypot(dx, dy) || 1;
-        const step = speed * (runActive ? RUN_MULTIPLIER : 1) * magnitude * dt;
+        const pace = runActive ? RUN_MULTIPLIER : chase.crouched ? 0.5 : 1;
+        const step = speed * pace * magnitude * dt;
         const nextX = x + (dx / length) * step;
         const nextY = y + (dy / length) * step;
 
@@ -361,6 +417,7 @@
             if (!collides(x, nextY)) y = Math.max(18, Math.min(82, nextY));
         }
 
+        emitNoise();
         renderPlayer();
     }
     function collides(testX, testY) {
@@ -385,6 +442,7 @@
         syncDiscoveredItems();
         createScenePoints();
         createTestMap();
+        resetChase();
         renderPlayer();
     }
 
@@ -401,6 +459,7 @@
     window.refreshExplorationState = function refreshExplorationState() {
         syncDiscoveredItems();
         createScenePoints();
+        resetChase();
         updatePrompt();
     };
 
@@ -494,6 +553,17 @@
     function updatePrompt() {
         if (!prompt) return;
 
+        if (chase.alertT > 0) {
+            prompt.hidden = false;
+            prompt.textContent = chase.alertText;
+            return;
+        }
+        if (chase.hiddenIn) {
+            prompt.hidden = false;
+            prompt.textContent = "E — sair do esconderijo";
+            return;
+        }
+
         const nearest = nearestPoint();
         if (!nearest || nearest.distance > 13) {
             prompt.hidden = true;
@@ -505,8 +575,19 @@
     }
 
     function interactNearest() {
+        if (document.querySelector(".modal.active, .overlay.active")) return;
+        if (chase.hiddenIn) {
+            leaveHiding();
+            return;
+        }
         const nearest = nearestPoint();
-        if (nearest && nearest.distance <= 13) interact(nearest.index);
+        if (nearest && nearest.distance <= 13) {
+            interact(nearest.index);
+            return;
+        }
+        // Sem elemento por perto, E esconde Alex em uma moita da cena.
+        const spot = hideSpotNear();
+        if (spot) hideIn(spot);
     }
 
     function interact(index) {
@@ -532,6 +613,282 @@
             window.advanceScene();
         }
     }
+
+    // ---------- Mapinguari: perseguição, agachar e esconderijos ----------
+    const clampPercent = (value, min, max) => Math.max(min, Math.min(max, value));
+
+    function chaseConfig() {
+        return CHASE_SCENES[currentScene] || null;
+    }
+
+    function setAlert(text, seconds) {
+        chase.alertText = text;
+        chase.alertT = seconds;
+        updatePrompt();
+    }
+
+    function chaseBlocked(testX, testY) {
+        const config = sceneGameplay[currentScene];
+        if (!config?.collisions) return false;
+        return config.collisions.some(box =>
+            testX + CHASE_RADIUS > box.x &&
+            testX - CHASE_RADIUS < box.x + box.width &&
+            testY + CHASE_RADIUS > box.y &&
+            testY - CHASE_RADIUS < box.y + box.height
+        );
+    }
+
+    function placeCreatureAtSpawn(config) {
+        const c = chase.creature;
+        Object.assign(c, {
+            x: config.spawn.x, y: config.spawn.y, state: "patrulha",
+            memoryX: config.spawn.x, memoryY: config.spawn.y, memoryT: 0,
+            searchX: config.spawn.x, searchY: config.spawn.y, searchT: 0,
+            burstT: 0, burstCd: 2
+        });
+    }
+
+    function resetChase() {
+        const config = chaseConfig();
+        chase.active = !!config;
+        chase.crouched = false;
+        chase.hiddenIn = null;
+        chase.noise.t = 0;
+        chase.alertT = 0;
+        player?.classList.remove("is-hidden", "is-crouched");
+        if (config) placeCreatureAtSpawn(config);
+        renderChaseElements();
+        renderChase();
+        updatePrompt();
+    }
+
+    function renderChaseElements() {
+        if (!layer) return;
+        chase.elements.creature?.remove();
+        chase.elements.spots.forEach(spot => spot.remove());
+        chase.elements.creature = null;
+        chase.elements.spots = [];
+
+        const config = chaseConfig();
+        if (!config) return;
+
+        config.hideSpots.forEach(spot => {
+            const element = document.createElement("div");
+            element.className = "hide-spot";
+            element.style.left = `${spot.x}%`;
+            element.style.top = `${spot.y}%`;
+            element.style.width = `${spot.radius * 2}%`;
+            layer.appendChild(element);
+            chase.elements.spots.push(element);
+        });
+
+        const creature = document.createElement("div");
+        creature.className = "chase-creature";
+        creature.setAttribute("aria-hidden", "true");
+        const image = document.createElement("img");
+        image.src = "imagens/mapinguari.png";
+        image.alt = "";
+        creature.appendChild(image);
+        layer.appendChild(creature);
+        chase.elements.creature = creature;
+    }
+
+    function renderChase() {
+        const creature = chase.elements.creature;
+        if (!creature) return;
+        creature.style.left = `${chase.creature.x}%`;
+        creature.style.top = `${chase.creature.y}%`;
+        creature.classList.toggle("is-hunting", chase.creature.state === "caçando");
+        creature.classList.toggle("is-searching", chase.creature.state === "vasculhando");
+    }
+
+    function toggleCrouch() {
+        chase.crouched = !chase.crouched;
+        player?.classList.toggle("is-crouched", chase.crouched);
+        setAlert(chase.crouched ? "Agachado: movimento silencioso. C para levantar." : "De pé. C para agachar.", 1.8);
+    }
+
+    function emitNoise() {
+        if (chase.crouched || !chase.moving) return;
+        chase.noise.x = x;
+        chase.noise.y = y;
+        chase.noise.radius = chase.running ? 22 : 9;
+        chase.noise.t = chase.running ? 1.35 : 0.6;
+    }
+
+    function hideSpotNear() {
+        const config = chaseConfig();
+        if (!config) return null;
+        return config.hideSpots.find(spot => Math.hypot(x - spot.x, y - spot.y) <= spot.radius) || null;
+    }
+
+    function hideIn(spot) {
+        chase.hiddenIn = spot;
+        chase.crouched = false;
+        player?.classList.remove("is-crouched");
+        player?.classList.add("is-hidden");
+        updatePrompt();
+    }
+
+    function leaveHiding() {
+        chase.hiddenIn = null;
+        player?.classList.remove("is-hidden");
+        updatePrompt();
+    }
+
+    function flushFromHiding() {
+        const c = chase.creature;
+        leaveHiding();
+        c.state = "caçando";
+        c.memoryX = x;
+        c.memoryY = y;
+        c.memoryT = 4;
+        setAlert("O Mapinguari farejou você!", 2);
+    }
+
+    function pickSearchPoint(centerX, centerY, minRadius, maxRadius) {
+        const c = chase.creature;
+        for (let tries = 0; tries < 8; tries++) {
+            const angle = Math.random() * Math.PI * 2;
+            const radius = minRadius + Math.random() * (maxRadius - minRadius);
+            const px = clampPercent(centerX + Math.cos(angle) * radius, 6, 94);
+            const py = clampPercent(centerY + Math.sin(angle) * radius, 6, 94);
+            if (!chaseBlocked(px, py)) {
+                c.searchX = px;
+                c.searchY = py;
+                break;
+            }
+        }
+        c.searchT = 0.8 + Math.random() * 1.6;
+    }
+
+    function onCaught() {
+        const config = chaseConfig();
+        x = 50;
+        y = 72;
+        chase.crouched = false;
+        chase.moving = false;
+        chase.running = false;
+        player?.classList.remove("is-crouched", "is-hidden", "is-walking", "is-running");
+        if (config) placeCreatureAtSpawn(config);
+        renderPlayer();
+        setAlert("O Mapinguari te alcançou! Você recua para o início da trilha.", 3);
+    }
+
+    // Atualiza a criatura a cada quadro: percepção (visão e ruído), memória e movimento.
+    function updateChase(dt) {
+        if (document.querySelector(".modal.active, .overlay.active")) return;
+
+        if (chase.alertT > 0) {
+            chase.alertT -= dt;
+            if (chase.alertT <= 0) updatePrompt();
+        }
+        if (chase.noise.t > 0) chase.noise.t = Math.max(0, chase.noise.t - dt);
+        if (!chase.active) return;
+
+        const c = chase.creature;
+        const hiddenNow = chase.hiddenIn;
+        const heard = chase.noise.t > 0 && Math.hypot(chase.noise.x - c.x, chase.noise.y - c.y) <= chase.noise.radius;
+        const vision = hiddenNow ? 0 : chase.crouched ? 7 : chase.running ? 26 : 16;
+        const seesPlayer = !hiddenNow && Math.hypot(x - c.x, y - c.y) < vision;
+
+        if (seesPlayer) {
+            c.memoryX = x;
+            c.memoryY = y;
+            c.memoryT = chase.running ? 4 : 3;
+            c.state = "caçando";
+        } else if (heard) {
+            c.memoryX = chase.noise.x;
+            c.memoryY = chase.noise.y;
+            c.memoryT = Math.max(c.memoryT, 2.5);
+            if (c.state !== "caçando") c.state = "investigando";
+        }
+        c.memoryT = Math.max(0, c.memoryT - dt);
+
+        // Escondido: a criatura vasculha a moita e pode forçar Alex a sair.
+        if (hiddenNow) {
+            const distanceToSpot = Math.hypot(hiddenNow.x - c.x, hiddenNow.y - c.y);
+            if (distanceToSpot < hiddenNow.radius + 12 && (c.memoryT > 0 || heard)) c.state = "vasculhando";
+            if (c.state === "vasculhando" && distanceToSpot < hiddenNow.radius + 2 && (heard || Math.random() < 0.6 * dt)) {
+                flushFromHiding();
+            }
+        } else if (c.state === "vasculhando") {
+            c.state = c.memoryT > 0 ? "investigando" : "patrulha";
+            c.searchT = 0;
+        }
+
+        if (c.state === "caçando" && c.memoryT <= 0 && !seesPlayer) c.state = "investigando";
+
+        if (c.state === "vasculhando" && chase.hiddenIn) {
+            if (c.searchT <= 0) pickSearchPoint(chase.hiddenIn.x, chase.hiddenIn.y, 3, 10);
+        } else if (c.state === "patrulha" && c.searchT <= 0) {
+            pickSearchPoint(c.x, c.y, 15, 35);
+        }
+
+        const useSearchTarget = c.state === "vasculhando" || c.state === "patrulha";
+        const tx = useSearchTarget ? c.searchX : c.memoryX;
+        const ty = useSearchTarget ? c.searchY : c.memoryY;
+        const distance = Math.hypot(tx - c.x, ty - c.y);
+
+        if (c.state === "investigando" && distance < 2) {
+            c.state = "patrulha";
+            c.memoryT = 0;
+            c.searchT = 0;
+        }
+
+        let speed = CHASE_SPEED[c.state] || CHASE_SPEED.patrulha;
+        if (c.state === "caçando") {
+            if (c.burstT > 0) {
+                c.burstT -= dt;
+                speed = CHASE_SPEED.arrancada;
+            } else {
+                c.burstCd -= dt;
+                if (c.burstCd <= 0) {
+                    c.burstT = 0.5;
+                    c.burstCd = 2.2 + Math.random() * 2.3;
+                }
+            }
+        }
+
+        if (distance > 1.2) {
+            const step = Math.min(distance, speed * dt);
+            const nextX = c.x + ((tx - c.x) / distance) * step;
+            const nextY = c.y + ((ty - c.y) / distance) * step;
+            if (!chaseBlocked(nextX, c.y)) c.x = nextX;
+            if (!chaseBlocked(c.x, nextY)) c.y = nextY;
+        }
+        c.x = clampPercent(c.x, 6, 94);
+        c.y = clampPercent(c.y, 6, 94);
+        c.searchT -= dt;
+
+        if (!chase.hiddenIn && Math.hypot(x - c.x, y - c.y) < CHASE_CAUGHT_DISTANCE) onCaught();
+        renderChase();
+    }
+
+    // Acesso de teste: permite verificar a perseguição sem depender de rolagens aleatórias.
+    window.ExplorationChase = {
+        state() {
+            return {
+                active: chase.active,
+                crouched: chase.crouched,
+                hidden: !!chase.hiddenIn,
+                creatureState: chase.creature.state,
+                creature: { x: chase.creature.x, y: chase.creature.y },
+                player: { x, y },
+                alert: chase.alertT > 0 ? chase.alertText : ""
+            };
+        },
+        placePlayer(newX, newY) {
+            x = newX;
+            y = newY;
+            renderPlayer();
+        },
+        placeCreature(newX, newY) {
+            chase.creature.x = newX;
+            chase.creature.y = newY;
+            renderChase();
+        }
+    };
 
     window.addEventListener("beforeunload", () => {
         if (animationFrame) cancelAnimationFrame(animationFrame);
