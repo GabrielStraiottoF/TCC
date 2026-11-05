@@ -30,52 +30,10 @@
       "id": 1,
       "local": "Rodoviária de Manacapuru",
       "eventos": [
-        "A rodoviária está barulhenta.",
-        "Alex permanece parado em um canto aparentando extremo cansaço.",
-        "Lucas se aproxima para vender produtos."
+        "A rodoviária está barulhenta."
       ],
-      "dialogos": [
-        {
-          "personagem": "Lucas",
-          "fala": "Boa noite tio sou Lucas lá da União e tô vendendo uns negócio para ajudar lá em casa vai querer?",
-          "comentario": "Lucas tenta vender produtos para ajudar financeiramente sua família."
-        },
-        {
-          "personagem": "Alex",
-          "fala": "Não era para você estar na escola uma hora dessas não garoto?",
-          "comentario": "Alex demonstra preocupação com a situação do garoto."
-        },
-        {
-          "personagem": "Lucas",
-          "fala": "Se eu ficar de bubuia o dia inteiro não vou conseguir comer né, pega uma ae tio estou com mó fome",
-          "comentario": "Lucas explica sua necessidade financeira e busca sensibilizar Alex."
-        },
-        {
-          "personagem": "Alex",
-          "fala": "Infelizmente sim entendo, mais quanto está?",
-          "comentario": "Alex demonstra empatia e considera realizar a compra."
-        },
-        {
-          "personagem": "Lucas",
-          "fala": "1,25 mais pra tu eu faço por 1",
-          "comentario": "Lucas oferece um desconto para concluir a venda."
-        },
-        {
-          "personagem": "Alex",
-          "fala": "Beleza então me vê 2 ai por favor, e vê se toma cuidado para não ser roubado",
-          "comentario": "Alex compra os produtos e alerta Lucas sobre possíveis perigos."
-        },
-        {
-          "personagem": "Lucas",
-          "fala": "Fecho tio, os galeroso não meche comigo não relaxa",
-          "comentario": "Lucas tenta demonstrar confiança e tranquilidade."
-        },
-        {
-          "personagem": "Alex",
-          "fala": "Vai nessa que o acaso não te protege não garoto",
-          "comentario": "Alex faz um aviso sério baseado em sua experiência."
-        }
-      ]
+      "dialogos": [],
+      "transicao": "interacao"
     },
     {
       "id": 2,
@@ -85,28 +43,7 @@
         "Alex fecha os olhos e suspira.",
         "Após cochilar, desperta próximo à ponte."
       ],
-      "dialogos": [
-        {
-          "personagem": "Alex",
-          "fala": "Estou cansado que só para ficar em pé vou tirar um cochilo aqui mesmo",
-          "comentario": "Alex expressa exaustão física e decide descansar."
-        },
-        {
-          "personagem": "Alex",
-          "fala": "Acho que não conseguirei morar aqui por muito tempo em Manacapuru, são Males do oficio estou acostumado",
-          "comentario": "Alex reflete sobre sua vida e dificuldades profissionais."
-        },
-        {
-          "personagem": "Alex",
-          "fala": "Ei José pode me deixar nesse posto?",
-          "comentario": "Alex solicita uma parada ao motorista."
-        },
-        {
-          "personagem": "José",
-          "fala": "Beleza pode deixar",
-          "comentario": "José concorda em ajudar Alex."
-        }
-      ]
+      "dialogos": []
     },
     {
       "id": 3,

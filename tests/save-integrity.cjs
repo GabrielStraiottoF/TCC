@@ -77,31 +77,31 @@ async function restoreAndRead(page, data) {
 }
 
 async function runSave003(browser) {
-    console.log("SAVE-003 — índices limitados ao intervalo da cena");
+    console.log("SAVE-003 — índices limitados ao intervalo da cena (usa a cena 3)");
     const context = await browser.newContext();
     const page = await context.newPage();
     await openGame(page);
 
     const scene1 = await page.evaluate(() => ({
-        eventos: roteiro.cenas[0].eventos.length,
-        dialogos: roteiro.cenas[0].dialogos.length,
+        eventos: roteiro.cenas[2].eventos.length,
+        dialogos: roteiro.cenas[2].dialogos.length,
     }));
 
-    let r = await restoreAndRead(page, payload({ eventIndex: 9999, dialogueIndex: 9999 }));
+    let r = await restoreAndRead(page, payload({ sceneId: 3, eventIndex: 9999, dialogueIndex: 9999 }));
     check("dialogueIndex acima do limite é limitado ao fim dos diálogos (dialogos.length)", r.dialogue === scene1.dialogos, JSON.stringify(r));
     check("eventIndex acima do limite é limitado ao fim dos eventos", r.event === scene1.eventos, JSON.stringify(r));
 
-    r = await restoreAndRead(page, payload({ eventIndex: -4, dialogueIndex: -5 }));
+    r = await restoreAndRead(page, payload({ sceneId: 3, eventIndex: -4, dialogueIndex: -5 }));
     check("dialogueIndex negativo vira -1", r.dialogue === -1, JSON.stringify(r));
     check("eventIndex negativo vira 0", r.event === 0, JSON.stringify(r));
 
-    r = await restoreAndRead(page, payload({ eventIndex: 1, dialogueIndex: 2 }));
+    r = await restoreAndRead(page, payload({ sceneId: 3, eventIndex: 1, dialogueIndex: 2 }));
     check("índices válidos são preservados", r.event === 1 && r.dialogue === 2, JSON.stringify(r));
 
-    r = await restoreAndRead(page, payload({ eventIndex: scene1.eventos, dialogueIndex: scene1.dialogos }));
+    r = await restoreAndRead(page, payload({ sceneId: 3, eventIndex: scene1.eventos, dialogueIndex: scene1.dialogos }));
     check("fim da cena (dialogueIndex = dialogos.length) é preservado, sem repetir o último diálogo", r.dialogue === scene1.dialogos && r.event === scene1.eventos, JSON.stringify(r));
 
-    r = await restoreAndRead(page, payload({ eventIndex: "2", dialogueIndex: "2" }));
+    r = await restoreAndRead(page, payload({ sceneId: 3, eventIndex: "2", dialogueIndex: "2" }));
     check("eventIndex numérico em string continua aceito (compatibilidade)", r.event === 2, JSON.stringify(r));
     check("dialogueIndex não inteiro (string) cai para -1", r.dialogue === -1, JSON.stringify(r));
 

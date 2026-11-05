@@ -402,6 +402,9 @@ function advanceScene() {
         return;
     }
 
+    // Cena com saída por interação: após o texto, a partida espera o jogador usar o ponto da exploração.
+    if (scene.transicao === "interacao") return;
+
     if (Number(scene.id) === 8) {
         showScene8Choices();
         return;
@@ -469,6 +472,18 @@ function showScene8Choices() {
 }
 
 window.chooseScene8 = chooseScene8;
+
+// Troca de cena acionada por um ponto da exploração (ex.: entrar no ônibus).
+function goToScene(sceneId) {
+    const index = findSceneIndex(sceneId);
+    if (index === -1) {
+        showDataError(`A cena de destino (${sceneId}) não foi encontrada.`);
+        return;
+    }
+    loadScene(index);
+}
+
+window.goToScene = goToScene;
 
 function chooseScene8(index) {
     const choice = scene8Choices[index];

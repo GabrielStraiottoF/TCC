@@ -129,7 +129,7 @@
     // Os pontos representam elementos encontrados no mundo, não opções de menu.
     // Na cena 8, a decisão é tomada pela ação do jogador sobre o elemento.
     const scenePoints = {
-        1: [{ x: 88, y: 72, label: "Investigar", action: "advance" }],
+        1: [{ x: 88, y: 72, label: "Entrar no ônibus", action: "transition", sceneId: 2 }],
         2: [{ x: 50, y: 55, label: "Investigar", action: "advance" }],
         3: [{ x: 76, y: 62, label: "Investigar", action: "advance" }],
         4: [{ x: 55, y: 68, label: "Investigar", action: "advance" }],
@@ -520,6 +520,11 @@
             if (point.action === "clue") window.Investigation?.addClue(point.clue);
             else window.Investigation?.addItem(point.item);
             createScenePoints();
+            return;
+        }
+
+        if (point.action === "transition") {
+            window.goToScene?.(point.sceneId);
             return;
         }
 
