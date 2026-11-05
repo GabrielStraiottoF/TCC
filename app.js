@@ -5,6 +5,8 @@ let roteiro = null;
 let currentSceneIndex = 0;
 let currentEventIndex = 0;
 let currentDialogueIndex = -1;
+// Checkpoint da cena 8 (antes da escolha de estratégia); usado para retornar após a derrota.
+let scene8Checkpoint = null;
 let currentState = "loading";
 let sceneLog = [];
 let journeyLog = [];
@@ -185,6 +187,8 @@ function setupGameControls() {
     });
 
     retryChoice?.addEventListener("click", () => {
+        // Retorna ao checkpoint pré-combate (pistas, itens e caderno preservados).
+        if (restoreSave()) return;
         const scene8Index = findSceneIndex(8);
         if (scene8Index !== -1) loadScene(scene8Index);
     });
@@ -238,6 +242,7 @@ function resetJourneyState() {
     journeyLog = [];
     visitedScenes = new Set();
     window.Investigation?.reset();
+    scene8Checkpoint = null;
     clearSavedGame();
 }
 
@@ -455,6 +460,10 @@ function showScene8Choices() {
         container.appendChild(button);
     });
 
+    // Checkpoint: estado logo antes da escolha, cópia profunda para não ser alterado depois.
+    const checkpoint = buildSavePayload(false);
+    if (checkpoint) scene8Checkpoint = JSON.parse(JSON.stringify(checkpoint));
+
     overlay.classList.add("active");
     saveGame();
 }
@@ -487,7 +496,9 @@ function showGameOver() {
     currentState = "gameover";
     document.getElementById("choices-overlay")?.classList.remove("active");
     document.getElementById("gameover-overlay")?.classList.add("active");
-    clearSavedGame();
+    // A derrota não apaga a partida: grava o checkpoint pré-combate para o retorno à cena 8.
+    if (scene8Checkpoint) writeSavePayload(scene8Checkpoint);
+    else clearSavedGame();
 }
 
 function showEnding() {
@@ -658,11 +669,11 @@ function updateSceneMapSelection() {
 
 window.saveGame = saveGame;
 
-function saveGame() {
-    if (!roteiro || currentState === "gameover" || currentState === "ending") return;
-
-    const scene = roteiro.cenas[currentSceneIndex];
-    if (!scene) return;
+// Monta o estado atual da partida. Inclui o checkpoint da cena 8, se houver, para que
+// a derrota possa retornar a ele mesmo depois de recarregar a página.
+function buildSavePayload(includeCheckpoint = true) {
+    const scene = roteiro?.cenas[currentSceneIndex];
+    if (!scene) return null;
 
     const payload = {
         version: 3,
@@ -675,12 +686,23 @@ function saveGame() {
         journeyLog,
         visitedScenes: Array.from(visitedScenes)
     };
+    if (includeCheckpoint && scene8Checkpoint) payload.checkpoint = scene8Checkpoint;
+    return payload;
+}
 
+function writeSavePayload(payload) {
     try {
         localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
     } catch (error) {
         console.warn("Não foi possível salvar o progresso:", error);
     }
+}
+
+function saveGame() {
+    if (!roteiro || currentState === "gameover" || currentState === "ending") return;
+
+    const payload = buildSavePayload();
+    if (payload) writeSavePayload(payload);
 }
 
 function restoreSave() {

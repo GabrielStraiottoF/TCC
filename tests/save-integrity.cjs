@@ -62,9 +62,17 @@ async function seed(page, data) {
 // Restaura de forma síncrona e lê os índices logo em seguida (antes dos callbacks do máquina de escrever).
 async function restoreAndRead(page, data) {
     await seed(page, data);
+    // advanceScene é suspenso só durante a leitura: se o save estiver no fim da cena, a
+    // partida avança de cena, e o que interessa aqui é o estado restaurado.
     return page.evaluate(() => {
-        restoreSave();
-        return { event: currentEventIndex, dialogue: currentDialogueIndex };
+        const realAdvance = window.advanceScene;
+        window.advanceScene = () => {};
+        try {
+            restoreSave();
+            return { event: currentEventIndex, dialogue: currentDialogueIndex };
+        } finally {
+            window.advanceScene = realAdvance;
+        }
     });
 }
 
@@ -80,7 +88,7 @@ async function runSave003(browser) {
     }));
 
     let r = await restoreAndRead(page, payload({ eventIndex: 9999, dialogueIndex: 9999 }));
-    check("dialogueIndex acima do limite é limitado ao último diálogo", r.dialogue === scene1.dialogos - 1, JSON.stringify(r));
+    check("dialogueIndex acima do limite é limitado ao fim dos diálogos (dialogos.length)", r.dialogue === scene1.dialogos, JSON.stringify(r));
     check("eventIndex acima do limite é limitado ao fim dos eventos", r.event === scene1.eventos, JSON.stringify(r));
 
     r = await restoreAndRead(page, payload({ eventIndex: -4, dialogueIndex: -5 }));
@@ -89,6 +97,9 @@ async function runSave003(browser) {
 
     r = await restoreAndRead(page, payload({ eventIndex: 1, dialogueIndex: 2 }));
     check("índices válidos são preservados", r.event === 1 && r.dialogue === 2, JSON.stringify(r));
+
+    r = await restoreAndRead(page, payload({ eventIndex: scene1.eventos, dialogueIndex: scene1.dialogos }));
+    check("fim da cena (dialogueIndex = dialogos.length) é preservado, sem repetir o último diálogo", r.dialogue === scene1.dialogos && r.event === scene1.eventos, JSON.stringify(r));
 
     r = await restoreAndRead(page, payload({ eventIndex: "2", dialogueIndex: "2" }));
     check("eventIndex numérico em string continua aceito (compatibilidade)", r.event === 2, JSON.stringify(r));

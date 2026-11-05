@@ -38,14 +38,15 @@ function restoreSave() {
     document.body.dataset.difficulty = selectedDifficulty;
     const savedSceneIndex = findSceneIndex(payload.sceneId);
     const savedScene = roteiro.cenas[savedSceneIndex];
-    // Índices fora do intervalo da cena são limitados para não pular a narração.
+    // Índices fora do intervalo da cena são limitados. dialogueIndex vai de -1 até dialogos.length:
+    // após o último diálogo ele vale dialogos.length, e não length - 1.
     const clampIndex = (value, min, max) => Math.min(max, Math.max(min, value));
     const rawEventIndex = Number(payload.eventIndex);
     const savedEventIndex = Number.isInteger(rawEventIndex)
         ? clampIndex(rawEventIndex, 0, savedScene.eventos.length)
         : 0;
     const savedDialogueIndex = Number.isInteger(payload.dialogueIndex)
-        ? clampIndex(payload.dialogueIndex, -1, savedScene.dialogos.length - 1)
+        ? clampIndex(payload.dialogueIndex, -1, savedScene.dialogos.length)
         : -1;
     const savedSceneLog = Array.isArray(payload.sceneLog) ? payload.sceneLog : [];
     const savedJourneyLog = Array.isArray(payload.journeyLog) ? payload.journeyLog : [];
@@ -59,6 +60,7 @@ function restoreSave() {
     journeyLog = savedJourneyLog;
     visitedScenes = new Set(savedVisitedScenes);
     visitedScenes.add(Number(payload.sceneId));
+    scene8Checkpoint = payload.checkpoint && typeof payload.checkpoint === "object" ? payload.checkpoint : null;
     window.Investigation?.restore(payload.investigation);
     window.refreshExplorationState?.();
     currentState = "running";
