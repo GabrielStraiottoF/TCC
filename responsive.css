@@ -13,8 +13,12 @@
     .dialog-box { min-height: 88px; padding: 16px 14px 8px; }
     #dialog-text { font-size: 18px; }
     .name-tag { top: -16px; font-size: 16px; }
-    .touch-controls { bottom: 146px; }
-    .joystick { width: 96px; height: 96px; }
+    /* Espaço entre a barra superior e a caixa de diálogo é curto: controles em uma linha só. */
+    .touch-controls { bottom: calc(var(--dialog-h, 128px) + 10px); }
+    .joystick { width: 80px; height: 80px; }
+    .touch-buttons { grid-template-columns: repeat(3, auto); }
+    .touch-btn { min-width: 96px; min-height: 44px; font-size: 17px; }
+    .touch-btn-primary { grid-column: auto; }
     .menu-box { padding: 16px 20px; }
     .menu-title { font-size: 40px; }
     .menu-box h2 { font-size: 26px; margin-bottom: 10px; }
@@ -34,4 +38,11 @@
    e pela tela "Como jogar". Ela deixa de competir com a caixa de narrativa. */
 @media (pointer: coarse) {
     .movement-help { display: none; }
+}
+
+/* Celular na vertical: a caixa de diálogo não pode tomar a tela inteira.
+   Textos longos rolam dentro da caixa, e os controles de toque ficam acima dela. */
+@media (pointer: coarse) and (max-width: 560px) {
+    .dialog-box { max-height: 40vh; overflow-y: auto; }
+    #dialog-text { font-size: 17px; line-height: 1.35; }
 }

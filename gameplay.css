@@ -206,6 +206,16 @@
 .player.is-crouched { transform: translate(-50%, -100%) scale(.8); }
 .player.is-hidden { opacity: .3; }
 
+.interaction-prompt.is-alert {
+    bottom: auto;
+    top: 36%;
+    z-index: 15;
+    width: max-content;
+    max-width: 86%;
+    white-space: normal;
+    text-align: center;
+}
+
 
 
     50% { transform: translateX(2px); }

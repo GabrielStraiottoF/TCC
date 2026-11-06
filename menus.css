@@ -56,7 +56,8 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 236px;
+    /* Acima da caixa de diálogo, que muda de altura conforme o texto (medida em --dialog-h). */
+    bottom: calc(var(--dialog-h, 236px) + 20px);
     z-index: 14;
     display: flex;
     justify-content: space-between;

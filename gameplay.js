@@ -237,7 +237,20 @@
         });
     }
 
+    // Mantém --dialog-h igual à altura real da caixa de diálogo, para posicionar os controles acima dela.
+    function trackDialogHeight() {
+        const box = document.getElementById("dialog-box");
+        if (!box) return;
+        const apply = () => {
+            document.documentElement.style.setProperty("--dialog-h", `${Math.round(box.getBoundingClientRect().height)}px`);
+        };
+        apply();
+        if (typeof ResizeObserver !== "undefined") new ResizeObserver(apply).observe(box);
+        window.addEventListener("resize", apply);
+    }
+
     function bindTouch() {
+        trackDialogHeight();
         const controls = document.getElementById("touch-controls");
         const joystick = document.getElementById("joystick");
         const knob = document.getElementById("joystick-knob");
@@ -552,6 +565,8 @@
 
     function updatePrompt() {
         if (!prompt) return;
+        // Avisos da perseguição ficam no alto do palco, longe dos controles de toque.
+        prompt.classList.toggle("is-alert", chase.alertT > 0);
 
         if (chase.alertT > 0) {
             prompt.hidden = false;
