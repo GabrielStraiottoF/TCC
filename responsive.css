@@ -43,7 +43,10 @@
 /* Celular na vertical: a caixa de diálogo não pode tomar a tela inteira.
    Textos longos rolam dentro da caixa, e os controles de toque ficam acima dela. */
 @media (pointer: coarse) and (max-width: 560px) {
-    .dialog-box { max-height: 40vh; overflow-y: auto; }
+    /* O rolamento fica no texto, não na caixa: a etiqueta do nome sobe acima da caixa
+       e seria cortada por overflow na própria caixa. */
+    .dialog-box { max-height: none; }
+    .text-container { max-height: 26vh; overflow-y: auto; }
     #dialog-text { font-size: 17px; line-height: 1.35; }
 }
 
@@ -74,4 +77,81 @@
     }
     .nav-controls.open { display: grid; grid-template-columns: 1fr 1fr; }
     .nav-controls .retro-btn { width: 100%; }
+}
+
+/* Celular ou tablet de toque: a imagem da cena fica numa moldura e os controles de toque
+   ficam fora dela, sem sobrepor o palco. No desktop nada disto se aplica. */
+@media (pointer: coarse) {
+    .game-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 8px 10px 10px;
+    }
+    .top-nav { order: 1; }
+    .stage {
+        position: relative;
+        inset: auto;
+        order: 2;
+        flex: 1 1 auto;
+        min-height: 140px;
+        margin: 6px 0;
+        overflow: hidden;
+        border: 4px solid var(--dialog-border);
+        box-shadow: 0 0 0 2px var(--dialog-border-dark), 6px 6px 0 rgba(0,0,0,.6);
+    }
+    .touch-controls {
+        order: 3;
+        position: static;
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin: 4px 0 6px;
+        padding: 0 4px;
+        pointer-events: none;
+    }
+    .touch-controls .joystick { width: 112px; height: 112px; }
+    .touch-controls .touch-buttons { gap: 8px; }
+    .touch-controls .touch-btn { min-width: 0; }
+    .dialog-wrapper { order: 4; margin-top: 22px; }
+}
+
+/* Celular deitado: a imagem fica no centro, o joystick à esquerda, os botões à direita
+   e a caixa de diálogo embaixo, todos fora da moldura. */
+@media (pointer: coarse) and (max-height: 520px) {
+    .game-container {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        column-gap: 10px;
+        row-gap: 6px;
+        padding: 6px 10px;
+    }
+    .top-nav { grid-column: 1 / -1; grid-row: 1; }
+    .stage {
+        grid-column: 2;
+        grid-row: 2;
+        margin: 0;
+        min-height: 0;
+    }
+    .touch-controls { display: contents; }
+    .touch-controls .joystick {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
+        width: 96px;
+        height: 96px;
+    }
+    .touch-controls .touch-buttons {
+        grid-column: 3;
+        grid-row: 2;
+        align-self: center;
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    .touch-controls .touch-btn { min-width: 104px; min-height: 40px; font-size: 17px; }
+    .touch-controls .touch-btn-primary { grid-column: auto; }
+    .dialog-wrapper { grid-column: 1 / -1; grid-row: 3; margin-top: 18px; }
 }

@@ -16,15 +16,17 @@
 </head>
 <body>
     <div class="game-container" id="game-container">
-        <div class="background-overlay"></div>
+        <div class="stage" id="stage">
+            <div class="background-overlay"></div>
 
-        <div id="exploration-layer" aria-label="Área de exploração">
-            <div id="player" class="player" role="img" aria-label="Alex, personagem controlável">
-                <span class="player-shadow"></span>
-                <span class="player-lift"><span class="player-sprite"></span></span>
+            <div id="exploration-layer" aria-label="Área de exploração">
+                <div id="player" class="player" role="img" aria-label="Alex, personagem controlável">
+                    <span class="player-shadow"></span>
+                    <span class="player-lift"><span class="player-sprite"></span></span>
+                </div>
+                <div id="interaction-prompt" class="interaction-prompt" hidden>E — Interagir</div>
+                <div class="movement-help">WASD: mover &nbsp; • &nbsp; E: interagir &nbsp; • &nbsp; Enter / Espaço / →: avançar</div>
             </div>
-            <div id="interaction-prompt" class="interaction-prompt" hidden>E — Interagir</div>
-            <div class="movement-help">WASD: mover &nbsp; • &nbsp; E: interagir &nbsp; • &nbsp; Enter / Espaço / →: avançar</div>
         </div>
 
         <div id="touch-controls" class="touch-controls" hidden aria-label="Controles de toque">

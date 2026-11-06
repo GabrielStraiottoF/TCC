@@ -50,6 +50,14 @@ button { font: inherit; }
     background: radial-gradient(circle at center, rgba(13,10,10,.35) 0%, rgba(0,0,0,.86) 100%);
 }
 
+/* Palco: recebe a arte da cena e a camada de exploração. No desktop ocupa todo o cenário;
+   no celular vira uma moldura própria (ver responsive.css). */
+.stage {
+    position: absolute;
+    inset: 0;
+    transition: background-image .45s ease-in-out;
+}
+
 .top-nav, .dialog-wrapper { position: relative; z-index: 10; }
 
 .top-nav {
