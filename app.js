@@ -608,6 +608,23 @@ function setupDisplayControls() {
         setTextSpeed(textSpeed === "fast" ? "normal" : "fast");
     });
 
+    // Em celular, os comandos da barra superior ficam num menu recolhível.
+    const navMenu = document.getElementById("btn-nav-menu");
+    const navControls = document.getElementById("nav-controls");
+    const setNavMenu = open => {
+        navControls.classList.toggle("open", open);
+        navMenu.setAttribute("aria-expanded", String(open));
+    };
+    if (navMenu && navControls) {
+        navMenu.addEventListener("click", event => {
+            event.stopPropagation();
+            setNavMenu(!navControls.classList.contains("open"));
+        });
+        navControls.addEventListener("click", event => {
+            if (event.target.closest("button")) setNavMenu(false);
+        });
+    }
+
     const fullscreenButton = document.getElementById("btn-fullscreen");
     if (!fullscreenButton) return;
     if (!document.fullscreenEnabled) {
