@@ -45,7 +45,7 @@ Efeito colateral corrigido junto: os itens da cena 8 só eram coletáveis antes 
 | TEST-007 | Versão publicada não verificada (URL protegida por login) | P1 |
 | TEST-008 | Só Chromium headless; sem Firefox, Safari ou aparelho real | P2 |
 | UI-004 | Acessibilidade não auditada: foco visível, contraste, leitor de tela. Teclado na escolha (1–3, Esc, Enter) está testado | P2 |
-| UI-005 | Falhas ao *salvar* seguem só em `console.warn` (restauração já avisa) — não reverificado | P2 |
+| UI-005 | Aviso visual de falha ao *salvar* implementado nesta branch; aguarda execução do teste de regressão | P2 |
 | INV-005 / INV-006 | Itens não são consumidos; `gameplay.js` mantém `discoveredItems` separado do estado de `investigation.js` | P2 |
 | ARQ-001 / 003 | Estado global em `let` lido por vários scripts; regra de confronto dividida entre `app.js` e `investigation.js` | P2 |
 | NAR-003 / 005 | Diálogos sem condição; navegação implícita pela ordem do array | P2 |
