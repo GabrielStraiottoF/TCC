@@ -835,11 +835,22 @@ function buildSavePayload(includeCheckpoint = true) {
     return payload;
 }
 
+function setSaveWarning(message = "") {
+    const warning = document.getElementById("save-warning");
+    if (!warning) return;
+    warning.textContent = message;
+    warning.hidden = !message;
+}
+
 function writeSavePayload(payload) {
     try {
         localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+        setSaveWarning();
+        return true;
     } catch (error) {
         console.warn("Não foi possível salvar o progresso:", error);
+        setSaveWarning("Não foi possível salvar seu progresso. O jogo continua, mas as alterações recentes podem ser perdidas. Libere espaço no navegador ou verifique as permissões de armazenamento.");
+        return false;
     }
 }
 
