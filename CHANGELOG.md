@@ -16,6 +16,9 @@ Todas as mudanças relevantes deste projeto serão registradas aqui.
 - Testes de regressão para falha de salvamento e controle de áudio.
 - Plano documentado para integração segura dos sistemas do protótipo 20.
 
-### Validação pendente
-- Reexecutar `npm test` no Windows após a substituição do servidor de testes.
+### Validação
+- `npm test` executado no Windows em 17/11/2026: 10 suítes, 198 verificações aprovadas e 0 falhas.
+
+### Ainda pendente
 - Verificar áudio e controles em navegadores e dispositivos reais.
+- Validar acessibilidade e a versão publicada.
