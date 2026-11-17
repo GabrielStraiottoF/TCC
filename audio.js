@@ -6,6 +6,7 @@
     const STORAGE_KEY = "heranca-maldita-audio-enabled-v1";
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     let context = null;
+    let resumePending = false;
     let enabled = readPreference();
     let lastFootstepAt = -Infinity;
 
@@ -30,7 +31,10 @@
         if (!enabled || !AudioContextClass) return;
         try {
             if (!context) context = new AudioContextClass();
-            if (context.state === "suspended") context.resume().catch(() => {});
+            if (context.state === "suspended" && !resumePending) {
+                resumePending = true;
+                context.resume().catch(() => {}).finally(() => { resumePending = false; });
+            }
         } catch (_) {
             context = null;
         }
@@ -103,6 +107,7 @@
     function play(name) {
         if (!enabled || !effects[name]) return;
         unlock();
+        if (!context || context.state !== "running") return;
         effects[name]();
     }
 
