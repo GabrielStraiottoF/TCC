@@ -1,8 +1,6 @@
 // Testa o feedback visual quando o navegador falha ao gravar o save.
 // Execução: node tests/save-feedback.cjs
-// Requer Chromium, Playwright e python3.
-
-const path = require("path");
+// Requer Chromium e Playwright; o servidor HTTP de teste usa Node.js.nst path = require("path");
 const { startStaticServer } = require("./http-server");
 const { chromium } = require("playwright");
 
