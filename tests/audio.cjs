@@ -45,6 +45,7 @@ async function waitForServer() {
         const page = await browser.newPage();
         await page.goto(BASE);
         await page.waitForFunction(() => typeof window.GameAudio?.play === "function");
+        await page.waitForFunction(() => window.roteiro !== null && !document.getElementById("loading-overlay").classList.contains("active"));
         await page.click("#btn-start");
         await page.click('.difficulty-btn[data-difficulty="normal"]');
         await page.waitForFunction(() => document.getElementById("top-nav").style.display !== "none");
