@@ -114,11 +114,11 @@ async function pressAndWait(page, key, ms = 60) {
         await page.waitForTimeout(100);
         check("em pé, Alex é detectado a 10 unidades", (await chaseState(page)).creatureState === "caçando");
         await openScene(page, SCENE7_INDEX);
+        await pressAndWait(page, "c");
         await page.evaluate(() => {
             window.ExplorationChase.placePlayer(50, 50);
             window.ExplorationChase.placeCreature(50, 40);
         });
-        await pressAndWait(page, "c");
         await page.waitForTimeout(100);
         check("agachado, Alex não é detectado a 10 unidades", (await chaseState(page)).creatureState !== "caçando");
 
