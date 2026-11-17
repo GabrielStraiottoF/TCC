@@ -74,3 +74,11 @@ Efeito colateral corrigido junto: os itens da cena 8 só eram coletáveis antes 
 - Criado `tests/audio.cjs` para verificar estado inicial, alternância, persistência e chamadas silenciosas quando o áudio está desligado.
 - Criado `docs/PLANO_INTEGRACAO_PROTOTIPO20.md` com matriz de compatibilidade e limites de integração.
 - **Validação pendente:** os testes de navegador ainda não foram executados neste ambiente. Rodar `npm test` com Playwright e Chromium antes de considerar a integração aprovada.
+
+
+## 7. Ajuste do ambiente de testes após execução no Windows
+
+- **Causa provável identificada:** os testes de navegador iniciavam o servidor estático com `spawn("python3", ...)`. Em instalações Windows nas quais o executável `python3` não está disponível no PATH, o processo não inicia; como sua saída era ignorada, todos os testes falhavam com a mesma mensagem genérica.
+- **Correção:** criado `tests/http-server.js`, servidor HTTP estático implementado com APIs nativas do Node. Os nove testes de navegador agora usam esse helper e não dependem de Python.
+- **Escopo:** não altera lógica do jogo nem os casos de teste; corrige somente a infraestrutura que entrega os arquivos ao Chromium.
+- **Validação:** alteração aplicada na branch, mas ainda depende de nova execução local de `npm test` no Windows.
