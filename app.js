@@ -189,6 +189,11 @@ function setupGameControls() {
         });
     });
 
+    document.getElementById("btn-scene8-explore")?.addEventListener("click", event => {
+        event.stopPropagation();
+        resumeExploringScene8();
+    });
+
     retryChoice?.addEventListener("click", () => {
         // Retorna ao checkpoint pré-combate (pistas, itens e caderno preservados).
         if (restoreSave()) return;
@@ -212,6 +217,11 @@ function setupGameControls() {
         }
 
         if (currentState === "choice") {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                resumeExploringScene8();
+                return;
+            }
             const choiceIndex = Number(event.key) - 1;
             if (Number.isInteger(choiceIndex) && choiceIndex >= 0 && choiceIndex < scene8Choices.length) {
                 event.preventDefault();
@@ -452,13 +462,30 @@ function showScene8Choices() {
     container.innerHTML = "";
 
     scene8Choices.forEach((choice, index) => {
+        const info = window.Investigation?.getStrategyInfo(index);
         const button = document.createElement("button");
         button.className = "retro-btn choice-btn";
         button.type = "button";
         button.innerHTML = `
             <span class="choice-key">${index + 1}</span>
-            <span>${escapeHtml(choice.label)}</span>
+            <span class="choice-body"><span class="choice-label">${escapeHtml(choice.label)}</span></span>
         `;
+        if (info) {
+            // Requisitos com símbolo e texto (não dependem só de cor) e o risco principal da estratégia.
+            const body = button.querySelector(".choice-body");
+            const requirements = document.createElement("span");
+            requirements.className = "choice-reqs";
+            info.requirements.forEach(req => {
+                const line = document.createElement("span");
+                line.className = `choice-req ${req.met ? "met" : "missing"}`;
+                line.textContent = `${req.met ? "✓" : "✗"} ${req.label}${req.met ? "" : " (falta)"}`;
+                requirements.appendChild(line);
+            });
+            const risk = document.createElement("span");
+            risk.className = "choice-risk";
+            risk.textContent = `Risco: ${info.risk}`;
+            body.append(requirements, risk);
+        }
         button.addEventListener("click", event => {
             event.stopPropagation();
             chooseScene8(index);
@@ -500,8 +527,29 @@ function chooseScene8(index) {
 
     window.Investigation?.chooseStrategy(index);
     journeyLog.push({ type: "choice", sceneId: 8, choice: choice.label });
+
+    // Sem os requisitos o plano falha: vai direto ao resultado, em vez de narrar a execução como se desse certo.
+    if (window.Investigation?.resolve() === "defeat") {
+        showGameOver();
+        return;
+    }
     loadScene(targetIndex);
 }
+
+// Fecha a escolha para Alex procurar mais no acampamento; Enter (ou tocar no texto) reabre a decisão.
+function resumeExploringScene8() {
+    if (currentState !== "choice") return;
+    document.getElementById("choices-overlay")?.classList.remove("active");
+    clearTypewriter();
+    currentState = "running";
+    nameTag.textContent = "Narrativa";
+    nameTag.className = "name-tag narration-tag";
+    dialogBox.className = "dialog-box narration-style";
+    dialogText.textContent = "Alex ainda pode procurar no acampamento. Pressione Enter quando quiser decidir.";
+    saveGame();
+}
+
+window.resumeExploringScene8 = resumeExploringScene8;
 
 function showEscapeEnding() {
     currentState = "ending";
@@ -514,6 +562,13 @@ function showGameOver() {
     currentState = "gameover";
     document.getElementById("choices-overlay")?.classList.remove("active");
     document.getElementById("gameover-overlay")?.classList.add("active");
+    // Informa o que faltou para a estratégia escolhida, para o jogador entender a derrota.
+    const reason = document.getElementById("gameover-reason");
+    if (reason) {
+        const missing = window.Investigation?.missingRequirements() ?? [];
+        reason.textContent = missing.length ? `Faltou para este plano: ${missing.join("; ")}.` : "";
+        reason.hidden = missing.length === 0;
+    }
     // A derrota não apaga a partida: grava o checkpoint pré-combate para o retorno à cena 8.
     if (scene8Checkpoint) writeSavePayload(scene8Checkpoint);
     else clearSavedGame();
