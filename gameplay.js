@@ -437,7 +437,9 @@
     }
     function collides(testX, testY) {
         const config = sceneGameplay[currentScene];
-        if (!config?.collisions) return false;
+        // O cenário genérico é apenas um mapa de teste. Se estiver oculto,
+        // suas colisões também precisam ficar desativadas para não criar paredes invisíveis.
+        if (!config?.collisions || (config.testMap && !SHOW_TEST_MAP)) return false;
 
         return config.collisions.some(box =>
             testX + playerRadius > box.x &&
@@ -649,7 +651,7 @@
 
     function chaseBlocked(testX, testY) {
         const config = sceneGameplay[currentScene];
-        if (!config?.collisions) return false;
+        if (!config?.collisions || (config.testMap && !SHOW_TEST_MAP)) return false;
         return config.collisions.some(box =>
             testX + CHASE_RADIUS > box.x &&
             testX - CHASE_RADIUS < box.x + box.width &&
