@@ -63,7 +63,7 @@ Efeito colateral corrigido junto: os itens da cena 8 só eram coletáveis antes 
 
 - **UI-005 (feedback de salvamento):** implementação adicionada em `app.js`, `index.html` e `style.css`. Falhas ao gravar o save agora exibem um aviso persistente, acessível por `role="status"` e `aria-live="polite"`; um salvamento posterior bem-sucedido remove o aviso.
 - **Regressão:** criado `tests/save-feedback.cjs`, cobrindo falha simulada de quota, conteúdo do aviso, acessibilidade e recuperação após novo salvamento.
-- **Validação:** o teste foi adicionado ao fluxo automático porque `tests/run-all.cjs` descobre arquivos `.cjs` automaticamente. A execução real ainda está pendente: este ambiente não conseguiu clonar o repositório para instalar Playwright/Chromium. Não declarar a suíte aprovada até executar `npm test` em ambiente com as dependências instaladas.
+- **Validação:** incluído no fluxo automático. A execução real no Windows em 17/11/2026 passou: `save-feedback.cjs` — 7 aprovados, 0 reprovados. Resultado consolidado registrado na seção 8.
 
 
 ## 6. Reaproveitamento do protótipo 20 — primeira integração
@@ -73,7 +73,7 @@ Efeito colateral corrigido junto: os itens da cena 8 só eram coletáveis antes 
 - Adicionado botão para ligar/desligar os efeitos sonoros; a preferência é persistida em uma chave separada do save da partida.
 - Criado `tests/audio.cjs` para verificar estado inicial, alternância, persistência e chamadas silenciosas quando o áudio está desligado.
 - Criado `docs/PLANO_INTEGRACAO_PROTOTIPO20.md` com matriz de compatibilidade e limites de integração.
-- **Validação pendente:** os testes de navegador ainda não foram executados neste ambiente. Rodar `npm test` com Playwright e Chromium antes de considerar a integração aprovada.
+- **Validação:** a integração foi exercitada pela suíte `audio.cjs` no Windows em 17/11/2026: 5 aprovados, 0 reprovados. A cobertura continua limitada aos comportamentos explicitamente testados.
 
 
 ## 7. Ajuste do ambiente de testes após execução no Windows
@@ -81,4 +81,25 @@ Efeito colateral corrigido junto: os itens da cena 8 só eram coletáveis antes 
 - **Causa provável identificada:** os testes de navegador iniciavam o servidor estático com `spawn("python3", ...)`. Em instalações Windows nas quais o executável `python3` não está disponível no PATH, o processo não inicia; como sua saída era ignorada, todos os testes falhavam com a mesma mensagem genérica.
 - **Correção:** criado `tests/http-server.js`, servidor HTTP estático implementado com APIs nativas do Node. Os nove testes de navegador agora usam esse helper e não dependem de Python.
 - **Escopo:** não altera lógica do jogo nem os casos de teste; corrige somente a infraestrutura que entrega os arquivos ao Chromium.
-- **Validação:** alteração aplicada na branch, mas ainda depende de nova execução local de `npm test` no Windows.
+- **Validação:** confirmada em execução local no Windows em 17/11/2026; as dez suítes concluíram sem falhas. Ver seção 8.
+
+
+## 8. Resultado da execução no Windows — 17/11/2026
+
+O autor atualizou a branch `fix/recovery-prototype20-integration` com `git fetch`, `git switch` e `git pull`, e executou `npm test` localmente após a substituição do servidor HTTP.
+
+| Suíte | Aprovados | Reprovados |
+|---|---:|---:|
+| audio.cjs | 5 | 0 |
+| chase.cjs | 16 | 0 |
+| checkpoint.cjs | 16 | 0 |
+| confronto.cjs | 51 | 0 |
+| display.cjs | 14 | 0 |
+| graph.cjs | 11 | 0 |
+| intro.cjs | 12 | 0 |
+| restart.cjs | 26 | 0 |
+| save-feedback.cjs | 7 | 0 |
+| save-integrity.cjs | 40 | 0 |
+| **Total** | **198** | **0** |
+
+**Conclusão:** a infraestrutura corrigida funciona no ambiente Windows informado e todas as verificações automatizadas atuais passaram. Isso não equivale a uma validação completa do jogo: permanecem pendentes testes em navegadores/dispositivos reais, acessibilidade, versão publicada e funcionalidades sem cobertura automatizada.
