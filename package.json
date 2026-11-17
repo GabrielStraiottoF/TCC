@@ -1,0 +1,14 @@
+{
+  "name": "heranca-maldita",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Herança Maldita (ex-Sobrenatural: O Mapinguari) — jogo narrativo de investigação e terror para navegador.",
+  "scripts": {
+    "test": "node tests/run-all.cjs",
+    "test:graph": "node tests/graph.cjs",
+    "start": "npx http-server -c-1 ."
+  },
+  "devDependencies": {
+    "playwright": "^1.50.0"
+  }
+}

@@ -50,6 +50,10 @@ const scene8Choices = [
     { label: "Montar uma armadilha com cordas", sceneId: 11 }
 ];
 
+// Regras de navegação usadas pela validação do grafo (espelham advanceScene).
+// Cena 11 é terminal: o desfecho é uma tela de fuga ou de derrota.
+const sceneRouting = { choiceSceneId: 8, choices: scene8Choices, terminalSceneIds: [11] };
+
 window.addEventListener("load", initializeGame);
 
 async function initializeGame() {
@@ -141,12 +145,10 @@ function validateRoteiro(data) {
         });
     });
 
-    const sceneIds = new Set(data.cenas.map(scene => Number(scene.id)));
-    scene8Choices.forEach(choice => {
-        if (!sceneIds.has(choice.sceneId)) {
-            throw new Error(`A escolha da cena 8 aponta para a cena inexistente ${choice.sceneId}.`);
-        }
-    });
+    const graphErrors = window.RoteiroGraph ? window.RoteiroGraph.validateGraph(data, sceneRouting) : [];
+    if (graphErrors.length) {
+        throw new Error(`O grafo do roteiro é inconsistente: ${graphErrors.join(" ")}`);
+    }
 }
 
 function setupGameControls() {
@@ -793,36 +795,7 @@ function saveGame() {
     if (payload) writeSavePayload(payload);
 }
 
-function restoreSave() {
-    let payload;
-
-    try {
-        const raw = localStorage.getItem(SAVE_KEY);
-        if (!raw) return false;
-        payload = JSON.parse(raw);
-    } catch (error) {
-        console.warn("Progresso salvo inválido:", error);
-        clearSavedGame();
-        return false;
-    }
-
-    if (!payload || ![2, 3].includes(payload.version) || findSceneIndex(payload.sceneId) === -1) {
-        clearSavedGame();
-        return false;
-    }
-
-    currentSceneIndex = findSceneIndex(payload.sceneId);
-    currentEventIndex = Math.max(0, Number(payload.eventIndex) || 0);
-    currentDialogueIndex = Number.isInteger(payload.dialogueIndex) ? payload.dialogueIndex : -1;
-    sceneLog = Array.isArray(payload.sceneLog) ? payload.sceneLog : [];
-    journeyLog = Array.isArray(payload.journeyLog) ? payload.journeyLog : [];
-    visitedScenes = new Set(Array.isArray(payload.visitedScenes) ? payload.visitedScenes.map(Number) : []);
-    visitedScenes.add(Number(payload.sceneId));
-    window.Investigation?.restore(payload.investigation);
-
-    loadScene(currentSceneIndex, false);
-    return true;
-}
+// restoreSave() é definida em restore-fix.js (carregado depois de app.js).
 
 function clearSavedGame() {
     try {
