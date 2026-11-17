@@ -57,3 +57,10 @@ Efeito colateral corrigido junto: os itens da cena 8 só eram coletáveis antes 
 - A decisão D-04 foi tomada como "informar, não bloquear", e D-02 como "resolver antes de narrar". São escolhas de implementação reversíveis; confirmar com o autor.
 - Os arquivos `tests/` anteriores (checkpoint, restart, save-integrity, chase, intro, display) foram executados e passam, mas não foram relidos linha a linha.
 - Nada foi verificado em aparelho real nem na versão publicada.
+
+
+## 5. Atualização técnica — branch `fix/recovery-prototype20-integration`
+
+- **UI-005 (feedback de salvamento):** implementação adicionada em `app.js`, `index.html` e `style.css`. Falhas ao gravar o save agora exibem um aviso persistente, acessível por `role="status"` e `aria-live="polite"`; um salvamento posterior bem-sucedido remove o aviso.
+- **Regressão:** criado `tests/save-feedback.cjs`, cobrindo falha simulada de quota, conteúdo do aviso, acessibilidade e recuperação após novo salvamento.
+- **Validação:** o teste foi adicionado ao fluxo automático porque `tests/run-all.cjs` descobre arquivos `.cjs` automaticamente. A execução real ainda está pendente: este ambiente não conseguiu clonar o repositório para instalar Playwright/Chromium. Não declarar a suíte aprovada até executar `npm test` em ambiente com as dependências instaladas.
