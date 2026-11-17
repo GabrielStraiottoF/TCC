@@ -88,11 +88,62 @@ async function pressAndWait(page, key, ms = 60) {
         const moved = Math.hypot(after.creature.x - before.creature.x, after.creature.y - before.creature.y);
         check("criatura se move sozinha", moved > 0.3, `deslocamento=${moved.toFixed(2)}`);
 
-        console.log("AGACHAR — C alterna o estado");
+        console.log("VISÃO — obstáculos bloqueiam a detecção");
+        await page.evaluate(() => {
+            window.ExplorationChase.placePlayer(32, 45);
+            window.ExplorationChase.placeCreature(43, 34);
+        });
+        await page.waitForTimeout(100);
+        s = await chaseState(page);
+        check("criatura não enxerga Alex através do tronco", s.creatureState !== "caçando", s.creatureState);
+
+        await page.evaluate(() => {
+            window.ExplorationChase.placePlayer(50, 60);
+            window.ExplorationChase.placeCreature(50, 45);
+        });
+        await page.waitForTimeout(100);
+        s = await chaseState(page);
+        check("criatura enxerga Alex sem obstáculo entre eles", s.creatureState === "caçando", s.creatureState);
+
+        console.log("AGACHAR — C alterna o estado e reduz alcance visual");
+        await openScene(page, SCENE7_INDEX);
+        await page.evaluate(() => {
+            window.ExplorationChase.placePlayer(50, 50);
+            window.ExplorationChase.placeCreature(50, 40);
+        });
+        await page.waitForTimeout(100);
+        check("em pé, Alex é detectado a 10 unidades", (await chaseState(page)).creatureState === "caçando");
+        await openScene(page, SCENE7_INDEX);
+        await page.evaluate(() => {
+            window.ExplorationChase.placePlayer(50, 50);
+            window.ExplorationChase.placeCreature(50, 40);
+        });
         await pressAndWait(page, "c");
-        check("C agacha Alex", (await chaseState(page)).crouched === true);
-        await pressAndWait(page, "c");
-        check("C levanta Alex", (await chaseState(page)).crouched === false);
+        await page.waitForTimeout(100);
+        check("agachado, Alex não é detectado a 10 unidades", (await chaseState(page)).creatureState !== "caçando");
+
+        console.log("RUÍDO — só há ruído quando existe deslocamento");
+        await openScene(page, SCENE7_INDEX);
+        await page.evaluate(() => {
+            window.ExplorationChase.placePlayer(42.3, 35);
+            window.ExplorationChase.placeCreature(70, 35);
+        });
+        await page.keyboard.down("a");
+        await page.waitForTimeout(180);
+        await page.keyboard.up("a");
+        s = await chaseState(page);
+        check("pressionar movimento contra obstáculo não desloca Alex", Math.abs(s.player.x - 42.3) < 0.01, JSON.stringify(s.player));
+        check("movimento bloqueado não emite ruído", s.noise.radius === 0 || s.noise.t <= 0, JSON.stringify(s.noise));
+
+        await page.evaluate(() => {
+            window.ExplorationChase.placePlayer(50, 72);
+            window.ExplorationChase.placeCreature(85, 72);
+        });
+        await page.keyboard.down("d");
+        await page.waitForTimeout(120);
+        await page.keyboard.up("d");
+        s = await chaseState(page);
+        check("deslocamento real emite ruído de caminhada", s.noise.radius === 9 && s.noise.t > 0, JSON.stringify(s.noise));
 
         console.log("ESCONDERIJO — E esconde, bloqueia o movimento e E sai");
         await page.evaluate(p => window.ExplorationChase.placePlayer(p.x, p.y), HIDE_SPOT);
