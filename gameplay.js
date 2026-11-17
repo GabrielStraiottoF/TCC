@@ -422,6 +422,8 @@
         const step = speed * pace * magnitude * dt;
         const nextX = x + (dx / length) * step;
         const nextY = y + (dy / length) * step;
+        const previousX = x;
+        const previousY = y;
 
         if (!collides(nextX, nextY)) {
             x = Math.max(7, Math.min(93, nextX));
@@ -431,9 +433,16 @@
             if (!collides(x, nextY)) y = Math.max(18, Math.min(82, nextY));
         }
 
-        window.GameAudio?.play("footstep");
-        emitNoise();
-        renderPlayer();
+        const actuallyMoved = Math.hypot(x - previousX, y - previousY) > 0.001;
+        chase.moving = actuallyMoved;
+        if (actuallyMoved) {
+            window.GameAudio?.play("footstep");
+            emitNoise();
+            renderPlayer();
+        } else {
+            setRunning(false);
+            player.classList.remove("is-walking", "is-running");
+        }
     }
     function collides(testX, testY) {
         const config = sceneGameplay[currentScene];
@@ -660,6 +669,37 @@
         );
     }
 
+    // A visão da criatura é bloqueada por obstáculos sólidos do mapa atual.
+    function hasLineOfSight(fromX, fromY, toX, toY) {
+        const config = sceneGameplay[currentScene];
+        if (!config?.collisions || (config.testMap && !SHOW_TEST_MAP)) return true;
+
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        return !config.collisions.some(box => {
+            let tMin = 0;
+            let tMax = 1;
+            const edges = [
+                [-dx, fromX - box.x],
+                [dx, box.x + box.width - fromX],
+                [-dy, fromY - box.y],
+                [dy, box.y + box.height - fromY]
+            ];
+
+            for (const [p, q] of edges) {
+                if (p === 0) {
+                    if (q < 0) return false;
+                    continue;
+                }
+                const t = q / p;
+                if (p < 0) tMin = Math.max(tMin, t);
+                else tMax = Math.min(tMax, t);
+                if (tMin > tMax) return false;
+            }
+            return true;
+        });
+    }
+
     function placeCreatureAtSpawn(config) {
         const c = chase.creature;
         Object.assign(c, {
@@ -813,7 +853,9 @@
         const hiddenNow = chase.hiddenIn;
         const heard = chase.noise.t > 0 && Math.hypot(chase.noise.x - c.x, chase.noise.y - c.y) <= chase.noise.radius;
         const vision = hiddenNow ? 0 : chase.crouched ? 7 : chase.running ? 26 : 16;
-        const seesPlayer = !hiddenNow && Math.hypot(x - c.x, y - c.y) < vision;
+        const seesPlayer = !hiddenNow &&
+            Math.hypot(x - c.x, y - c.y) < vision &&
+            hasLineOfSight(c.x, c.y, x, y);
 
         if (seesPlayer) {
             c.memoryX = x;
@@ -898,6 +940,7 @@
                 creatureState: chase.creature.state,
                 creature: { x: chase.creature.x, y: chase.creature.y },
                 player: { x, y },
+                noise: { x: chase.noise.x, y: chase.noise.y, radius: chase.noise.radius, t: chase.noise.t },
                 alert: chase.alertT > 0 ? chase.alertText : ""
             };
         },
