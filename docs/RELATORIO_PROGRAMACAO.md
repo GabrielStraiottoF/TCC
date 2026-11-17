@@ -5,6 +5,8 @@
 **Branch documentada:** `design/investigacao-confronto-desfechos`  
 **Commit de referência anterior à documentação:** `cecf3f481808e107d40239cb32527e0e709e5c77`
 
+> **Atualização de 17/11/2026:** as seções 1–9 descrevem o estado de 02/11/2026. As mudanças posteriores estão na seção 10; o estado das pendências está em `PENDENCIAS_2026-11-17.md`.
+
 > Este relatório registra o que está implementado no código da branch na data de corte. Ele separa funcionalidades existentes de intenções descritas no GDD e não considera uma validação visual ou de navegador como concluída quando ela não foi executada.
 
 ## 1. Visão técnica
@@ -254,3 +256,33 @@ Os commits abaixo pertencem à branch documentada. Os hashes estão abreviados p
 ## 9. Integridade do repositório
 
 Este relatório descreve a branch `design/investigacao-confronto-desfechos`. As alterações documentadas não foram feitas em `main` e não implicam merge ou publicação.
+
+## 10. Atualização de 17/11/2026
+
+Esta seção descreve apenas o que foi alterado e verificado em 17/11/2026. As demais mudanças feitas entre 02 e 06/11 (menu inicial, dificuldade, controles de toque, perseguição, checkpoint, validação de save) estão cobertas pela suíte de testes e não foram redocumentadas aqui.
+
+### 10.1 Validação do grafo do roteiro
+
+`roteiro-graph.js` (módulo sem dependência de DOM, usado no navegador e no Node) valida destinos inexistentes, cena apontando para si mesma, cenas inalcançáveis, ciclos e becos sem saída. `validateRoteiro` rejeita o roteiro no carregamento se houver erro. As regras de navegação (cena 8 de escolha, cena 11 terminal) são declaradas em `sceneRouting`, em `app.js`.
+
+### 10.2 Requisitos como dados
+
+`investigation.js` passou a declarar as estratégias em `strategyCatalog` (rótulo, risco, exigências, resultado em caso de sucesso). A resolução do confronto e a interface leem a mesma fonte. O resultado de cada estratégia permanece o descrito na seção 2.6: espinhos + explosivo e arma + sangue + livro levam à vitória; cordas + (pegadas ou sangue) levam à fuga; sem os requisitos, derrota.
+
+### 10.3 Escolha da cena 8
+
+- Cada opção exibe requisitos (✓ atendido / ✗ falta, com texto) e o risco principal.
+- **Esc** ou o botão "Procurar mais no acampamento" fecha a escolha e devolve a exploração; **Enter** (ou tocar no texto) reabre a decisão com os requisitos atualizados.
+- Se faltarem requisitos, a escolha leva direto à tela de derrota, que informa o que faltou. A execução não é mais narrada como sucesso antes da derrota. Os textos das cenas 9, 10 e 11 não foram alterados.
+
+### 10.4 Caderno
+
+As hipóteses só aparecem quando a evidência-base foi registrada. Cada uma mostra a base, o limite do que a evidência prova e, no caso do livro, com quais vestígios físicos já foi confrontado. Os textos continuam fixos; não há árvore de deduções.
+
+### 10.5 Testes
+
+`npm test` executa `tests/*.cjs`. Resultado em 17/11/2026 (Chromium headless): 186 verificações, 0 falhas — `graph` 11, `confronto` 51, `save-integrity` 40, `restart` 26, `checkpoint` 16, `chase` 16, `display` 14, `intro` 12. A suíte não cobre Firefox, Safari, aparelhos reais nem a versão publicada.
+
+### 10.6 Remoção de código morto
+
+A função `restoreSave()` duplicada em `app.js` foi removida. Ela apagava o save em silêncio para qualquer dado inválido e era sobrescrita por `restore-fix.js`, que continua sendo a definição em uso.
