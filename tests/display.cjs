@@ -3,7 +3,7 @@
 // Requer Chromium e Playwright instalados no ambiente e python3 para o servidor local.
 
 const path = require("path");
-const { spawn } = require("child_process");
+const { startStaticServer } = require("./http-server");
 const { chromium } = require("playwright");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -146,11 +146,10 @@ async function runTouch(browser) {
 }
 
 (async () => {
-    const server = spawn("python3", ["-m", "http.server", String(PORT), "--bind", "127.0.0.1", "--directory", ROOT], {
-        stdio: "ignore",
-    });
+    let server;
     let browser;
     try {
+        server = await startStaticServer(ROOT, PORT);
         await waitForServer();
         browser = await chromium.launch();
         await runTextSpeed(browser);
@@ -161,7 +160,7 @@ async function runTouch(browser) {
         console.log(`  ERRO ${error.message}`);
     } finally {
         if (browser) await browser.close();
-        server.kill();
+        if (server) await server.close();
     }
     console.log(`\nResultado: ${passed} aprovado(s), ${failed} reprovado(s).`);
     process.exit(failed === 0 ? 0 : 1);
