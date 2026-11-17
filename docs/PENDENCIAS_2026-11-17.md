@@ -100,3 +100,28 @@ O autor atualizou a branch `fix/recovery-prototype20-integration` e executou `np
 | **Total** | **206** | **0** |
 
 **Conclusão:** todas as 11 suítes automatizadas passaram no ambiente Windows informado. Isso valida apenas os comportamentos cobertos pelos testes; as pendências da seção 2 e 3 continuam abertas.
+
+
+## 9. Auditoria funcional — perseguição (17/11/2026)
+
+### Achados
+
+- **PER-001 — visão atravessa obstáculos:** a detecção considerava apenas distância. A criatura podia detectar Alex através dos troncos e da vegetação sólida da cena 7.
+- **PER-002 — ruído sem deslocamento:** pressionar uma direção contra um obstáculo emitia passo e ruído mesmo quando a colisão impedia qualquer movimento.
+- **PER-003 — estado de corrida inconsistente:** a corrida era marcada como ativa pela tecla pressionada, mesmo sem deslocamento. Isso podia ampliar indevidamente o alcance visual da criatura.
+
+### Alterações na branch de trabalho
+
+- Adicionada verificação geométrica de linha de visão entre criatura e jogador, usando as caixas de colisão do mapa da cena.
+- Passos e ruído agora são emitidos somente quando há deslocamento real.
+- O estado de corrida agora depende de deslocamento real.
+- A interface de estado usada pelos testes passou a expor os dados do último ruído.
+- Ampliado `tests/chase.cjs` para cobrir visão obstruída e desobstruída, alcance visual agachado, movimento bloqueado e ruído após movimento real.
+
+### Esconderijos
+
+A lógica atual permite esconder Alex, impede seu movimento enquanto escondido e permite que a criatura vasculhe a área e o force a sair. Os testes existentes cobrem entrada, bloqueio de movimento, saída e ausência de captura enquanto escondido. Ainda é necessário validar o comportamento em jogabilidade manual, inclusive a frequência de expulsão do esconderijo.
+
+### Validação pendente
+
+As alterações desta seção ainda **não foram executadas com `npm test` no ambiente Windows do autor**. A execução anterior de 206 verificações é uma linha de base histórica e não valida estes commits. Após a execução, atualizar a contagem e investigar qualquer falha antes de considerar a auditoria concluída.
