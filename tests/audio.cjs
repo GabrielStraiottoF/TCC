@@ -1,6 +1,7 @@
 // Testa preferências e disponibilidade do módulo de áudio procedural.
 // Execução: node tests/audio.cjs
-// Requer Chromium e Playwright; o servidor HTTP de teste usa Node.js.nst path = require("path");
+// Requer Chromium e Playwright; o servidor HTTP de teste usa Node.js.
+const path = require("path");
 const { startStaticServer } = require("./http-server");
 const { chromium } = require("playwright");
 
