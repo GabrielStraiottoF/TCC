@@ -103,3 +103,13 @@ O autor atualizou a branch `fix/recovery-prototype20-integration` com `git fetch
 | **Total** | **198** | **0** |
 
 **Conclusão:** a infraestrutura corrigida funciona no ambiente Windows informado e todas as verificações automatizadas atuais passaram. Isso não equivale a uma validação completa do jogo: permanecem pendentes testes em navegadores/dispositivos reais, acessibilidade, versão publicada e funcionalidades sem cobertura automatizada.
+
+
+## 9. Auditoria funcional — exploração (primeira correção)
+
+- **Defeito identificado:** as cenas sem mapa próprio (1–5 e 9–14) reutilizam o objeto `testScene`. O renderizador oculta o mapa genérico quando `SHOW_TEST_MAP = false`, mas a função `collides()` continuava aplicando suas caixas de colisão.
+- **Impacto:** o jogador podia encontrar obstáculos invisíveis nas cenas que ainda não possuem mapa próprio.
+- **Correção:** `collides()` e `chaseBlocked()` agora ignoram colisões do mapa de teste quando sua visualização está desativada. Se o mapa de teste for habilitado para desenvolvimento, as colisões voltam a acompanhar os elementos visíveis.
+- **Regressão:** criado `tests/exploration.cjs`, que verifica a ausência do mapa genérico e se Alex consegue atravessar a área antes bloqueada nas cenas 1 e 9.
+- **Higiene:** atualizados os comentários dos nove testes de navegador; eles não dependem mais de Python, pois usam `tests/http-server.js`.
+- **Validação pendente:** executar `npm test` no Windows. A correção está na branch de trabalho e não foi mesclada.
