@@ -64,3 +64,13 @@ Efeito colateral corrigido junto: os itens da cena 8 só eram coletáveis antes 
 - **UI-005 (feedback de salvamento):** implementação adicionada em `app.js`, `index.html` e `style.css`. Falhas ao gravar o save agora exibem um aviso persistente, acessível por `role="status"` e `aria-live="polite"`; um salvamento posterior bem-sucedido remove o aviso.
 - **Regressão:** criado `tests/save-feedback.cjs`, cobrindo falha simulada de quota, conteúdo do aviso, acessibilidade e recuperação após novo salvamento.
 - **Validação:** o teste foi adicionado ao fluxo automático porque `tests/run-all.cjs` descobre arquivos `.cjs` automaticamente. A execução real ainda está pendente: este ambiente não conseguiu clonar o repositório para instalar Playwright/Chromium. Não declarar a suíte aprovada até executar `npm test` em ambiente com as dependências instaladas.
+
+
+## 6. Reaproveitamento do protótipo 20 — primeira integração
+
+- Criado `audio.js`, isolando o sintetizador procedural Web Audio do protótipo, sem dependência de arquivos externos.
+- Integrados efeitos de passos, coleta, interação, salto, alerta da criatura e captura em `gameplay.js`.
+- Adicionado botão para ligar/desligar os efeitos sonoros; a preferência é persistida em uma chave separada do save da partida.
+- Criado `tests/audio.cjs` para verificar estado inicial, alternância, persistência e chamadas silenciosas quando o áudio está desligado.
+- Criado `docs/PLANO_INTEGRACAO_PROTOTIPO20.md` com matriz de compatibilidade e limites de integração.
+- **Validação pendente:** os testes de navegador ainda não foram executados neste ambiente. Rodar `npm test` com Playwright e Chromium antes de considerar a integração aprovada.
