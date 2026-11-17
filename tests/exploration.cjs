@@ -86,6 +86,6 @@ async function verifyScene(browser, sceneIndex, sceneId) {
         if (server) await server.close();
     }
 
-    console.log(`\\nResultado: ${passed} aprovado(s), ${failed} reprovado(s).`);
+    console.log(`\nResultado: ${passed} aprovado(s), ${failed} reprovado(s).`);
     process.exit(failed === 0 ? 0 : 1);
 })();
