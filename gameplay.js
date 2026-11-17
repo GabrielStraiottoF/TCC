@@ -435,6 +435,7 @@
 
         const actuallyMoved = Math.hypot(x - previousX, y - previousY) > 0.001;
         chase.moving = actuallyMoved;
+        chase.running = actuallyMoved && runActive;
         if (actuallyMoved) {
             window.GameAudio?.play("footstep");
             emitNoise();
