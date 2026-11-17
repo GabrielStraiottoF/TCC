@@ -361,6 +361,7 @@
 
     function jump() {
         if (!player || jumpTimer || document.querySelector(".modal.active, .overlay.active")) return;
+        window.GameAudio?.play("jump");
         player.classList.add("is-jumping");
         jumpTimer = setTimeout(() => {
             player.classList.remove("is-jumping");
@@ -430,6 +431,7 @@
             if (!collides(x, nextY)) y = Math.max(18, Math.min(82, nextY));
         }
 
+        window.GameAudio?.play("footstep");
         emitNoise();
         renderPlayer();
     }
@@ -612,6 +614,7 @@
 
         if (point.action === "clue" || point.action === "item") {
             const key = point.clue || point.item;
+            window.GameAudio?.play("pickup");
             discoveredItems.add(key);
             if (point.action === "clue") window.Investigation?.addClue(point.clue);
             else window.Investigation?.addItem(point.item);
@@ -620,6 +623,7 @@
         }
 
         if (point.action === "transition") {
+            window.GameAudio?.play("interact");
             window.goToScene?.(point.sceneId);
             return;
         }
@@ -637,6 +641,7 @@
     }
 
     function setAlert(text, seconds) {
+        if (text.includes("farejou")) window.GameAudio?.play("alert");
         chase.alertText = text;
         chase.alertT = seconds;
         updatePrompt();
@@ -778,6 +783,7 @@
     }
 
     function onCaught() {
+        window.GameAudio?.play("caught");
         const config = chaseConfig();
         x = 50;
         y = 72;
