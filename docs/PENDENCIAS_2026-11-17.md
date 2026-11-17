@@ -112,4 +112,12 @@ O autor atualizou a branch `fix/recovery-prototype20-integration` com `git fetch
 - **Correção:** `collides()` e `chaseBlocked()` agora ignoram colisões do mapa de teste quando sua visualização está desativada. Se o mapa de teste for habilitado para desenvolvimento, as colisões voltam a acompanhar os elementos visíveis.
 - **Regressão:** criado `tests/exploration.cjs`, que verifica a ausência do mapa genérico e se Alex consegue atravessar a área antes bloqueada nas cenas 1 e 9.
 - **Higiene:** atualizados os comentários dos nove testes de navegador; eles não dependem mais de Python, pois usam `tests/http-server.js`.
-- **Validação pendente:** executar `npm test` no Windows. A correção está na branch de trabalho e não foi mesclada.
+- **Validação:** a primeira execução no Windows passou em `exploration.cjs` (8/8), mas revelou um erro de sintaxe nos imports de `audio.cjs` e `save-feedback.cjs`. Correção dos imports aplicada; a suíte completa precisa ser reexecutada para validar o estado atualizado. A correção está na branch de trabalho e não foi mesclada.
+
+
+## 10. Correção de imports nos testes — 17/11/2026
+
+- **Falha:** `audio.cjs` e `save-feedback.cjs` continham uma quebra de linha perdida no cabeçalho: a declaração `const path = require("path");` foi concatenada ao comentário anterior e acabou não sendo interpretada como código.
+- **Impacto:** ambos encerravam imediatamente com `ReferenceError: path is not defined`, antes de iniciar Chromium ou executar qualquer asserção.
+- **Correção:** restaurada a separação entre comentário e declaração `require("path")` nos dois arquivos. Nenhuma lógica de áudio, salvamento ou gameplay foi alterada.
+- **Validação:** pendente de nova execução de `npm test` pelo autor após atualizar a branch.
