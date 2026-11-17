@@ -5,6 +5,7 @@ Todas as mudanças relevantes deste projeto serão registradas aqui.
 ## [Unreleased]
 
 ### Corrigido
+- Inicialização do servidor HTTP dos testes sem dependência de `python3`, usando servidor nativo do Node para compatibilidade com Windows.
 - Exibição de aviso persistente e acessível quando o navegador falha ao salvar o progresso.
 - Remoção automática do aviso após um salvamento bem-sucedido.
 
@@ -16,5 +17,5 @@ Todas as mudanças relevantes deste projeto serão registradas aqui.
 - Plano documentado para integração segura dos sistemas do protótipo 20.
 
 ### Validação pendente
-- Executar `npm test` em ambiente com Playwright e Chromium instalados.
+- Reexecutar `npm test` no Windows após a substituição do servidor de testes.
 - Verificar áudio e controles em navegadores e dispositivos reais.
