@@ -45,6 +45,9 @@ async function waitForServer() {
         const page = await browser.newPage();
         await page.goto(BASE);
         await page.waitForFunction(() => typeof window.GameAudio?.play === "function");
+        await page.click("#btn-start");
+        await page.click('.difficulty-btn[data-difficulty="normal"]');
+        await page.waitForFunction(() => document.getElementById("top-nav").style.display !== "none");
 
         let state = await page.locator("#btn-audio").evaluate(button => ({
             text: button.textContent,
